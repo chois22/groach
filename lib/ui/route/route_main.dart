@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/value/colors.dart';
 
+//todo: bottom navigation bar 만들기
 class RouteMain extends StatelessWidget {
   const RouteMain({super.key});
 
