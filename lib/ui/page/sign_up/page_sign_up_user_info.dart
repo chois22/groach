@@ -83,183 +83,188 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
       child: Scaffold(
         appBar: AppBar(title: Text('회원가입', style: TS.s18w600(colorBlack)), toolbarHeight: 56),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Gaps.v20,
-                  Text('회원가입 정보 입력', style: TS.s20w600(colorBlack)),
-                  Gaps.v10,
-                  Text('로그인에 사용될 가입 정보를 입력해주세요.', style: TS.s16w500(colorGray600)),
-                  Gaps.v42,
-                  Text('이메일', style: TS.s14w500(colorGray700)),
-                  Gaps.v8,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Gaps.v20,
+                        Text('회원가입 정보 입력', style: TS.s20w600(colorBlack)),
+                        Gaps.v10,
+                        Text('로그인에 사용될 가입 정보를 입력해주세요.', style: TS.s16w500(colorGray600)),
+                        Gaps.v42,
+                        Text('이메일', style: TS.s14w500(colorGray700)),
+                        Gaps.v8,
 
-                  /// 이메일 텍스트필드 및 중복확인
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SizedBox(
-                              height: 48,
-                              child: TextFieldDefault(
-                                controller: tecEmail,
-                                hintText: '이메일 입력',
-                              ),
+                        /// 이메일 텍스트필드 및 중복확인
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 48,
+                                    child: TextFieldDefault(
+                                      controller: tecEmail,
+                                      hintText: '이메일 입력',
+                                    ),
+                                  ),
+                                ),
+                                Gaps.h8,
+                                ValueListenableBuilder(
+                                  valueListenable: vnTecEmailMatch,
+                                  builder: (context, isEmail, child) {
+                                    return ButtonConfirm(
+                                      boxText: '중복확인',
+                                      textStyle: TS.s16w500(isEmail ? colorWhite : colorGray500),
+                                      boxColor: isEmail ? colorGreen600 : colorGray200,
+                                      width: 87,
+                                      height: 48,
+                                      onTap: () {
+                                        String email = tecEmail.text;
+                                        if (email.isNotEmpty) { // 이메일이 입력되었을 때만 체크
+                                          if (email == 'test@naver.com') {
+                                            // 이메일이 사용 가능하면
+                                            vnTecEmailMatch.value = true; // 유효한 이메일
+                                          } else {
+                                            // 이메일이 이미 사용 중이면
+                                            vnTecEmailMatch.value = false; // 유효하지 않은 이메일
+                                          }
+                                          vnIsEmailCheck.value = true;
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                          ),
-                          Gaps.h8,
-                          ValueListenableBuilder(
-                            valueListenable: vnTecEmailMatch,
-                            builder: (context, isEmail, child) {
-                              return ButtonConfirm(
-                                boxText: '중복확인',
-                                textStyle: TS.s16w500(isEmail ? colorWhite : colorGray500),
-                                boxColor: isEmail ? colorGreen600 : colorGray200,
-                                width: 87,
-                                height: 48,
-                                onTap: () {
-                                  String email = tecEmail.text;
-                                  if (email.isNotEmpty) { // 이메일이 입력되었을 때만 체크
-                                    if (email == 'test@naver.com') {
-                                      // 이메일이 사용 가능하면
-                                      vnTecEmailMatch.value = true; // 유효한 이메일
+                            /// 이메일 사용 가능, 불가능 체크 텍스트
+                            ValueListenableBuilder(
+                              valueListenable: vnIsEmailCheck, // 중복확인 버튼을 눌렀는지 여부 확인
+                              builder: (context, isChecked, child) {
+                                // 중복확인 버튼을 눌렀을 때만 메시지 표시
+                                if (!isChecked) {
+                                  return SizedBox.shrink(); // 중복확인 버튼을 누르지 않으면 아무것도 표시되지 않음
+                                }
+
+                                return ValueListenableBuilder(
+                                  valueListenable: vnTecEmailMatch, // 이메일 유효성 체크 상태
+                                  builder: (context, isTecEmailMatch, child) {
+                                    if (isTecEmailMatch) {
+                                      // 이메일이 사용 가능할 때
+                                      return _InfoCheck(
+                                        iconPath: 'assets/icon/v_icon.svg',
+                                        message: '사용 가능한 이메일 입니다.',
+                                        textStyle: TS.s12w500(colorGreen500),
+                                      );
                                     } else {
-                                      // 이메일이 이미 사용 중이면
-                                      vnTecEmailMatch.value = false; // 유효하지 않은 이메일
+                                      // 이메일이 사용 중일 때, 중복확인 상태를 리셋
+
+                                      return _InfoCheck(
+                                        iconPath: 'assets/icon/!_icon.svg',
+                                        message: '사용중인 이메일 입니다.',
+                                        textStyle: TS.s12w500(Color(0XFFD4380D)),
+                                      );
                                     }
-                                    vnIsEmailCheck.value = true;
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      /// 이메일 사용 가능, 불가능 체크 텍스트
-                      ValueListenableBuilder(
-                        valueListenable: vnIsEmailCheck, // 중복확인 버튼을 눌렀는지 여부 확인
-                        builder: (context, isChecked, child) {
-                          // 중복확인 버튼을 눌렀을 때만 메시지 표시
-                          if (!isChecked) {
-                            return SizedBox.shrink(); // 중복확인 버튼을 누르지 않으면 아무것도 표시되지 않음
-                          }
-
-                          return ValueListenableBuilder(
-                            valueListenable: vnTecEmailMatch, // 이메일 유효성 체크 상태
-                            builder: (context, isTecEmailMatch, child) {
-                              if (isTecEmailMatch) {
-                                // 이메일이 사용 가능할 때
-                                return _InfoCheck(
-                                  iconPath: 'assets/icon/v_icon.svg',
-                                  message: '사용 가능한 이메일 입니다.',
-                                  textStyle: TS.s12w500(colorGreen500),
+                                  },
                                 );
-                              } else {
-                                // 이메일이 사용 중일 때, 중복확인 상태를 리셋
-
-                                return _InfoCheck(
-                                  iconPath: 'assets/icon/!_icon.svg',
-                                  message: '사용중인 이메일 입니다.',
-                                  textStyle: TS.s12w500(Color(0XFFD4380D)),
-                                );
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-
-                  Gaps.v20,
-                  Text('이름', style: TS.s14w500(colorGray700)),
-                  Gaps.v8,
-                  SizedBox(
-                    height: 48,
-                    child: TextFieldDefault(
-                      controller: tecName,
-                      hintText: '이름 입력',
-                    ),
-                  ),
-                  Gaps.v20,
-                  Text('닉네임', style: TS.s14w500(colorGray700)),
-                  Gaps.v8,
-                  SizedBox(
-                    height: 48,
-                    child: TextFieldDefault(
-                      controller: tecNickName,
-                      hintText: '닉네임 입력',
-                    ),
-                  ),
-                  Gaps.v20,
-                  Text('비밀번호', style: TS.s14w500(colorGray700)),
-                  Gaps.v8,
-                  SizedBox(
-                    height: 48,
-                    child: TextFieldDefault(
-                      controller: tecPw,
-                      hintText: '비밀번호 입력',
-                      obscureText: true, // 비밀번호 ***표시
-                    ),
-                  ),
-                  Gaps.v8,
-                  SizedBox(
-                    height: 48,
-                    child: TextFieldDefault(
-                      controller: tecPwCheck,
-                      hintText: '비밀번호 재입력',
-                      obscureText: true,
-                    ),
-                  ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: vnTecPwMatch,
-                    builder: (context, pwMatch, child) {
-                      if (tecPw.text.isEmpty || tecPwCheck.text.isEmpty) {
-                        return SizedBox.shrink(); // 아무것도 표시하지 않음
-                      }
-                      if (pwMatch) {
-                        return _InfoCheck(
-                          iconPath: 'assets/icon/v_icon.svg',
-                          message: '비밀번호가 일치합니다..',
-                          textStyle: TS.s12w500(colorGreen500),
-                        );
-                      } else {
-                        return _InfoCheck(
-                          iconPath: 'assets/icon/!_icon.svg',
-                          message: '비밀번호가 일치하지 않습니다.',
-                          textStyle: TS.s12w500(Color(0XFFD4380D)),
-                        );
-                      }
-                    },
-                  ),
-                  Gaps.v96,
-                  ValueListenableBuilder<bool>(
-                    valueListenable: vnFormCheckNotifier,
-                    builder: (context, isFormCheck, child) {
-                      return GestureDetector(
-                        onTap: isFormCheck
-                            ? () {
-                          widget.pageController.animateToPage(
-                            1,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.linear,
-                          );
-                        }
-                            : null, // isFormCheck이 false면 아무 동작 없음
-                        child: ButtonAnimate(
-                          title: '다음',
-                          colorBg: isFormCheck ? colorGreen600 : colorGray500,
+                              },
+                            ),
+                          ],
                         ),
-                      );
-                    },
+
+                        Gaps.v20,
+                        Text('이름', style: TS.s14w500(colorGray700)),
+                        Gaps.v8,
+                        SizedBox(
+                          height: 48,
+                          child: TextFieldDefault(
+                            controller: tecName,
+                            hintText: '이름 입력',
+                          ),
+                        ),
+                        Gaps.v20,
+                        Text('닉네임', style: TS.s14w500(colorGray700)),
+                        Gaps.v8,
+                        SizedBox(
+                          height: 48,
+                          child: TextFieldDefault(
+                            controller: tecNickName,
+                            hintText: '닉네임 입력',
+                          ),
+                        ),
+                        Gaps.v20,
+                        Text('비밀번호', style: TS.s14w500(colorGray700)),
+                        Gaps.v8,
+                        SizedBox(
+                          height: 48,
+                          child: TextFieldDefault(
+                            controller: tecPw,
+                            hintText: '비밀번호 입력',
+                            obscureText: true, // 비밀번호 ***표시
+                          ),
+                        ),
+                        Gaps.v8,
+                        SizedBox(
+                          height: 48,
+                          child: TextFieldDefault(
+                            controller: tecPwCheck,
+                            hintText: '비밀번호 재입력',
+                            obscureText: true,
+                          ),
+                        ),
+                        ValueListenableBuilder<bool>(
+                          valueListenable: vnTecPwMatch,
+                          builder: (context, pwMatch, child) {
+                            if (tecPw.text.isEmpty || tecPwCheck.text.isEmpty) {
+                              return SizedBox.shrink(); // 아무것도 표시하지 않음
+                            }
+                            if (pwMatch) {
+                              return _InfoCheck(
+                                iconPath: 'assets/icon/v_icon.svg',
+                                message: '비밀번호가 일치합니다..',
+                                textStyle: TS.s12w500(colorGreen500),
+                              );
+                            } else {
+                              return _InfoCheck(
+                                iconPath: 'assets/icon/!_icon.svg',
+                                message: '비밀번호가 일치하지 않습니다.',
+                                textStyle: TS.s12w500(Color(0XFFD4380D)),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
-            ),
+              ValueListenableBuilder<bool>(
+                valueListenable: vnFormCheckNotifier,
+                builder: (context, isFormCheck, child) {
+                  return GestureDetector(
+                    onTap: isFormCheck
+                        ? () {
+                      widget.pageController.animateToPage(
+                        1,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.linear,
+                      );
+                    }
+                        : null, // isFormCheck이 false면 아무 동작 없음
+                    child: ButtonAnimate(
+                      title: '다음',
+                      colorBg: isFormCheck ? colorGreen600 : colorGray500,margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

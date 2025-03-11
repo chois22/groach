@@ -165,6 +165,7 @@ class _PageSignUpTermsState extends State<PageSignUpTerms> {
                             Text('(선택) 개인정보 알람 및 주변 알람 동의', style: TS.s16w400(colorBlack)),
                           ],
                         ),
+                        // todo: complete push.
                         const SizedBox(height: 294),
                         ValueListenableBuilder<bool>(
                           valueListenable: vnFormCheckNotifier,
@@ -172,6 +173,7 @@ class _PageSignUpTermsState extends State<PageSignUpTerms> {
                             return GestureDetector(
                               onTap: isFormCheck
                                   ? () {
+                                // change
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (_) => RouteTerms(

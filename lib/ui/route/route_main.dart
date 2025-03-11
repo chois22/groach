@@ -12,11 +12,12 @@ class RouteMain extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        //todo: appbar XXX
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Row(
             children: [
-            SvgPicture.asset('assets/image/main_name.svg'),
+            Image.asset('assets/image/main_groach.png', width: 64, height: 28),
               Icon(Icons.notifications_active_outlined),
               Icon(Icons.search_outlined),
             ],

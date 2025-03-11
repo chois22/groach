@@ -6,12 +6,13 @@ import 'package:practice1/const/value/text_style.dart';
 class ButtonAnimate extends StatelessWidget {
   final String title;
   final Color colorBg; //backgroud 배경색
-
+  final EdgeInsetsGeometry? margin;
   final void Function()? onTap;
 
   const ButtonAnimate({
     required this.title,
     required this.colorBg,
+    this.margin,
     this.onTap,
     super.key,
   });
@@ -21,6 +22,7 @@ class ButtonAnimate extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
+        margin: margin,
         duration: Duration(milliseconds: 300),
         width: double.infinity,
         height: 48,
