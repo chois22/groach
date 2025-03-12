@@ -53,7 +53,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
       } else {}
     });
   }
-// 벨류들도 dispose에 추가
+//todo : vn들 dispose 추가
   @override
   void dispose() {
     tecEmail.dispose();
@@ -63,6 +63,11 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
     tecPwCheck.dispose();
     tecPw.removeListener(_checkPasswordMatch);
     tecPwCheck.removeListener(_checkPasswordMatch);
+
+    vnTecPwMatch.dispose();
+    vnIsEmailCheck.dispose();
+    vnTecEmailMatch.dispose();
+    vnFormCheckNotifier.dispose();
     super.dispose();
   }
 

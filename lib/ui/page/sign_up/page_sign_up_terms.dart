@@ -20,7 +20,7 @@ class PageSignUpTerms extends StatefulWidget {
   @override
   State<PageSignUpTerms> createState() => _PageSignUpTermsState();
 }
-/// diospose
+//todo : vn들 dispose 추가
 class _PageSignUpTermsState extends State<PageSignUpTerms> {
   final ValueNotifier<bool> vnCheckBoxAll = ValueNotifier<bool>(false);
   final ValueNotifier<bool> vnCheckBoxTerm1 = ValueNotifier<bool>(false);
@@ -36,6 +36,7 @@ class _PageSignUpTermsState extends State<PageSignUpTerms> {
     vnCheckBoxTerm1.addListener(_checkFormField);
     vnCheckBoxTerm2.addListener(_checkFormField);
     vnCheckBoxTerm3.addListener(_checkFormField);
+    vnFormCheckNotifier.dispose();
 
     return PopScope(
       canPop: true,

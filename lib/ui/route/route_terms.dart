@@ -27,6 +27,14 @@ class _RouteTermsState extends State<RouteTerms> {
     vnCheckBoxTerm2 = ValueNotifier<bool>(widget.isChecked);
     vnCheckBoxTerm3 = ValueNotifier<bool>(widget.isChecked);
   }
+  // TODO: vn들 dispose 추가
+  @override
+  void dispose() {
+    vnCheckBoxTerm1.dispose();
+    vnCheckBoxTerm2.dispose();
+    vnCheckBoxTerm3.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     vnCheckBoxTerm1.addListener(_checkFormField);
