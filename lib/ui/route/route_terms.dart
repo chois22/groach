@@ -8,24 +8,56 @@ import 'package:practice1/ui/page/sign_up/page_sign_up_complete.dart';
 
 // 이용약관 나와있는 페이지 // > 눌러서 오는 페이지
 class RouteTerms extends StatefulWidget {
-  final PageController pageController;
-  //final String title;
-
-  const RouteTerms({
-    required this.pageController,
-    super.key,
-  });
+  final bool isChecked;
+  const RouteTerms({required this.isChecked,super.key});
 
   @override
   State<RouteTerms> createState() => _RouteTermsState();
 }
 
 class _RouteTermsState extends State<RouteTerms> {
-  final ValueNotifier<bool> vnCheckBoxTerm1 = ValueNotifier<bool>(false);
+  late ValueNotifier<bool> vnCheckBoxTerm1 = ValueNotifier<bool>(false);
+  late ValueNotifier<bool> vnCheckBoxTerm2 = ValueNotifier<bool>(false);
+  late ValueNotifier<bool> vnCheckBoxTerm3 = ValueNotifier<bool>(false);
 
+  @override
+  void initState() {
+    super.initState();
+    vnCheckBoxTerm1 = ValueNotifier<bool>(widget.isChecked);
+    vnCheckBoxTerm2 = ValueNotifier<bool>(widget.isChecked);
+    vnCheckBoxTerm3 = ValueNotifier<bool>(widget.isChecked);
+  }
   @override
   Widget build(BuildContext context) {
     vnCheckBoxTerm1.addListener(_checkFormField);
+    vnCheckBoxTerm2.addListener(_checkFormField);
+    vnCheckBoxTerm3.addListener(_checkFormField);
+
+    String title = '';
+    if (vnCheckBoxTerm1.value) {
+      title = '(필수) 이용약관 동의';
+    } else if (vnCheckBoxTerm2.value) {
+      title = '(필수) 개인정보 수집 및 이용 동의';
+    } else {
+      title = '(선택) 개인정보 알람 및 주변 알람 동의';
+    }
+
+    // String title = '';
+    // if(vnCheckBoxTerm1.value) {
+    //   title = '(필수) 이용약관 동의';
+    // } else {
+    //   title = '(필수) 이용약관 동의';
+    // }
+    // if(vnCheckBoxTerm2.value) {
+    //   title = '(필수) 개인정보 수집 및 이용 동의';
+    // } else {
+    //   title = '(필수) 개인정보 수집 및 이용 동의';
+    // }
+    // if(vnCheckBoxTerm3.value) {
+    //   title = '(선택) 개인정보 알람 및 주변 알람 동의';
+    // } else {
+    //   title = '(선택) 개인정보 알람 및 주변 알람 동의';
+    // }
 
     return Scaffold(
       body: SafeArea(
@@ -48,7 +80,7 @@ class _RouteTermsState extends State<RouteTerms> {
               ),
               Gaps.v16,
               //todo maxline 물어보기
-              Text('(필수) 이용약관 동의', style: TS.s16w500(colorBlack)),
+              Text(title, style: TS.s16w500(colorBlack)),
               Gaps.v16,
               Center(
                 child: Container(
@@ -91,7 +123,7 @@ class _RouteTermsState extends State<RouteTerms> {
                     },
                   ),
                   Gaps.h10,
-                  Text('(선택) 개인정보 알람 및 주변 알람 동의', style: TS.s16w400(colorBlack)),
+                  Text(title, style: TS.s16w400(colorBlack)),
                 ],
               ),
               const SizedBox(height: 13),
@@ -102,16 +134,11 @@ class _RouteTermsState extends State<RouteTerms> {
                   return GestureDetector(
                     onTap: isFormCheck
                         ? () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => PageSignUpComplete(
-                            pageController: widget.pageController,
-                          ),
-                        ),
-                      );
+                      bool result = vnCheckBoxTerm1.value;
+                      Navigator.pop(context, result);
                     }
 
-                    /*{
+                        /*{
                       // 여기서 페이지 이동을 시도하기 전에 pageController가 null이 아닌지 다시 한 번 확인
                       print("animateToPage 호출됨");
                       widget.pageController.animateToPage(
@@ -122,7 +149,7 @@ class _RouteTermsState extends State<RouteTerms> {
                     }*/
                         : null,
                     child: ButtonAnimate(
-                      title: '다음',
+                      title: '확인',
                       colorBg: isFormCheck ? colorGreen600 : colorGray500,
                     ),
                   );

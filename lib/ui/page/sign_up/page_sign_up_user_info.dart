@@ -53,7 +53,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
       } else {}
     });
   }
-
+// 벨류들도 dispose에 추가
   @override
   void dispose() {
     tecEmail.dispose();
@@ -250,6 +250,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                   return GestureDetector(
                     onTap: isFormCheck
                         ? () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+
                       widget.pageController.animateToPage(
                         1,
                         duration: Duration(milliseconds: 300),
@@ -259,7 +261,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                         : null, // isFormCheck이 false면 아무 동작 없음
                     child: ButtonAnimate(
                       title: '다음',
-                      colorBg: isFormCheck ? colorGreen600 : colorGray500,margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                      colorBg: isFormCheck ? colorGreen600 : colorGray500, margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                     ),
                   );
                 },

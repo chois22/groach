@@ -20,7 +20,7 @@ class PageSignUpTerms extends StatefulWidget {
   @override
   State<PageSignUpTerms> createState() => _PageSignUpTermsState();
 }
-
+/// diospose
 class _PageSignUpTermsState extends State<PageSignUpTerms> {
   final ValueNotifier<bool> vnCheckBoxAll = ValueNotifier<bool>(false);
   final ValueNotifier<bool> vnCheckBoxTerm1 = ValueNotifier<bool>(false);
@@ -53,145 +53,212 @@ class _PageSignUpTermsState extends State<PageSignUpTerms> {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Gaps.v20,
-                        Text('사용자 정보를 허용해주세요.', style: TS.s20w600(colorBlack)),
-                        Gaps.v6,
-                        Text('앱의 사용을 위해 권한을 허용해주세요.', style: TS.s16w500(colorGray600)),
-                        Gaps.v72,
-                        Row(
-                          children: [
-                            ValueListenableBuilder<bool>(
-                              valueListenable: vnCheckBoxAll,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Gaps.v20,
+                      Text('사용자 정보를 허용해주세요.', style: TS.s20w600(colorBlack)),
+                      Gaps.v6,
+                      Text('앱의 사용을 위해 권한을 허용해주세요.', style: TS.s16w500(colorGray600)),
+                      Gaps.v72,
+                      Row(
+                        children: [
+                          ValueListenableBuilder<bool>(
+                            valueListenable: vnCheckBoxAll,
+                            builder: (context, check, child) {
+                              return GestureDetector(
+                                onTap: () {
+                                  bool allCheck = !vnCheckBoxAll.value;
+                                  vnCheckBoxAll.value = allCheck;
+                                  vnCheckBoxTerm1.value = allCheck;
+                                  vnCheckBoxTerm2.value = allCheck;
+                                  vnCheckBoxTerm3.value = allCheck;
+                                },
+                                child: SvgPicture.asset(
+                                  check ? 'assets/icon/check-box_rectlagle.svg' : 'assets/icon/check-box_square.svg',
+                                ),
+                              );
+                            },
+                          ),
+                          Gaps.h10,
+                          Text('약관 전체 동의', style: TS.s18w700(colorBlack)),
+                        ],
+                      ),
+                      Gaps.v20,
+                      CustomDivider(color: colorGray200),
+                      Gaps.v20,
+                      Row(
+                        children: [
+                          ValueListenableBuilder<bool>(
+                              valueListenable: vnCheckBoxTerm1,
                               builder: (context, check, child) {
                                 return GestureDetector(
                                   onTap: () {
-                                    bool allCheck = !vnCheckBoxAll.value;
-                                    vnCheckBoxAll.value = allCheck;
-                                    vnCheckBoxTerm1.value = allCheck;
-                                    vnCheckBoxTerm2.value = allCheck;
-                                    vnCheckBoxTerm3.value = allCheck;
+                                    vnCheckBoxTerm1.value = !check;
+
+                                    if (vnCheckBoxTerm1.value && vnCheckBoxTerm2.value && vnCheckBoxTerm3.value) {
+                                      vnCheckBoxAll.value = true;
+                                    } else {
+                                      vnCheckBoxAll.value = false;
+                                    }
                                   },
                                   child: SvgPicture.asset(
                                     check ? 'assets/icon/check-box_rectlagle.svg' : 'assets/icon/check-box_square.svg',
                                   ),
                                 );
                               },
-                            ),
-                            Gaps.h10,
-                            Text('약관 전체 동의', style: TS.s18w700(colorBlack)),
-                          ],
-                        ),
-                        Gaps.v20,
-                        CustomDivider(color: colorGray200),
-                        Gaps.v20,
-                        Row(
-                          children: [
-                            ValueListenableBuilder<bool>(
-                                valueListenable: vnCheckBoxTerm1,
-                                builder: (context, check, child) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      vnCheckBoxTerm1.value = !check;
-
-                                      if (vnCheckBoxTerm1.value && vnCheckBoxTerm2.value && vnCheckBoxTerm3.value) {
-                                        vnCheckBoxAll.value = true;
-                                      } else {
-                                        vnCheckBoxAll.value = false;
-                                      }
-                                    },
-                                    child: SvgPicture.asset(
-                                      check ? 'assets/icon/check-box_rectlagle.svg' : 'assets/icon/check-box_square.svg',
-                                    ),
-                                  );
-                                },
-                            ),
-                            Gaps.h10,
-                            Text('(필수) 이용약관 동의', style: TS.s16w400(colorBlack)),
-                          ],
-                        ),
-                        const SizedBox(height: 18.5),
-                        Row(
-                          children: [
-                            ValueListenableBuilder<bool>(
-                                valueListenable: vnCheckBoxTerm2,
-                                builder: (context, check, child) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      vnCheckBoxTerm2.value = !check;
-
-                                      if (vnCheckBoxTerm1.value && vnCheckBoxTerm2.value && vnCheckBoxTerm3.value) {
-                                        vnCheckBoxAll.value = true;
-                                      } else {
-                                        vnCheckBoxAll.value = false;
-                                      }
-                                    },
-                                    child: SvgPicture.asset(
-                                      check ? 'assets/icon/check-box_rectlagle.svg' : 'assets/icon/check-box_square.svg',
-                                    ),
-                                  );
-                                },
-                            ),
-                            Gaps.h10,
-                            Text('(필수) 개인정보 수집 및 이용 동의', style: TS.s16w400(colorBlack)),
-                          ],
-                        ),
-                        const SizedBox(height: 18.5),
-                        Row(
-                          children: [
-                            ValueListenableBuilder<bool>(
-                                valueListenable: vnCheckBoxTerm3,
-                                builder: (context, check, child) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      vnCheckBoxTerm3.value = !check;
-
-                                      if (vnCheckBoxTerm1.value && vnCheckBoxTerm2.value && vnCheckBoxTerm3.value) {
-                                        vnCheckBoxAll.value = true;
-                                      } else {
-                                        vnCheckBoxAll.value = false;
-                                      }
-                                    },
-                                    child: SvgPicture.asset(
-                                      check ? 'assets/icon/check-box_rectlagle.svg' : 'assets/icon/check-box_square.svg',
-                                    ),
-                                  );
-                                },
-                            ),
-                            Gaps.h10,
-                            Text('(선택) 개인정보 알람 및 주변 알람 동의', style: TS.s16w400(colorBlack)),
-                          ],
-                        ),
-                        // todo: complete push.
-                        const SizedBox(height: 294),
-                        ValueListenableBuilder<bool>(
-                          valueListenable: vnFormCheckNotifier,
-                          builder: (context, isFormCheck, child) {
-                            return GestureDetector(
-                              onTap: isFormCheck
-                                  ? () {
-                                // change
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (_) => RouteTerms(
-                                            pageController: widget.pageController,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  : null, // isFormCheck이 false면 아무 동작 없음
-                              child: ButtonAnimate(
-                                title: '다음',
-                                colorBg: isFormCheck ? colorGreen600 : colorGray500,
+                          ),
+                          Gaps.h10,
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async{
+                                final result = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                  builder: (_) => RouteTerms(isChecked: vnCheckBoxTerm1.value),
+                                  ),
+                                );
+                                if(result != null) {
+                                  print('result : $result');
+                                  vnCheckBoxTerm1.value = result;
+                                }else {
+                                  print('result 값이 없습니다.');
+                                }
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('(필수) 이용약관 동의', style: TS.s16w400(colorBlack)),
+                                  SvgPicture.asset('assets/icon/right_arrow.svg'),
+                                ],
                               ),
-                            );
-                          },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 18.5),
+                      Row(
+                        children: [
+                          ValueListenableBuilder<bool>(
+                              valueListenable: vnCheckBoxTerm2,
+                              builder: (context, check, child) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    vnCheckBoxTerm2.value = !check;
+
+                                    if (vnCheckBoxTerm1.value && vnCheckBoxTerm2.value && vnCheckBoxTerm3.value) {
+                                      vnCheckBoxAll.value = true;
+                                    } else {
+                                      vnCheckBoxAll.value = false;
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                    check ? 'assets/icon/check-box_rectlagle.svg' : 'assets/icon/check-box_square.svg',
+                                  ),
+                                );
+                              },
+                          ),
+                          Gaps.h10,
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () async{
+                                final result = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => RouteTerms(isChecked: vnCheckBoxTerm2.value),
+                                  ),
+                                );
+                                if(result != null) {
+                                  print('result : $result');
+                                  vnCheckBoxTerm2.value = result;
+                                }else {
+                                  print('result 값이 없습니다.');
+                                }
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('(필수) 개인정보 수집 및 이용 동의', style: TS.s16w400(colorBlack)),
+                                  SvgPicture.asset('assets/icon/right_arrow.svg'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 18.5),
+                      Row(
+                        children: [
+                          ValueListenableBuilder<bool>(
+                              valueListenable: vnCheckBoxTerm3,
+                              builder: (context, check, child) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    vnCheckBoxTerm3.value = !check;
+
+                                    if (vnCheckBoxTerm1.value && vnCheckBoxTerm2.value && vnCheckBoxTerm3.value) {
+                                      vnCheckBoxAll.value = true;
+                                    } else {
+                                      vnCheckBoxAll.value = false;
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                    check ? 'assets/icon/check-box_rectlagle.svg' : 'assets/icon/check-box_square.svg',
+                                  ),
+                                );
+                              },
+                          ),
+                          Gaps.h10,
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async{
+                              final result = await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => RouteTerms(isChecked: vnCheckBoxTerm3.value),
+                                ),
+                              );
+                              if(result != null) {
+                                print('result : $result');
+                                vnCheckBoxTerm3.value = result;
+                              }else {
+                                print('result 값이 없습니다.');
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('(선택) 개인정보 알람 및 주변 알람 동의', style: TS.s16w400(colorBlack)),
+                                SvgPicture.asset('assets/icon/right_arrow.svg'),
+                              ],
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
+                        ],
+                      ),
+                      // todo: Expanded로 column을 감싸서 다음 버튼 여백 설정 해야하는데, 잘 안돼서 spacer로 대체함.
+                      Spacer(),
+                      // todo: 푸시 팝 됐는데, 이상하게 동작함
+                      ValueListenableBuilder<bool>(
+                        valueListenable: vnFormCheckNotifier,
+                        builder: (context, isFormCheck, child) {
+                          return GestureDetector(
+                            onTap: isFormCheck
+                                ? () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+
+                              widget.pageController.animateToPage(
+                                2,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.linear,
+                              );
+                                  }
+                                : null, // isFormCheck이 false면 아무 동작 없음
+                            child: ButtonAnimate(
+                              title: '다음',
+                              colorBg: isFormCheck ? colorGreen600 : colorGray500,margin: EdgeInsets.symmetric(vertical: 16),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ],

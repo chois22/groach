@@ -12,6 +12,7 @@ class RouteAuthSignUp extends StatefulWidget {
 
 
 class _RouteAuthSignUpState extends State<RouteAuthSignUp> {
+  final ValueNotifier<int> vnIndexCurrent = ValueNotifier(0);
   final PageController pageController = PageController();
   final TextEditingController tecEmail = TextEditingController();
   final TextEditingController tecName = TextEditingController();
@@ -24,31 +25,42 @@ class _RouteAuthSignUpState extends State<RouteAuthSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: true,
-      onPopInvokedWithResult: (didPop, result) {
-
+    return ValueListenableBuilder(
+      valueListenable: vnIndexCurrent,
+      builder: (context, indexCurrent, child) {
+        print('-------------------');
+        print(indexCurrent);
+        print('-------------------');
+        return PopScope(
+          canPop:indexCurrent == 0 ?  true : false,
+          onPopInvokedWithResult: (didPop, result) {
+            if(indexCurrent != 0){
+              pageController.animateToPage(indexCurrent-1, duration: Duration(milliseconds: 300), curve: Curves.linear);
+            }
+          },
+          child: Scaffold(
+            //appBar: AppBar(automaticallyImplyLeading: false,),
+            body: SafeArea(child: PageView(
+              controller: pageController,
+              physics: NeverScrollableScrollPhysics(),
+              onPageChanged: (value) {
+                vnIndexCurrent.value=value;
+              },
+              children: [
+                PageSignUpUserInfo(
+                  pageController: pageController,
+                ),
+                PageSignUpTerms(
+                    pageController: pageController
+                ),
+                PageSignUpComplete(
+                  pageController: pageController,
+                ),
+              ],
+            ),),
+          ),
+        );
       },
-      child: Scaffold(
-        //appBar: AppBar(automaticallyImplyLeading: false,),
-        body: SafeArea(child: PageView(
-          controller: pageController,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            PageSignUpUserInfo(
-              pageController: pageController,
-            ),
-            //todo
-            /// push로 이동해야되는데 오류나서 방법을 모르겠음.
-            PageSignUpTerms(
-                pageController: pageController
-            ),
-            PageSignUpComplete(
-              pageController: pageController,
-            ),
-          ],
-        ),),
-      ),
     );
   }
 }
