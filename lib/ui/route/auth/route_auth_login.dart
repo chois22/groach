@@ -46,7 +46,10 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          // 앱바 화살표 표시 없애기
+          automaticallyImplyLeading: false,
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20),

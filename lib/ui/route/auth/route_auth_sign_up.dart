@@ -46,6 +46,7 @@ class _RouteAuthSignUpState extends State<RouteAuthSignUp> {
               onPageChanged: (value) {
                 vnIndexCurrent.value=value;
               },
+              // 회원가입 정보를 info, complete에 넘겨주기
               children: [
                 PageSignUpUserInfo(
                   pageController: pageController,

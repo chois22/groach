@@ -18,8 +18,6 @@ class PageSignUpComplete extends StatelessWidget {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        body: SafeArea(
           child: Column(
             children: [
               Expanded(
@@ -69,14 +67,12 @@ class PageSignUpComplete extends StatelessWidget {
                   );
                 },
                 child: ButtonAnimate(
-                  title: '다음',
+                  title: '메인 페이지로 이동',
                   colorBg: colorGreen600, margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                 ),
               ),
             ],
           ),
-        ),
-      ),
     );
   }
 }

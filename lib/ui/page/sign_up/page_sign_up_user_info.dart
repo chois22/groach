@@ -5,6 +5,7 @@ import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/button_confirm.dart';
+import 'package:practice1/ui/component/custom_appbar.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 
 class PageSignUpUserInfo extends StatefulWidget {
@@ -53,6 +54,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
       } else {}
     });
   }
+
 //todo : vn들 dispose 추가
   @override
   void dispose() {
@@ -81,19 +83,19 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
     tecPw.addListener(_checkFormField);
     tecPwCheck.addListener(_checkFormField);
 
+    // Scaffold랑 Appbar 지우기
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        appBar: AppBar(title: Text('회원가입', style: TS.s18w600(colorBlack)), toolbarHeight: 56),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                CustomAppbar(text: '회원가입'),
+                Expanded(
+                  child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +134,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                       height: 48,
                                       onTap: () {
                                         String email = tecEmail.text;
-                                        if (email.isNotEmpty) { // 이메일이 입력되었을 때만 체크
+                                        if (email.isNotEmpty) {
+                                          // 이메일이 입력되었을 때만 체크
                                           if (email == 'test@naver.com') {
                                             // 이메일이 사용 가능하면
                                             vnTecEmailMatch.value = true; // 유효한 이메일
@@ -148,6 +151,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                 ),
                               ],
                             ),
+
                             /// 이메일 사용 가능, 불가능 체크 텍스트
                             ValueListenableBuilder(
                               valueListenable: vnIsEmailCheck, // 중복확인 버튼을 눌렀는지 여부 확인
@@ -248,33 +252,34 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                     ),
                   ),
                 ),
-              ),
-              ValueListenableBuilder<bool>(
-                valueListenable: vnFormCheckNotifier,
-                builder: (context, isFormCheck, child) {
-                  return GestureDetector(
-                    onTap: isFormCheck
-                        ? () {
-                      FocusManager.instance.primaryFocus?.unfocus();
+                ValueListenableBuilder<bool>(
+                  valueListenable: vnFormCheckNotifier,
+                  builder: (context, isFormCheck, child) {
+                    return GestureDetector(
+                      onTap: isFormCheck
+                          ? () {
+                              FocusManager.instance.primaryFocus?.unfocus();
 
-                      widget.pageController.animateToPage(
-                        1,
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.linear,
-                      );
-                    }
-                        : null, // isFormCheck이 false면 아무 동작 없음
-                    child: ButtonAnimate(
-                      title: '다음',
-                      colorBg: isFormCheck ? colorGreen600 : colorGray500, margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                    ),
-                  );
-                },
-              ),
-            ],
+                              widget.pageController.animateToPage(
+                                1,
+                                duration: Duration(milliseconds: 300),
+                                curve: Curves.linear,
+                              );
+                            }
+                          : null, // isFormCheck이 false면 아무 동작 없음
+                      child: ButtonAnimate(
+                        title: '다음',
+                        colorBg: isFormCheck ? colorGreen600 : colorGray500,
+                        margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+
+
     );
   }
 

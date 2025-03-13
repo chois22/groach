@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/value/colors.dart';
 
 //todo: kjw : bottom navigation bar 만들기(complete)
-
+// pop안되도록 설정하기
 
 class RouteMain extends StatelessWidget {
   const RouteMain({super.key});
