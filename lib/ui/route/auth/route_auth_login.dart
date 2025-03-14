@@ -8,6 +8,7 @@ import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/component/custom_toast.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 import 'package:practice1/ui/page/find/page_find_id_confirm_email.dart';
+import 'package:practice1/ui/route/auth/route_auth_find_id.dart';
 import 'package:practice1/ui/route/auth/route_auth_sign_up.dart';
 import 'package:practice1/utils/utils.dart';
 
@@ -109,7 +110,7 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => PageFindIdConfirmEmail(),
+                            builder: (_) => RouteAuthFindId(),
                           ),
                         );
                       },

@@ -31,6 +31,7 @@ class _RouteAuthSignUpState extends State<RouteAuthSignUp> {
         print(indexCurrent);
         print('-------------------');
         return PopScope(
+          /// 0이 아닐 경우에만 뒤로 가기 가능, 0이 아니면 -1 이전 페이지 이동, 애니메이션 효과
           canPop:indexCurrent == 0 ?  true : false,
           onPopInvokedWithResult: (didPop, result) {
             if(indexCurrent != 0){

@@ -6,6 +6,7 @@ import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/button_confirm.dart';
 import 'package:practice1/ui/component/custom_appbar.dart';
+import 'package:practice1/ui/component/info_check_text.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 
 class PageSignUpUserInfo extends StatefulWidget {
@@ -178,7 +179,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                               builder: (context, isTecEmailMatch, child) {
                                 if (isTecEmailMatch) {
                                   // 이메일이 사용 가능할 때
-                                  return _InfoCheck(
+                                  return Infochecktext(
                                     iconPath: 'assets/icon/v_icon.svg',
                                     message: '사용 가능한 이메일 입니다.',
                                     textStyle: TS.s12w500(colorGreen500),
@@ -186,7 +187,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                 } else {
                                   // 이메일이 사용 중일 때, 중복확인 상태를 리셋
 
-                                  return _InfoCheck(
+                                  return Infochecktext(
                                     iconPath: 'assets/icon/!_icon.svg',
                                     message: '사용중인 이메일 입니다.',
                                     textStyle: TS.s12w500(Color(0XFFD4380D)),
@@ -246,13 +247,13 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                           return SizedBox.shrink(); // 아무것도 표시하지 않음
                         }
                         if (pwMatch) {
-                          return _InfoCheck(
+                          return Infochecktext(
                             iconPath: 'assets/icon/v_icon.svg',
                             message: '비밀번호가 일치합니다..',
                             textStyle: TS.s12w500(colorGreen500),
                           );
                         } else {
-                          return _InfoCheck(
+                          return Infochecktext(
                             iconPath: 'assets/icon/!_icon.svg',
                             message: '비밀번호가 일치하지 않습니다.',
                             textStyle: TS.s12w500(Color(0XFFD4380D)),
@@ -307,54 +308,3 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
   }
 }
 
-class _InfoCheck extends StatelessWidget {
-  final String iconPath;
-  final String message;
-  final TextStyle textStyle;
-
-  const _InfoCheck({
-    required this.iconPath,
-    required this.message,
-    required this.textStyle,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 2.0),
-          child: SvgPicture.asset(iconPath),
-        ),
-        Text(
-          message, // 메시지 텍스트
-          style: textStyle,
-        ),
-      ],
-    );
-  }
-}
-
-// import 'package:flutter/material.dart';
-//
-// class PageSignUpUserInfo extends StatefulWidget {
-//   final PageController pageController;
-//   const PageSignUpUserInfo({required this.pageController,super.key});
-//
-//   @override
-//   State<PageSignUpUserInfo> createState() => _PageSignUpUserInfoState();
-// }
-//
-// class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(children: [
-//       Text('asdf'),
-//
-//       ElevatedButton(onPressed: (){
-//         widget.pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.linear);
-//       }, child: Text('next')),
-//     ],);
-//   }
-// }

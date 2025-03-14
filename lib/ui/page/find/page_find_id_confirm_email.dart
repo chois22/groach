@@ -4,35 +4,44 @@ import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/button_confirm.dart';
+import 'package:practice1/ui/component/info_check_text.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 
 class PageFindIdConfirmEmail extends StatefulWidget {
-  const PageFindIdConfirmEmail({super.key});
+  final PageController pageController;
+  final TextEditingController tecEmail;
+
+  const PageFindIdConfirmEmail({
+    required this.pageController,
+    required this.tecEmail,
+    super.key,
+  });
 
   @override
   State<PageFindIdConfirmEmail> createState() => _PageFindIdConfirmEmailState();
 }
 
 class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
-  final TextEditingController tecEmail = TextEditingController();
-  final TextEditingController tecVerificationCode = TextEditingController();
+  final TextEditingController tecConfirmNumber = TextEditingController();
   final ValueNotifier<bool> vnIsEmailCheck = ValueNotifier<bool>(false);
 
   // 인증번호
-  final ValueNotifier<bool> vnVerificationCode = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> vnConfirmNumber = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> vnNumberMatch = ValueNotifier<bool>(false);
+  final ValueNotifier<String> vnMatchMessage = ValueNotifier<String>('');
 
   @override
   void initState() {
     super.initState();
-    tecEmail.addListener(() {
-      String email = tecEmail.text;
+    widget.tecEmail.addListener(() {
+      String email = widget.tecEmail.text;
       vnIsEmailCheck.value = email.isNotEmpty;
     });
   }
 
   @override
   void dispose() {
-    tecEmail.dispose();
+    widget.tecEmail.dispose();
     super.dispose();
   }
 
@@ -71,7 +80,7 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
                                   child: SizedBox(
                                     height: 48,
                                     child: TextFieldDefault(
-                                      controller: tecEmail,
+                                      controller: widget.tecEmail,
                                       hintText: '이메일 입력',
                                     ),
                                   ),
@@ -81,16 +90,16 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
                                   valueListenable: vnIsEmailCheck,
                                   builder: (context, isEmail, child) {
                                     return ButtonConfirm(
+                                      /// 시간 오버 되면 재요청으로 변경
                                       boxText: '인증요청',
                                       textStyle: TS.s16w500(isEmail ? colorWhite : colorGray500),
                                       boxColor: isEmail ? colorGreen600 : colorGray200,
                                       width: 87,
                                       height: 48,
                                       onTap: () {
-                                        String email = tecEmail.text;
+                                        String email = widget.tecEmail.text;
                                         if (email.isNotEmpty) {
-                                          print('인증요청');
-                                          vnVerificationCode.value = true;
+                                          vnConfirmNumber.value = true;
                                         }
                                       },
                                     );
@@ -99,15 +108,48 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
                               ],
                             ),
                             Gaps.v10,
+
+                            /// 시간초는 Stack으로 넣기, timer periodic 사용하기
                             ValueListenableBuilder<bool>(
-                              valueListenable: vnVerificationCode,
+                              valueListenable: vnConfirmNumber,
                               builder: (context, showSecondTextField, child) {
                                 return showSecondTextField
-                                    ? TextFieldDefault(
-                                  controller: tecVerificationCode,
-                                  hintText: '인증번호 입력',
-                                )
-                                    : SizedBox(); // showSecondTextField
+                                    ? Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          TextFieldDefault(
+                                            controller: tecConfirmNumber,
+                                            hintText: '인증번호 입력',
+                                            onChanged: (text) {
+                                              String serverVerificationCode = '1234';
+                                              if (text.isEmpty) {
+                                                vnMatchMessage.value = ''; // 입력이 없으면 메시지 비우기
+                                                vnNumberMatch.value = false; // 일치 여부 초기화
+                                              } else if (text == serverVerificationCode) {
+                                                vnNumberMatch.value = true;
+                                                vnMatchMessage.value = '인증번호가 일치합니다.';
+                                              } else {
+                                                vnNumberMatch.value = false;
+                                                vnMatchMessage.value = '인증번호가 일치하지 않습니다.';
+                                              }
+                                            },
+                                          ),
+                                          Gaps.v8,
+                                          ValueListenableBuilder<String>(
+                                            valueListenable: vnMatchMessage,
+                                            builder: (context, message, child) {
+                                              return message.isNotEmpty
+                                                  ? Infochecktext(
+                                                      iconPath: vnNumberMatch.value ? 'assets/icon/v_icon.svg' : 'assets/icon/!_icon.svg',
+                                                      message: message,
+                                                      textStyle: TS.s12w500(vnNumberMatch.value ? colorGreen500 : Color(0XFFD4380D)),
+                                                    )
+                                                  : SizedBox();
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox(); // showSecondTextField // showSecondTextField
                               },
                             ),
                           ],
@@ -117,9 +159,28 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
                   ),
                 ),
               ),
-              ButtonAnimate(
-                title: '다음',
-                colorBg: colorGreen600, margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              GestureDetector(
+                onTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  print('---------------------');
+                  print('이메일 값은 ? ${widget.tecEmail.text}');
+                  print('---------------------');
+                  widget.pageController.animateToPage(
+                    1,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.linear,
+                  );
+                },
+                child: ValueListenableBuilder(
+                  valueListenable: vnNumberMatch,
+                  builder: (context, check, child) {
+                    return ButtonAnimate(
+                      title: '다음',
+                      colorBg: check ? colorGreen600 : colorGray500,
+                      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -128,5 +189,3 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
     );
   }
 }
-
-
