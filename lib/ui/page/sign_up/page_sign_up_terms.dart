@@ -22,7 +22,6 @@ class PageSignUpTerms extends StatefulWidget {
   State<PageSignUpTerms> createState() => _PageSignUpTermsState();
 }
 
-//todo : vn들 dispose 추가
 class _PageSignUpTermsState extends State<PageSignUpTerms> {
   final ValueNotifier<bool> vnCheckBoxAll = ValueNotifier<bool>(false);
   final ValueNotifier<bool> vnCheckBoxTerm1 = ValueNotifier<bool>(false);

@@ -10,7 +10,6 @@ class RouteAuthSignUp extends StatefulWidget {
   State<RouteAuthSignUp> createState() => _RouteAuthSignUpState();
 }
 
-
 class _RouteAuthSignUpState extends State<RouteAuthSignUp> {
   final ValueNotifier<int> vnIndexCurrent = ValueNotifier(0);
   final PageController pageController = PageController();
@@ -44,18 +43,28 @@ class _RouteAuthSignUpState extends State<RouteAuthSignUp> {
               controller: pageController,
               physics: NeverScrollableScrollPhysics(),
               onPageChanged: (value) {
-                vnIndexCurrent.value=value;
+                vnIndexCurrent.value = value;
               },
               // 회원가입 정보를 info, complete에 넘겨주기
               children: [
                 PageSignUpUserInfo(
                   pageController: pageController,
+                  tecEmail: tecEmail,
+                  tecName: tecName,
+                  tecNickName: tecNickName,
+                  tecPw: tecPw,
+                  tecPwCheck: tecPwCheck,
                 ),
                 PageSignUpTerms(
                     pageController: pageController
                 ),
                 PageSignUpComplete(
                   pageController: pageController,
+                  tecEmail: tecEmail,
+                  tecName: tecName,
+                  tecNickName: tecNickName,
+                  tecPw: tecPw,
+                  tecPwCheck: tecPwCheck,
                 ),
               ],
             ),),
