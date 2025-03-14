@@ -98,6 +98,18 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
                                 ),
                               ],
                             ),
+                            Gaps.v10,
+                            ValueListenableBuilder<bool>(
+                              valueListenable: vnVerificationCode,
+                              builder: (context, showSecondTextField, child) {
+                                return showSecondTextField
+                                    ? TextFieldDefault(
+                                  controller: tecVerificationCode,
+                                  hintText: '인증번호 입력',
+                                )
+                                    : SizedBox(); // showSecondTextField
+                              },
+                            ),
                           ],
                         ),
                       ],
@@ -105,18 +117,6 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
                   ),
                 ),
               ),
-              ValueListenableBuilder<bool>(
-                valueListenable: vnVerificationCode,
-                builder: (context, showSecondTextField, child) {
-                  return showSecondTextField
-                      ? TextFieldDefault(
-                    controller: tecVerificationCode,
-                    hintText: '인증번호 입력',
-                  )
-                      : SizedBox(); // showSecondTextField
-                },
-              ),
-              const SizedBox(height: 418),
               ButtonAnimate(
                 title: '다음',
                 colorBg: colorGreen600, margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -128,3 +128,5 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
     );
   }
 }
+
+

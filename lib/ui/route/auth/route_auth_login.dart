@@ -7,7 +7,7 @@ import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/component/custom_toast.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
-import 'package:practice1/ui/page/find_id/page_find_id_confirm_email.dart';
+import 'package:practice1/ui/page/find/page_find_id_confirm_email.dart';
 import 'package:practice1/ui/route/auth/route_auth_sign_up.dart';
 import 'package:practice1/utils/utils.dart';
 
