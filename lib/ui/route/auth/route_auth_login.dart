@@ -14,10 +14,8 @@ import 'package:practice1/ui/route/route_main.dart';
 import 'package:practice1/utils/utils.dart';
 
 class RouteAuthLogin extends StatefulWidget {
-  final bool isPwChange;
 
   const RouteAuthLogin({
-    this.isPwChange = false,
     super.key,
   });
 
@@ -31,20 +29,6 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
   final ValueNotifier<bool> vnAuthLogin = ValueNotifier<bool>(false);
   final ValueNotifier<bool> vnFormCheckNotifier = ValueNotifier<bool>(false);
 
-  void initState() {
-    super.initState();
-
-    // isPwChange가 true일 때만 Toast 띄우기
-    if (widget.isPwChange) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Utils.toast(
-          context: context,
-          desc: '비밀번호가 변경되었어요. 다시 로그인해주세요.',
-          toastGravity: ToastGravity.TOP,
-        );
-      });
-    }
-  }
 
   @override
   void dispose() {

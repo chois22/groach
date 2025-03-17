@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:practice1/const/value/colors.dart';
+import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
@@ -26,13 +26,16 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
   final ValueNotifier<bool> vnTecPwMatch = ValueNotifier<bool>(false);
   final ValueNotifier<bool> vnFormCheckNotifier = ValueNotifier<bool>(false);
 
-  @override
+  final ValueNotifier<StatusOfPw> vnStatusOfPW = ValueNotifier(StatusOfPw.none);
+
+/*  @override
   void initState() {
     tecPw.addListener(_checkPasswordMatch);
     tecPwCheck.addListener(_checkPasswordMatch);
     _checkPasswordMatch();
     super.initState();
   }
+
   @override
   void dispose() {
     tecPw.dispose();
@@ -40,12 +43,12 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
     tecPw.removeListener(_checkPasswordMatch);
     tecPwCheck.removeListener(_checkPasswordMatch);
     super.dispose();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
-   tecPw.addListener(_checkFormField);
-   tecPwCheck.addListener(_checkFormField);
+/*    tecPw.addListener(_checkFormField);
+    tecPwCheck.addListener(_checkFormField);*/
 
     return GestureDetector(
       onTap: () {
@@ -75,6 +78,29 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
                         controller: tecPw,
                         hintText: '비밀번호 입력',
                         obscureText: true,
+                        onChanged: (text) {
+                          /// 비밀번호가 비어있을 때
+                          if (text.isEmpty) {
+                            vnStatusOfPW.value = StatusOfPw.none;
+
+                            /// 텍스트 적었을 때
+                          } else {
+                            if (tecPwCheck.text.isEmpty) {
+                              vnStatusOfPW.value = StatusOfPw.none;
+                              return;
+                            }
+
+                            /// tecPw == tecPwCheck
+                            if (text == tecPwCheck.text) {
+                              vnStatusOfPW.value = StatusOfPw.match;
+                            }
+
+                            /// 일치하지 않을 때
+                            else {
+                              vnStatusOfPW.value = StatusOfPw.not_match;
+                            }
+                          }
+                        },
                       ),
                     ),
                     Gaps.v10,
@@ -84,21 +110,47 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
                         controller: tecPwCheck,
                         hintText: '비밀번호 입력',
                         obscureText: true,
+                        onChanged: (text) {
+                          if (text.isEmpty) {
+                            vnStatusOfPW.value = StatusOfPw.none;
+
+                            /// 텍스트 적었을 때
+                          } else {
+                            if (tecPw.text.isEmpty) {
+                              vnStatusOfPW.value = StatusOfPw.none;
+                              return;
+                            }
+
+                            /// tecPw == tecPwCheck
+                            if (text == tecPw.text) {
+                              vnStatusOfPW.value = StatusOfPw.match;
+                            }
+
+                            /// 일치하지 않을 때
+                            else {
+                              vnStatusOfPW.value = StatusOfPw.not_match;
+                            }
+                          }
+                        },
                       ),
                     ),
                     Gaps.v10,
-                    ValueListenableBuilder<bool>(
-                      valueListenable: vnTecPwMatch,
-                      builder: (context, pwMatch, child) {
-                        if (tecPw.text.isEmpty && tecPwCheck.text.isEmpty) {
-                          return SizedBox.shrink(); // 아무것도 표시하지 않음
-                        }
-                        if (pwMatch) {
+                    ValueListenableBuilder(
+                      valueListenable: vnStatusOfPW,
+                      builder: (context, statusOfPw, child) {
+                        /// 아무것도 안보여줌
+                        if (statusOfPw == StatusOfPw.none) {
+                          return SizedBox.shrink();
+
+                          /// 일치 할 때
+                        } else if (statusOfPw == StatusOfPw.match) {
                           return InfoCheckText(
                             iconPath: 'assets/icon/v_icon.svg',
                             message: '비밀번호가 일치합니다.',
                             textStyle: TS.s12w500(colorGreen500),
                           );
+
+                          /// 일치핮지 않을 때
                         } else {
                           return InfoCheckText(
                             iconPath: 'assets/icon/!_icon.svg',
@@ -112,37 +164,44 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
                 ),
               ),
             ),
-            ValueListenableBuilder<bool>(
-              valueListenable: vnFormCheckNotifier,
-              builder: (context, isFormCheck, child) {
-                bool isPwMatch = tecPw.text == tecPwCheck.text;
-                bool isAllFormCheck = tecPw.text.isNotEmpty && tecPwCheck.text.isNotEmpty;
-                bool canActivateButton = isFormCheck && isPwMatch && isAllFormCheck;
-
+            ValueListenableBuilder<StatusOfPw>(
+              valueListenable: vnStatusOfPW,
+              builder: (context, statusOfPw, child) {
                 return GestureDetector(
-                  onTap: canActivateButton
+                  onTap: statusOfPw == StatusOfPw.match
                       ? () {
-                    FocusManager.instance.primaryFocus?.unfocus();
+                          FocusManager.instance.primaryFocus?.unfocus();
 
-                    bool isPwChange = true;  // 이 조건이 충족될 때만 로그인 화면에 값 전달
-
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => RouteAuthLogin(isPwChange: isPwChange), // 값을 전달
-                      ),
-                    );
-                  }
+                          Utils.toast(
+                            context: context,
+                            desc: '비밀번호를 다시 확인해주세요.',
+                            toastGravity: ToastGravity.CENTER,
+                          );
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => RouteAuthLogin(), // 값을 전달
+                            ),
+                          );
+                        }
                       : () {
-                    // isFormCheck이 false일 때, 버튼을 누를 수 없으므로 Toast 띄우기
-                    Utils.toast(
-                      context: context,
-                      desc: '비밀번호를 다시 확인해주세요.',
-                      toastGravity: ToastGravity.CENTER,
-                    );
-                  },
+                          /// 매치 아닐때
+                          if (statusOfPw == StatusOfPw.none) {
+                            Utils.toast(
+                              context: context,
+                              desc: '비밀번호를 입력해주세요.',
+                              toastGravity: ToastGravity.TOP,
+                            );
+                          } else {
+                            Utils.toast(
+                              context: context,
+                              desc: '비밀번호가 일치하지 않습니다.',
+                              toastGravity: ToastGravity.CENTER,
+                            );
+                          }
+                        },
                   child: ButtonAnimate(
                     title: '다음',
-                    colorBg: isFormCheck ? colorGreen600 : colorGray500,
+                    colorBg: statusOfPw == StatusOfPw.match ? colorGreen600 : colorGray500,
                     margin: EdgeInsets.symmetric(vertical: 16),
                   ),
                 );
@@ -153,20 +212,4 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
       ),
     );
   }
-  void _checkPasswordMatch() {
-    bool isMatch = tecPw.text == tecPwCheck.text;
-    vnTecPwMatch.value = isMatch;
-  }
-
-// 모든 칸이 입력됐는지 확인하는 변수
-  void _checkFormField() {
-    bool isAllCheck = tecPw.text.isNotEmpty && tecPwCheck.text.isNotEmpty;
-    bool isMatch = tecPw.text == tecPwCheck.text;
-
-    vnTecPwMatch.value = isMatch;
-
-    // 두 조건 모두 만족할 때만 true
-    vnFormCheckNotifier.value = isAllCheck && isMatch;
-  }
 }
-
