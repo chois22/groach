@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class Infochecktext extends StatelessWidget {
+class InfoCheckText extends StatelessWidget {
   final String iconPath;
   final String message;
   final TextStyle textStyle;
 
-  const Infochecktext({
+  const InfoCheckText({
     required this.iconPath,
     required this.message,
     required this.textStyle,

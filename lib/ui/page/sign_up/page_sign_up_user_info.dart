@@ -6,8 +6,10 @@ import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/button_confirm.dart';
 import 'package:practice1/ui/component/custom_appbar.dart';
+import 'package:practice1/ui/component/custom_toast.dart';
 import 'package:practice1/ui/component/info_check_text.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
+import 'package:practice1/utils/utils.dart';
 
 class PageSignUpUserInfo extends StatefulWidget {
   final PageController pageController;
@@ -32,11 +34,11 @@ class PageSignUpUserInfo extends StatefulWidget {
 }
 
 class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
- // final TextEditingController tecEmail = TextEditingController();
- // final TextEditingController tecName = TextEditingController();
- // final TextEditingController tecNickName = TextEditingController();
- // final TextEditingController tecPw = TextEditingController();
- // final TextEditingController tecPwCheck = TextEditingController();
+  // final TextEditingController tecEmail = TextEditingController();
+  // final TextEditingController tecName = TextEditingController();
+  // final TextEditingController tecNickName = TextEditingController();
+  // final TextEditingController tecPw = TextEditingController();
+  // final TextEditingController tecPwCheck = TextEditingController();
 
   // 비밀번호 일치 하는지 체크
   final ValueNotifier<bool> vnTecPwMatch = ValueNotifier<bool>(false);
@@ -179,7 +181,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                               builder: (context, isTecEmailMatch, child) {
                                 if (isTecEmailMatch) {
                                   // 이메일이 사용 가능할 때
-                                  return Infochecktext(
+                                  return InfoCheckText(
                                     iconPath: 'assets/icon/v_icon.svg',
                                     message: '사용 가능한 이메일 입니다.',
                                     textStyle: TS.s12w500(colorGreen500),
@@ -187,7 +189,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                 } else {
                                   // 이메일이 사용 중일 때, 중복확인 상태를 리셋
 
-                                  return Infochecktext(
+                                  return InfoCheckText(
                                     iconPath: 'assets/icon/!_icon.svg',
                                     message: '사용중인 이메일 입니다.',
                                     textStyle: TS.s12w500(Color(0XFFD4380D)),
@@ -216,7 +218,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                     SizedBox(
                       height: 48,
                       child: TextFieldDefault(
-                        controller:  widget.tecNickName,
+                        controller: widget.tecNickName,
                         hintText: '닉네임 입력',
                       ),
                     ),
@@ -235,25 +237,26 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                     SizedBox(
                       height: 48,
                       child: TextFieldDefault(
-                        controller:  widget.tecPwCheck,
+                        controller: widget.tecPwCheck,
                         hintText: '비밀번호 재입력',
                         obscureText: true,
                       ),
                     ),
+                    Gaps.v10,
                     ValueListenableBuilder<bool>(
                       valueListenable: vnTecPwMatch,
                       builder: (context, pwMatch, child) {
-                        if (widget.tecPw.text.isEmpty || widget.tecPwCheck.text.isEmpty) {
+                        if (widget.tecPw.text.isEmpty && widget.tecPwCheck.text.isEmpty) {
                           return SizedBox.shrink(); // 아무것도 표시하지 않음
                         }
                         if (pwMatch) {
-                          return Infochecktext(
+                          return InfoCheckText(
                             iconPath: 'assets/icon/v_icon.svg',
                             message: '비밀번호가 일치합니다..',
                             textStyle: TS.s12w500(colorGreen500),
                           );
                         } else {
-                          return Infochecktext(
+                          return InfoCheckText(
                             iconPath: 'assets/icon/!_icon.svg',
                             message: '비밀번호가 일치하지 않습니다.',
                             textStyle: TS.s12w500(Color(0XFFD4380D)),
@@ -268,8 +271,12 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
             ValueListenableBuilder<bool>(
               valueListenable: vnFormCheckNotifier,
               builder: (context, isFormCheck, child) {
+                bool isPwMatch = widget.tecPw.text == widget.tecPwCheck.text;
+                bool isAllFormCheck = widget.tecPw.text.isNotEmpty && widget.tecPwCheck.text.isNotEmpty;
+                bool canActivateButton = isFormCheck && isPwMatch && isAllFormCheck;
+
                 return GestureDetector(
-                  onTap: isFormCheck
+                  onTap: canActivateButton
                       ? () {
                           FocusManager.instance.primaryFocus?.unfocus();
 
@@ -279,7 +286,23 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                             curve: Curves.linear,
                           );
                         }
-                      : null, // isFormCheck이 false면 아무 동작 없음
+                      : () {
+                    // isFormCheck이 false일 때, 모든 정보를 입력하지 않으면 Toast 띄우기
+                    if (!isAllFormCheck) {
+                      Utils.toast(
+                        context: context,
+                        desc: '모든 정보를 입력해주세요.',
+                        toastGravity: ToastGravity.CENTER,
+                      );
+                    } else if (!isPwMatch) {
+                      // 비밀번호가 일치하지 않으면 Toast 띄우기
+                      Utils.toast(
+                        context: context,
+                        desc: '비밀번호를 확인해 주세요.',
+                        toastGravity: ToastGravity.CENTER,
+                      );
+                    }
+                  }, // isFormCheck이 false면 아무 동작 없음
                   child: ButtonAnimate(
                     title: '다음',
                     colorBg: isFormCheck ? colorGreen600 : colorGray500,
@@ -302,9 +325,13 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
 
   // 모든 칸이 입력됐는지 확인하는 변수
   void _checkFormField() {
-    bool isCheck = widget.tecName.text.isNotEmpty && widget.tecNickName.text.isNotEmpty && widget.tecPw.text.isNotEmpty && widget.tecPwCheck.text.isNotEmpty;
+    bool isCheck = widget.tecName.text.isNotEmpty &&
+        widget.tecNickName.text.isNotEmpty &&
+        widget.tecPw.text.isNotEmpty &&
+        widget.tecPwCheck.text.isNotEmpty;
 
     vnFormCheckNotifier.value = isCheck;
+
+    _checkPasswordMatch();
   }
 }
-

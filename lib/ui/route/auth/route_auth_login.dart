@@ -7,13 +7,19 @@ import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/component/custom_toast.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
-import 'package:practice1/ui/page/find/page_find_id_confirm_email.dart';
 import 'package:practice1/ui/route/auth/route_auth_find_id.dart';
+import 'package:practice1/ui/route/auth/route_auth_find_pw.dart';
 import 'package:practice1/ui/route/auth/route_auth_sign_up.dart';
+import 'package:practice1/ui/route/route_main.dart';
 import 'package:practice1/utils/utils.dart';
 
 class RouteAuthLogin extends StatefulWidget {
-  const RouteAuthLogin({super.key});
+  final bool isPwChange;
+
+  const RouteAuthLogin({
+    this.isPwChange = false,
+    super.key,
+  });
 
   @override
   State<RouteAuthLogin> createState() => _RouteAuthLoginState();
@@ -24,6 +30,21 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
   final TextEditingController tecPw = TextEditingController();
   final ValueNotifier<bool> vnAuthLogin = ValueNotifier<bool>(false);
   final ValueNotifier<bool> vnFormCheckNotifier = ValueNotifier<bool>(false);
+
+  void initState() {
+    super.initState();
+
+    // isPwChange가 true일 때만 Toast 띄우기
+    if (widget.isPwChange) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Utils.toast(
+          context: context,
+          desc: '비밀번호가 변경되었어요. 다시 로그인해주세요.',
+          toastGravity: ToastGravity.TOP,
+        );
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -83,8 +104,15 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
                 /// 초록색 로그인 버튼
                 GestureDetector(
                   onTap: () {
-                    print('다음 버튼 터치');
-                    Utils.toast(context: context, desc: 'test',toastGravity: ToastGravity.BOTTOM);
+                    if(vnFormCheckNotifier.value = true){
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => RouteMain(),
+                        ),
+                      );
+                    } else {
+                      print('다음 버튼 터치');
+                    }
                   },
                   child: ValueListenableBuilder<bool>(
                     valueListenable: vnFormCheckNotifier,
@@ -121,7 +149,13 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
                     //todo: put sldkfj
                     /// 비밀번호 찾기
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => RouteAuthFindPw(),
+                          ),
+                        );
+                      },
                       child: _TextContainer(loginAuthText: '비밀번호 찾기'),
                     ),
                     const Text('|', style: TS.s13w400(colorGray400)),

@@ -4,6 +4,7 @@ import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/button_confirm.dart';
+import 'package:practice1/ui/component/custom_appbar.dart';
 import 'package:practice1/ui/component/info_check_text.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 import 'dart:async';
@@ -57,17 +58,13 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('아이디 찾기', style: TS.s18w600(colorBlack)),
-        ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                CustomAppbar(text: '아이디 찾기'),
+                Expanded(
+                  child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -166,7 +163,7 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
                                             valueListenable: vnMatchMessage,
                                             builder: (context, message, child) {
                                               return message.isNotEmpty
-                                                  ? Infochecktext(
+                                                  ? InfoCheckText(
                                                       iconPath: vnNumberMatch.value ? 'assets/icon/v_icon.svg' : 'assets/icon/!_icon.svg',
                                                       message: message,
                                                       textStyle: TS.s12w500(vnNumberMatch.value ? colorGreen500 : Color(0XFFD4380D)),
@@ -185,34 +182,33 @@ class _PageFindIdConfirmEmailState extends State<PageFindIdConfirmEmail> {
                     ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  print('---------------------');
-                  print('이메일 값은 ? ${widget.tecEmail.text}');
-                  print('---------------------');
-                  widget.pageController.animateToPage(
-                    1,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.linear,
-                  );
-                },
-                child: ValueListenableBuilder(
-                  valueListenable: vnNumberMatch,
-                  builder: (context, check, child) {
-                    return ButtonAnimate(
-                      title: '다음',
-                      colorBg: check ? colorGreen600 : colorGray500,
-                      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                GestureDetector(
+                  onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    print('---------------------');
+                    print('이메일 값은 ? ${widget.tecEmail.text}');
+                    print('---------------------');
+                    widget.pageController.animateToPage(
+                      1,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.linear,
                     );
                   },
+                  child: ValueListenableBuilder(
+                    valueListenable: vnNumberMatch,
+                    builder: (context, check, child) {
+                      return ButtonAnimate(
+                        title: '다음',
+                        colorBg: check ? colorGreen600 : colorGray500,
+                        margin: EdgeInsets.symmetric(vertical: 16),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+
     );
   }
 }
@@ -233,7 +229,7 @@ class _TimerPeriodic extends StatefulWidget {
 }
 
 class _TimerPeriodicState extends State<_TimerPeriodic> {
-  final ValueNotifier<int> remainingSeconds = ValueNotifier<int>(5);
+  final ValueNotifier<int> remainingSeconds = ValueNotifier<int>(180);
 
   // final ValueNotifier<String> vnRequestButtonText = ValueNotifier<String>('인증요청');
   Timer? _timer;
@@ -248,7 +244,7 @@ class _TimerPeriodicState extends State<_TimerPeriodic> {
   /// 타이머 시작
   void startTimer() {
     _timer?.cancel(); // 기존 타이머 취소
-    remainingSeconds.value = 5; // 3분 리셋
+    remainingSeconds.value = 180; // 3분 리셋
 
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (remainingSeconds.value == 0) {
