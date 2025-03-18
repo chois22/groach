@@ -22,34 +22,11 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
   final TextEditingController tecPw = TextEditingController();
   final TextEditingController tecPwCheck = TextEditingController();
 
-  // 비밀번호 매칭 확인용
-  final ValueNotifier<bool> vnTecPwMatch = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> vnFormCheckNotifier = ValueNotifier<bool>(false);
-
-  final ValueNotifier<StatusOfPw> vnStatusOfPW = ValueNotifier(StatusOfPw.none);
-
-/*  @override
-  void initState() {
-    tecPw.addListener(_checkPasswordMatch);
-    tecPwCheck.addListener(_checkPasswordMatch);
-    _checkPasswordMatch();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    tecPw.dispose();
-    tecPwCheck.dispose();
-    tecPw.removeListener(_checkPasswordMatch);
-    tecPwCheck.removeListener(_checkPasswordMatch);
-    super.dispose();
-  }*/
+  // enum을 이용한 비밀번호 체크
+  final ValueNotifier<StatusOfPw> vnStatusOfPw = ValueNotifier(StatusOfPw.none);
 
   @override
   Widget build(BuildContext context) {
-/*    tecPw.addListener(_checkFormField);
-    tecPwCheck.addListener(_checkFormField);*/
-
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -81,23 +58,23 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
                         onChanged: (text) {
                           /// 비밀번호가 비어있을 때
                           if (text.isEmpty) {
-                            vnStatusOfPW.value = StatusOfPw.none;
+                            vnStatusOfPw.value = StatusOfPw.none;
 
                             /// 텍스트 적었을 때
                           } else {
                             if (tecPwCheck.text.isEmpty) {
-                              vnStatusOfPW.value = StatusOfPw.none;
+                              vnStatusOfPw.value = StatusOfPw.none;
                               return;
                             }
 
                             /// tecPw == tecPwCheck
                             if (text == tecPwCheck.text) {
-                              vnStatusOfPW.value = StatusOfPw.match;
+                              vnStatusOfPw.value = StatusOfPw.match;
                             }
 
                             /// 일치하지 않을 때
                             else {
-                              vnStatusOfPW.value = StatusOfPw.not_match;
+                              vnStatusOfPw.value = StatusOfPw.not_match;
                             }
                           }
                         },
@@ -112,23 +89,23 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
                         obscureText: true,
                         onChanged: (text) {
                           if (text.isEmpty) {
-                            vnStatusOfPW.value = StatusOfPw.none;
+                            vnStatusOfPw.value = StatusOfPw.none;
 
                             /// 텍스트 적었을 때
                           } else {
                             if (tecPw.text.isEmpty) {
-                              vnStatusOfPW.value = StatusOfPw.none;
+                              vnStatusOfPw.value = StatusOfPw.none;
                               return;
                             }
 
                             /// tecPw == tecPwCheck
                             if (text == tecPw.text) {
-                              vnStatusOfPW.value = StatusOfPw.match;
+                              vnStatusOfPw.value = StatusOfPw.match;
                             }
 
                             /// 일치하지 않을 때
                             else {
-                              vnStatusOfPW.value = StatusOfPw.not_match;
+                              vnStatusOfPw.value = StatusOfPw.not_match;
                             }
                           }
                         },
@@ -136,7 +113,7 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
                     ),
                     Gaps.v10,
                     ValueListenableBuilder(
-                      valueListenable: vnStatusOfPW,
+                      valueListenable: vnStatusOfPw,
                       builder: (context, statusOfPw, child) {
                         /// 아무것도 안보여줌
                         if (statusOfPw == StatusOfPw.none) {
@@ -165,7 +142,7 @@ class _PageFindPwChangeState extends State<PageFindPwChange> {
               ),
             ),
             ValueListenableBuilder<StatusOfPw>(
-              valueListenable: vnStatusOfPW,
+              valueListenable: vnStatusOfPw,
               builder: (context, statusOfPw, child) {
                 return GestureDetector(
                   onTap: statusOfPw == StatusOfPw.match

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/value/colors.dart';
+import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
@@ -34,21 +35,15 @@ class PageSignUpUserInfo extends StatefulWidget {
 }
 
 class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
-  // final TextEditingController tecEmail = TextEditingController();
-  // final TextEditingController tecName = TextEditingController();
-  // final TextEditingController tecNickName = TextEditingController();
-  // final TextEditingController tecPw = TextEditingController();
-  // final TextEditingController tecPwCheck = TextEditingController();
-
-  // 비밀번호 일치 하는지 체크
-  final ValueNotifier<bool> vnTecPwMatch = ValueNotifier<bool>(false);
+  // enum을 이용한 비밀번호 체크
+  final ValueNotifier<StatusOfPw> vnStatusOfPw = ValueNotifier(StatusOfPw.none);
 
   // 이메일을 입력 했을 때, 중복확인 버튼 활성화
   final ValueNotifier<bool> vnIsEmailCheck = ValueNotifier<bool>(false);
   final ValueNotifier<bool> vnTecEmailMatch = ValueNotifier<bool>(false);
 
   // 빈칸이 없을 때 다음 버튼 활성화
-  final ValueNotifier<bool> vnFormCheckNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> vnFormCheck = ValueNotifier<bool>(false);
 
   void _resetEmailStatus() {
     vnIsEmailCheck.value = false;
@@ -58,8 +53,6 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
   @override
   void initState() {
     super.initState();
-    widget.tecPw.addListener(_checkPasswordMatch);
-    widget.tecPwCheck.addListener(_checkPasswordMatch);
     widget.tecEmail.addListener(() {
       String email = widget.tecEmail.text;
 
@@ -79,13 +72,10 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
     widget.tecNickName.dispose();
     widget.tecPw.dispose();
     widget.tecPwCheck.dispose();
-    widget.tecPw.removeListener(_checkPasswordMatch);
-    widget.tecPwCheck.removeListener(_checkPasswordMatch);
 
-    vnTecPwMatch.dispose();
     vnIsEmailCheck.dispose();
     vnTecEmailMatch.dispose();
-    vnFormCheckNotifier.dispose();
+    vnFormCheck.dispose();
     super.dispose();
   }
 
@@ -231,6 +221,26 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                         controller: widget.tecPw,
                         hintText: '비밀번호 입력',
                         obscureText: true, // 비밀번호 ***표시
+                        onChanged: (text) {
+                          /// 비밀번호가 비어있을 때
+                          if (text.isEmpty) {
+                            vnStatusOfPw.value = StatusOfPw.none;
+                            /// 텍스트 적었을 때
+                          } else {
+                            if (widget.tecPwCheck.text.isEmpty) {
+                              vnStatusOfPw.value = StatusOfPw.none;
+                              return;
+                            }
+                            /// tecPw == tecPwCheck
+                            if (text == widget.tecPwCheck.text) {
+                              vnStatusOfPw.value = StatusOfPw.match;
+                            }
+                            /// 일치하지 않을 때
+                            else {
+                              vnStatusOfPw.value = StatusOfPw.not_match;
+                            }
+                          }
+                        },
                       ),
                     ),
                     Gaps.v8,
@@ -240,21 +250,45 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                         controller: widget.tecPwCheck,
                         hintText: '비밀번호 재입력',
                         obscureText: true,
+                        onChanged: (text) {
+                          if (text.isEmpty) {
+                            vnStatusOfPw.value = StatusOfPw.none;
+                            /// 텍스트 적었을 때
+                          } else {
+                            if (widget.tecPw.text.isEmpty) {
+                              vnStatusOfPw.value = StatusOfPw.none;
+                              return;
+                            }
+                            /// tecPw == tecPwCheck
+                            if (text == widget.tecPw.text) {
+                              vnStatusOfPw.value = StatusOfPw.match;
+                            }
+                            /// 일치하지 않을 때
+                            else {
+                              vnStatusOfPw.value = StatusOfPw.not_match;
+                            }
+                          }
+                        },
                       ),
                     ),
                     Gaps.v10,
-                    ValueListenableBuilder<bool>(
-                      valueListenable: vnTecPwMatch,
-                      builder: (context, pwMatch, child) {
-                        if (widget.tecPw.text.isEmpty && widget.tecPwCheck.text.isEmpty) {
-                          return SizedBox.shrink(); // 아무것도 표시하지 않음
-                        }
-                        if (pwMatch) {
+                    // 비밀번호 체크
+                    ValueListenableBuilder<StatusOfPw>(
+                      valueListenable: vnStatusOfPw,
+                      builder: (context, statusOfPw, child) {
+                        /// 아무것도 안보여줌
+                        if (statusOfPw == StatusOfPw.none) {
+                          return SizedBox.shrink();
+
+                          /// 일치 할 때
+                        } else if (statusOfPw == StatusOfPw.match) {
                           return InfoCheckText(
                             iconPath: 'assets/icon/v_icon.svg',
-                            message: '비밀번호가 일치합니다..',
+                            message: '비밀번호가 일치합니다.',
                             textStyle: TS.s12w500(colorGreen500),
                           );
+
+                          /// 일치핮지 않을 때
                         } else {
                           return InfoCheckText(
                             iconPath: 'assets/icon/!_icon.svg',
@@ -268,8 +302,9 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                 ),
               ),
             ),
+
             ValueListenableBuilder<bool>(
-              valueListenable: vnFormCheckNotifier,
+              valueListenable: vnFormCheck,
               builder: (context, isFormCheck, child) {
                 bool isPwMatch = widget.tecPw.text == widget.tecPwCheck.text;
                 bool isAllFormCheck = widget.tecPw.text.isNotEmpty && widget.tecPwCheck.text.isNotEmpty;
@@ -287,22 +322,13 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                           );
                         }
                       : () {
-                    // isFormCheck이 false일 때, 모든 정보를 입력하지 않으면 Toast 띄우기
-                    if (!isAllFormCheck) {
-                      Utils.toast(
-                        context: context,
-                        desc: '모든 정보를 입력해주세요.',
-                        toastGravity: ToastGravity.CENTER,
-                      );
-                    } else if (!isPwMatch) {
-                      // 비밀번호가 일치하지 않으면 Toast 띄우기
-                      Utils.toast(
-                        context: context,
-                        desc: '비밀번호를 확인해 주세요.',
-                        toastGravity: ToastGravity.CENTER,
-                      );
-                    }
-                  }, // isFormCheck이 false면 아무 동작 없음
+                          // isFormCheck이 false일 때, 버튼을 누를 수 없으므로 Toast 띄우기
+                          Utils.toast(
+                            context: context,
+                            desc: '모든 정보를 입력해주세요.',
+                            toastGravity: ToastGravity.CENTER,
+                          );
+                        }, // isFormCheck이 false면 아무 동작 없음
                   child: ButtonAnimate(
                     title: '다음',
                     colorBg: isFormCheck ? colorGreen600 : colorGray500,
@@ -317,12 +343,6 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
     );
   }
 
-  // 비밀번호와 비밀번호 확인이 일치하는지 확인하는 함수
-  void _checkPasswordMatch() {
-    bool isMatch = widget.tecPw.text == widget.tecPwCheck.text;
-    vnTecPwMatch.value = isMatch;
-  }
-
   // 모든 칸이 입력됐는지 확인하는 변수
   void _checkFormField() {
     bool isCheck = widget.tecName.text.isNotEmpty &&
@@ -330,8 +350,6 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
         widget.tecPw.text.isNotEmpty &&
         widget.tecPwCheck.text.isNotEmpty;
 
-    vnFormCheckNotifier.value = isCheck;
-
-    _checkPasswordMatch();
+    vnFormCheck.value = isCheck;
   }
 }

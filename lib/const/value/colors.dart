@@ -5,6 +5,7 @@ const colorWhite = Color(0xFFFFFFFF);
 const colorBlack = Color(0xFF000000);
 const colorRed = Color(0xFFD4380D);
 final colorGrayShadow70 = const Color(0xFF000000).withValues(alpha: 0.7);
+final colorWhiteShadow60 = const Color(0xFFFFFFFF).withValues(alpha: 0.6);
 
 /// Gray Scale
 const colorGray50 = Color(0xFFF7F8F9);
