@@ -306,29 +306,32 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
             ValueListenableBuilder<bool>(
               valueListenable: vnFormCheck,
               builder: (context, isFormCheck, child) {
-                bool isPwMatch = widget.tecPw.text == widget.tecPwCheck.text;
-                bool isAllFormCheck = widget.tecPw.text.isNotEmpty && widget.tecPwCheck.text.isNotEmpty;
-                bool canActivateButton = isFormCheck && isPwMatch && isAllFormCheck;
-
                 return GestureDetector(
-                  onTap: canActivateButton
-                      ? () {
-                          FocusManager.instance.primaryFocus?.unfocus();
+                  onTap: (){
+                    if(widget.tecEmail.text.isEmpty){
+                      Utils.toast(context: context, desc: '이메일을 입력해주세요.');
+                      return;
+                    }
+                    if(widget.tecName.text.isEmpty){
+                      Utils.toast(context: context, desc: '이름을 입력해주세요.');
+                      return;
+                    }
+                    if(widget.tecNickName.text.isEmpty){
+                      Utils.toast(context: context, desc: '닉네임을 입력해주세요.');
+                      return;
+                    }
+                    if(vnStatusOfPw.value == StatusOfPw.none){
+                      Utils.toast(context: context, desc: '비밀번호를 입력해주세요.');
+                      return;
+                    }
+                    if(vnStatusOfPw.value == StatusOfPw.not_match){
+                      Utils.toast(context: context, desc: '비밀번호를 확인해주세요.');
+                      return;
+                    }
+                    FocusManager.instance.primaryFocus?.unfocus();
 
-                          widget.pageController.animateToPage(
-                            1,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.linear,
-                          );
-                        }
-                      : () {
-                          // isFormCheck이 false일 때, 버튼을 누를 수 없으므로 Toast 띄우기
-                          Utils.toast(
-                            context: context,
-                            desc: '모든 정보를 입력해주세요.',
-                            toastGravity: ToastGravity.CENTER,
-                          );
-                        }, // isFormCheck이 false면 아무 동작 없음
+                    widget.pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.linear);
+                  },
                   child: ButtonAnimate(
                     title: '다음',
                     colorBg: isFormCheck ? colorGreen600 : colorGray500,
