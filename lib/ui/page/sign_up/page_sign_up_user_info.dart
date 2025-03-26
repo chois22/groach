@@ -10,6 +10,8 @@ import 'package:practice1/ui/component/custom_appbar.dart';
 import 'package:practice1/ui/component/custom_toast.dart';
 import 'package:practice1/ui/component/info_check_text.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
+import 'package:practice1/ui/dialog/dialog_confirm.dart';
+import 'package:practice1/ui/dialog/dialog_show.dart';
 import 'package:practice1/utils/utils.dart';
 
 class PageSignUpUserInfo extends StatefulWidget {
@@ -225,16 +227,19 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                           /// 비밀번호가 비어있을 때
                           if (text.isEmpty) {
                             vnStatusOfPw.value = StatusOfPw.none;
+
                             /// 텍스트 적었을 때
                           } else {
                             if (widget.tecPwCheck.text.isEmpty) {
                               vnStatusOfPw.value = StatusOfPw.none;
                               return;
                             }
+
                             /// tecPw == tecPwCheck
                             if (text == widget.tecPwCheck.text) {
                               vnStatusOfPw.value = StatusOfPw.match;
                             }
+
                             /// 일치하지 않을 때
                             else {
                               vnStatusOfPw.value = StatusOfPw.not_match;
@@ -253,16 +258,19 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                         onChanged: (text) {
                           if (text.isEmpty) {
                             vnStatusOfPw.value = StatusOfPw.none;
+
                             /// 텍스트 적었을 때
                           } else {
                             if (widget.tecPw.text.isEmpty) {
                               vnStatusOfPw.value = StatusOfPw.none;
                               return;
                             }
+
                             /// tecPw == tecPwCheck
                             if (text == widget.tecPw.text) {
                               vnStatusOfPw.value = StatusOfPw.match;
                             }
+
                             /// 일치하지 않을 때
                             else {
                               vnStatusOfPw.value = StatusOfPw.not_match;
@@ -302,30 +310,38 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                 ),
               ),
             ),
-
             ValueListenableBuilder<bool>(
               valueListenable: vnFormCheck,
               builder: (context, isFormCheck, child) {
                 return GestureDetector(
-                  onTap: (){
-                    if(widget.tecEmail.text.isEmpty){
+                  onTap: () async {
+                    if (widget.tecEmail.text.isEmpty) {
                       Utils.toast(context: context, desc: '이메일을 입력해주세요.');
                       return;
                     }
-                    if(widget.tecName.text.isEmpty){
+                    if (widget.tecName.text.isEmpty) {
                       Utils.toast(context: context, desc: '이름을 입력해주세요.');
                       return;
                     }
-                    if(widget.tecNickName.text.isEmpty){
+                    if (widget.tecNickName.text.isEmpty) {
                       Utils.toast(context: context, desc: '닉네임을 입력해주세요.');
                       return;
                     }
-                    if(vnStatusOfPw.value == StatusOfPw.none){
-                      Utils.toast(context: context, desc: '비밀번호를 입력해주세요.');
+                    // if(vnStatusOfPw.value == StatusOfPw.none){
+                    //   Utils.toast(context: context, desc: '비밀번호를 입력해주세요.');
+                    //   return;
+                    // }
+                    // if(vnStatusOfPw.value == StatusOfPw.not_match){
+                    //   Utils.toast(context: context, desc: '비밀번호를 확인해주세요.');
+                    //   return;
+                    // }
+                    if (vnStatusOfPw.value == StatusOfPw.none) {
+                      await DialogShow2.showDialogLine2(context, '비밀번호를 입력해주세요.비밀번호를 입력해주세요.');
                       return;
                     }
-                    if(vnStatusOfPw.value == StatusOfPw.not_match){
-                      Utils.toast(context: context, desc: '비밀번호를 확인해주세요.');
+
+                    if (vnStatusOfPw.value == StatusOfPw.not_match) {
+                      await DialogShow1.showDialogLine1(context, '비밀번호를 확인해주세요.');
                       return;
                     }
                     FocusManager.instance.primaryFocus?.unfocus();

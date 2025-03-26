@@ -19,26 +19,27 @@ class CardProgramGrid extends StatelessWidget {
       children: [
         Stack(
           children: [
-            Container(
-              width: 160,
-              // 각 컨테이너의 너비
-              height: 160,
-              // 각 컨테이너의 높이
-              margin: EdgeInsets.only(right: 0),
-              // 각 컨테이너 간 간격
-              decoration: BoxDecoration(
-                color: Colors.teal[(index + 1) * 100], // 색상 변형
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  'Item $index',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+            // 비율 설정
+            AspectRatio(
+              aspectRatio: 1 / 1,
+              child: Container(
+                margin: EdgeInsets.only(right: 0),
+                // 각 컨테이너 간 간격
+                decoration: BoxDecoration(
+                  color: Colors.teal[(index + 1) * 100], // 색상 변형
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Text(
+                    'Item $index',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 110, top: 10), // 좌측 10, 상단 10
+            Positioned(
+              top: 10,
+              right: 10,
               child: Container(
                 height: 40,
                 width: 40,
@@ -72,7 +73,12 @@ class CardProgramGrid extends StatelessWidget {
         ),
         Gaps.v8,
         Text('프로그램명', style: TS.s13w500(colorGray600)),
-        Text('간단한 설명을 입력하는 칸입\n니다. 두줄까지 채워집니다.', style: TS.s13w500(colorGray600)),
+        Text(
+          '간단한 설명을 입력하는 칸입니다. 두줄까지 채워집니다.',
+          style: TS.s13w500(colorGray600),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
         Row(
           children: [
             Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
