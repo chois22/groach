@@ -15,12 +15,14 @@ import 'package:practice1/ui/tab/tab_search.dart';
 class RouteMain extends StatefulWidget {
   const RouteMain({super.key});
 
+  static ValueNotifier<int> vnIndexTab = ValueNotifier(0);
+
   @override
   State<RouteMain> createState() => _RouteMainState();
 }
 
 class _RouteMainState extends State<RouteMain> {
-  final ValueNotifier<int> vnIndexTab = ValueNotifier(0);
+  //final ValueNotifier<int> vnIndexTab = ValueNotifier(0);
   final ScrollController scrollController = ScrollController();
   List<String> listIcons = [
     'assets/icon/home_outline.svg',
@@ -44,7 +46,7 @@ class _RouteMainState extends State<RouteMain> {
             ),
           ),
           child: ValueListenableBuilder(
-            valueListenable: vnIndexTab,
+            valueListenable: RouteMain.vnIndexTab,
             builder: (context, indexTab, child) {
               return Row(
                 children: List.generate(
@@ -54,7 +56,7 @@ class _RouteMainState extends State<RouteMain> {
                     title: listTitleMainBottomNavi[index],
                     isSelected: indexTab == index,
                     onTap: (){ /// 홈버튼 누를 때 조건문 추가하기
-                      vnIndexTab.value = index;
+                      RouteMain.vnIndexTab.value = index;
                     },
                   ),
                 ),
@@ -64,7 +66,7 @@ class _RouteMainState extends State<RouteMain> {
         ),
         body: SafeArea(
           child: ValueListenableBuilder(
-            valueListenable: vnIndexTab,
+            valueListenable: RouteMain.vnIndexTab,
             builder: (context, index, child) {
               if (index == 0) {
                 return TabHome();

@@ -7,7 +7,6 @@ import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/button_confirm.dart';
 import 'package:practice1/ui/component/custom_appbar.dart';
-import 'package:practice1/ui/component/custom_toast.dart';
 import 'package:practice1/ui/component/info_check_text.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 import 'package:practice1/ui/dialog/dialog_confirm.dart';
@@ -315,6 +314,13 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
               builder: (context, isFormCheck, child) {
                 return GestureDetector(
                   onTap: () async {
+                    showDialog(
+                      context: context,
+                      builder: (context) => DialogConfirm(),
+                    );
+
+                    return;
+
                     if (widget.tecEmail.text.isEmpty) {
                       Utils.toast(context: context, desc: '이메일을 입력해주세요.');
                       return;

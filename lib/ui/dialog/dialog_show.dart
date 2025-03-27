@@ -5,16 +5,14 @@ import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/dialog/dialog_cancel_confirm.dart';
 import 'package:practice1/ui/dialog/dialog_confirm.dart';
 
-
 /// 확인 (pop)
 /// 취소 / 확인 (무언가 지울 때 최종확인느낌)
 
 /// 한줄짜리
 class DialogShow1 extends StatelessWidget {
   final String text;
-  const DialogShow1({
-    required this.text,
-    super.key});
+
+  const DialogShow1({required this.text, super.key});
 
   static Future<void> showDialogLine1(BuildContext context, String text) async {
     return showDialog(
@@ -29,7 +27,6 @@ class DialogShow1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        height: 146,
         width: 270,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
@@ -51,7 +48,10 @@ class DialogShow1 extends StatelessWidget {
                 Gaps.h10,
                 DialogConfirm(),
               ],
-            )
+            ),
+            SizedBox(
+              height: 100,
+            ),
           ],
         ),
       ),
@@ -62,9 +62,8 @@ class DialogShow1 extends StatelessWidget {
 /// 두줄짜리
 class DialogShow2 extends StatelessWidget {
   final String text;
-  const DialogShow2({
-    required this.text,
-    super.key});
+
+  const DialogShow2({required this.text, super.key});
 
   static Future<void> showDialogLine2(BuildContext context, String text) async {
     return showDialog(
@@ -112,6 +111,3 @@ class DialogShow2 extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -8,23 +8,22 @@ class DialogCancelConfirm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pop();
-        },
-        child: Container(
-          height: 42,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: colorWhite,
-            border: Border.all(
-              color: colorGreen600,
-              width: 1,
-            ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pop();
+      },
+      child: Container(
+        height: 42,
+        width: 110,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: colorWhite,
+          border: Border.all(
+            color: colorGreen600,
+            width: 1,
           ),
-          child: Center(child: Text('취소', style: TS.s18w600(colorGreen600))),
         ),
+        child: Center(child: Text('취소', style: TS.s18w600(colorGreen600))),
       ),
     );
   }

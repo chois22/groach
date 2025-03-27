@@ -8,6 +8,16 @@ class DialogConfirm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Dialog(
+      child: Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('한 줄짜리 텍스트창 팝업입니다.'),
+          ],
+        ),
+      ),
+    );
     return Expanded(
       child: GestureDetector(
         onTap: () {

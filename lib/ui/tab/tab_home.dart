@@ -10,6 +10,7 @@ import 'package:practice1/ui/component/card_program_grid.dart';
 import 'package:practice1/ui/component/card_program_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/route/recommendation_program.dart';
+import 'package:practice1/ui/route/route_main.dart';
 
 class TabHome extends StatefulWidget {
   const TabHome({super.key});
@@ -62,7 +63,11 @@ class _TabHomeState extends State<TabHome> {
                       children: [
                         Image.asset('assets/icon/bell_off.png', width: 24, height: 24),
                         Gaps.h16,
-                        Image.asset('assets/icon/search.png', width: 24, height: 24),
+                        GestureDetector(
+                          onTap: (){
+                            RouteMain.vnIndexTab.value = 1;
+                          },
+                            child: Image.asset('assets/icon/search.png', width: 24, height: 24)),
                         Gaps.h16,
                       ],
                     ),
@@ -129,9 +134,9 @@ class _TabHomeState extends State<TabHome> {
                     IconCardGridView(),
                     Gaps.v30,
                     CustomDivider(color: colorGray200, height: 10),
-                    Gaps.v30,
+                    Gaps.v20,
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: const EdgeInsets.only(left: 20.0),
                       child: Row(
                         children: [
                           Text('추천 프로그램', style: TS.s18w700(colorBlack)),
@@ -149,6 +154,7 @@ class _TabHomeState extends State<TabHome> {
                             child: IntrinsicHeight(
                               child: Container(
                                 color: Colors.red,
+                                padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
                                 child: Row(
                                   children: [
                                     Text('더보기', style: TS.s14w500(colorGray600)),
@@ -162,7 +168,7 @@ class _TabHomeState extends State<TabHome> {
                         ],
                       ),
                     ),
-                    Gaps.v16,
+                    Gaps.v6,
                     SizedBox(
                       height: 216,
                       child: SingleChildScrollView(

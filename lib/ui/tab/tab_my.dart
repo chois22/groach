@@ -5,8 +5,12 @@ class TabMy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('마이 페이지'),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+       Text('마이 페이지'),
+      ],
     );
   }
 }
