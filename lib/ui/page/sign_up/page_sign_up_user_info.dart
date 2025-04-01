@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
@@ -10,8 +9,6 @@ import 'package:practice1/ui/component/custom_appbar.dart';
 import 'package:practice1/ui/component/info_check_text.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 import 'package:practice1/ui/dialog/dialog_confirm.dart';
-import 'package:practice1/ui/dialog/dialog_show.dart';
-import 'package:practice1/utils/utils.dart';
 
 class PageSignUpUserInfo extends StatefulWidget {
   final PageController pageController;
@@ -313,43 +310,62 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
               valueListenable: vnFormCheck,
               builder: (context, isFormCheck, child) {
                 return GestureDetector(
-                  onTap: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) => DialogConfirm(),
-                    );
-
-                    return;
-
+                  onTap: () {
                     if (widget.tecEmail.text.isEmpty) {
-                      Utils.toast(context: context, desc: '이메일을 입력해주세요.');
+                      showDialog(
+                        context: context,
+                        builder: (context) => DialogConfirm(
+                          text: '이메일을 입력해주세요.',
+                        ),
+                      );
                       return;
                     }
+
                     if (widget.tecName.text.isEmpty) {
-                      Utils.toast(context: context, desc: '이름을 입력해주세요.');
+                      showDialog(
+                        context: context,
+                        builder: (context) => DialogConfirm(
+                          text: '이름을 입력해주세요.',
+                        ),
+                      );
                       return;
                     }
+
                     if (widget.tecNickName.text.isEmpty) {
-                      Utils.toast(context: context, desc: '닉네임을 입력해주세요.');
+                      showDialog(
+                        context: context,
+                        builder: (context) => DialogConfirm(
+                          text: '닉네임을 입력해주세요.',
+                        ),
+                      );
                       return;
                     }
-                    // if(vnStatusOfPw.value == StatusOfPw.none){
-                    //   Utils.toast(context: context, desc: '비밀번호를 입력해주세요.');
-                    //   return;
-                    // }
-                    // if(vnStatusOfPw.value == StatusOfPw.not_match){
-                    //   Utils.toast(context: context, desc: '비밀번호를 확인해주세요.');
-                    //   return;
-                    // }
+
                     if (vnStatusOfPw.value == StatusOfPw.none) {
-                      await DialogShow2.showDialogLine2(context, '비밀번호를 입력해주세요.비밀번호를 입력해주세요.');
+                      showDialog(
+                        context: context,
+                        builder: (context) => DialogConfirm(
+                          text: '비밀번호를 입력해주세요.',
+                        ),
+                      );
                       return;
                     }
 
                     if (vnStatusOfPw.value == StatusOfPw.not_match) {
-                      await DialogShow1.showDialogLine1(context, '비밀번호를 확인해주세요.');
+                      showDialog(
+                        context: context,
+                        builder: (context) => DialogConfirm(
+                          text: '비밀번호를 확인해주세요.',
+                        ),
+                      );
                       return;
                     }
+
+                    // if (widget.tecName.text.isEmpty) {
+                    //   Utils.toast(context: context, desc: '이름을 입력해주세요.');
+                    //   return;
+                    // }
+
                     FocusManager.instance.primaryFocus?.unfocus();
 
                     widget.pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.linear);
