@@ -373,7 +373,7 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                   child: ButtonAnimate(
                     title: '다음',
                     colorBg: isFormCheck ? colorGreen600 : colorGray500,
-                    margin: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    margin: EdgeInsets.symmetric(vertical: 16,),
                   ),
                 );
               },

@@ -225,6 +225,8 @@ class _TabHomeState extends State<TabHome> {
                         return CardProgramGrid(index: index);
                       },
                     ),
+                    Gaps.v30,
+                    SvgPicture.asset('assets/image/bottominfo.svg'),
                   ],
                 ),
               ),

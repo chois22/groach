@@ -8,6 +8,7 @@ import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/route/auth/route_auth_find_pw.dart';
 import 'package:practice1/ui/route/auth/route_auth_login.dart';
 import 'package:practice1/ui/route/route_main.dart';
+import 'package:practice1/ui/tab/tab_home.dart';
 
 class PageFindIdComplete extends StatelessWidget {
   final PageController pageController;
@@ -70,7 +71,7 @@ class PageFindIdComplete extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => RouteMain(),
+                  builder: (_) => RouteAuthLogin(),
                 ),
               );
             },
