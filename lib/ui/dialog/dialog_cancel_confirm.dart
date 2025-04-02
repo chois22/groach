@@ -15,7 +15,7 @@ class DialogCancelConfirm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        width: 270,
+        //width: 270,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: colorWhite,
@@ -24,7 +24,10 @@ class DialogCancelConfirm extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Gaps.v42,
-            Text(text, style: TS.s16w500(colorBlack)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(text, style: TS.s16w500(colorBlack), textAlign: TextAlign.center),
+            ),
             Gaps.v26,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
