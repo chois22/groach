@@ -1,3 +1,19 @@
+buildscript {
+    repositories {
+        google()        // Android SDK 리포지토리
+        mavenCentral()  // Maven 중앙 리포지토리
+    }
+
+    dependencies {
+        // Android Gradle Plugin 버전 설정
+        classpath 'com.android.tools.build:gradle:8.1.1'  // 8.1.1 이상으로 설정
+    }
+}
+
+
+
+
+
 allprojects {
     repositories {
         google()
@@ -16,3 +32,4 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+

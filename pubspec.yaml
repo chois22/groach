@@ -66,6 +66,8 @@ dependencies:
   flutter_switch: ^0.3.2
   photo_view: ^0.15.0
   flutter_animate: ^4.5.2
+  google_maps_flutter: ^2.10.0
+  geolocator: ^13.0.2
 
 dev_dependencies:
   flutter_test:

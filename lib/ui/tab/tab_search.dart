@@ -69,8 +69,7 @@ class _TabSearchState extends State<TabSearch> {
   // 특정 검색 기록 삭제 함수
   Future<void> _removeHistoryItem(String search) async {
     final spf = await SharedPreferences.getInstance();
-    final updatedHistory = List<String>.from(vnListSearchHistory.value)
-      ..remove(search);
+    final updatedHistory = List<String>.from(vnListSearchHistory.value)..remove(search);
     vnListSearchHistory.value = updatedHistory;
     await spf.setStringList('list_search_keyword', updatedHistory);
   }
@@ -95,24 +94,23 @@ class _TabSearchState extends State<TabSearch> {
               children: [
                 ValueListenableBuilder(
                   valueListenable: tecSearch,
-                  builder: (context, _, child) =>
-                      TextFieldSearch(
-                        controller: tecSearch,
-                        focusNode: focusNode,
-                        hintText: '검색어를 입력해주세요',
-                        suffixIcon: null,
-                        prefixIcon: focusNode.hasFocus
-                            ? null
-                            : Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 6),
-                          child: SvgPicture.asset('assets/icon/search_outline.svg'),
-                        ),
-                        colorBorder: colorGray50,
-                        fillColor: (focusNode.hasFocus || tecSearch.text.isNotEmpty) ? colorWhite : colorGray50,
-                        onChanged: (text) {
-                          vnHasData.value = null;
-                        },
-                      ),
+                  builder: (context, _, child) => TextFieldSearch(
+                    controller: tecSearch,
+                    focusNode: focusNode,
+                    hintText: '검색어를 입력해주세요',
+                    suffixIcon: null,
+                    prefixIcon: focusNode.hasFocus
+                        ? null
+                        : Padding(
+                            padding: const EdgeInsets.only(left: 16, right: 6),
+                            child: SvgPicture.asset('assets/icon/search_outline.svg'),
+                          ),
+                    colorBorder: colorGray50,
+                    fillColor: (focusNode.hasFocus || tecSearch.text.isNotEmpty) ? colorWhite : colorGray50,
+                    onChanged: (text) {
+                      vnHasData.value = null;
+                    },
+                  ),
                 ),
                 ValueListenableBuilder(
                   valueListenable: tecSearch,
@@ -129,7 +127,6 @@ class _TabSearchState extends State<TabSearch> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-
                               /// (x) 누르면 검색어 삭제
                               GestureDetector(
                                 onTap: () {
@@ -186,101 +183,50 @@ class _TabSearchState extends State<TabSearch> {
         Gaps.v16,
         ValueListenableBuilder(
           valueListenable: tecSearch,
-          builder: (context, tec, child) =>
-              ValueListenableBuilder<bool?>(
-                valueListenable: vnHasData,
-                builder: (context, hasData, child) {
-                  // if (hasData == true)
-                  // Todo : hasDate가 true일때 검색 기능 실행을 넣으려고 바꿈
-                    if (tecSearch.text.isEmpty) {
-                    // hasData가 true면 최근 검색어 보여주기.
-                    return _ScreenSearchKeyword(
-
-                      /// 전달  vnListSearchHistory:vnListSearchHistory,
+          builder: (context, tec, child) => ValueListenableBuilder<bool?>(
+            valueListenable: vnHasData,
+            builder: (context, hasData, child) {
+              // if (hasData == true)
+              // Todo : hasDate가 true일때 검색 기능 실행을 넣으려고 바꿈
+              if (tecSearch.text.isEmpty) {
+                // hasData가 true면 최근 검색어 보여주기.
+                return _ScreenSearchKeyword(
+                    tecSearch: tecSearch,
+                    vnListSearchHistory: vnListSearchHistory,
+                    vnHasData: vnHasData,
+                    onDeleteAllTap: _clearAllHistory,
+                    onKeyWordDeleteTap: _removeHistoryItem,
+                    onKeyWordTap: _search,
+                    /// 전달  vnListSearchHistory:vnListSearchHistory,
                     );
 
-                    // Todo : hasDate 가 true 일때 '검색결과'라고 표시
-                  } if (hasData == true){
-                      return Center(child: Text('${tecSearch.text} 검색결과'));
-                    }
+                // Todo : hasDate 가 true 일때 '검색결과'라고 표시
+              }
+              if (hasData == true) {
+                return Center(child: Text('${tecSearch.text} 검색결과'));
+              } else if (hasData == false) {
+                return _ScreenNoResult();
+              }
 
-                    else if (hasData == false) {
-                    return _ScreenNoResult();
-                  }
-
-                  // 최근 검색어 (돋보기가 없어서 검색을 할 수 없음)
-                  else if (tec.text.isEmpty) {
-                    return Container(
-                      child: Center(
-                        child: Text('검색어가 없어서 최근 검색어를 보여줌'),
-                      ),
-                    );
-                  }
-
-                  /// 검색어 입력중일 때
-                  else {
-                    return Container(
-                      child: Center(
-                        child: Text('검색어를 입력중'),
-                      ),
-                    );
-                  }
-                },
-              ),
-        ),
-        ValueListenableBuilder(
-          ///tec로 수정함
-          valueListenable: tecSearch,
-          builder: (context, tec, child) {
-            return ValueListenableBuilder<List<String>>(
-              valueListenable: vnListSearchHistory,
-              builder: (context, searchHistory, child) {
-                if (tec.text.isNotEmpty || vnHasData.value == true) {
-                  return Container();
-                }
-                if (searchHistory.isEmpty) return Container();
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('최근 검색어', style: TS.s18w700(colorBlack)),
-                          GestureDetector(
-                            onTap: _clearAllHistory,
-                            child: Text('모두 지우기', style: TS.s14w500(colorGray500)),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Gaps.v16,
-
-                    /// 글씨부분을 누르면 검색어에 입력되어 결과가 표시되기
-                    /// x를 누르면 그 검색어가 사라지기
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Wrap(
-                        spacing: 10.0,
-                        runSpacing: 10.0,
-                        children: searchHistory.map((text) {
-                          return SearchHistory(
-                            recentText: text,
-                            onDelete: _removeHistoryItem,
-                            // todo : onTap 기능 추가
-                            onTap: (searchText) => _search(searchText),
-
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
+              // 최근 검색어 (돋보기가 없어서 검색을 할 수 없음)
+              else if (tec.text.isEmpty) {
+                return Container(
+                  child: Center(
+                    child: Text('검색어가 없어서 최근 검색어를 보여줌'),
+                  ),
                 );
-              },
-            );
-          },
+              }
+
+              /// 검색어 입력중일 때
+              else {
+                return Container(
+                  child: Center(
+                    child: Text('검색어를 입력중'),
+                  ),
+                );
+              }
+            },
+          ),
         ),
       ],
     );
@@ -289,20 +235,20 @@ class _TabSearchState extends State<TabSearch> {
 
 class SearchHistory extends StatelessWidget {
   final String recentText;
-  final Function(String) onDelete;
-  final Function(String) onTap;
+  final Function(String) onKeyWordDeleteTap;
+  final Function(String) onKeyWordTap;
 
   const SearchHistory({
     required this.recentText,
-    required this.onDelete,
-    required this.onTap,
+    required this.onKeyWordDeleteTap,
+    required this.onKeyWordTap,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap(recentText),
+      onTap: () => onKeyWordTap(recentText),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
@@ -323,7 +269,7 @@ class SearchHistory extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () => onDelete(recentText), // 개별 검색 기록 삭제
+              onTap: () => onKeyWordDeleteTap(recentText), // 개별 검색 기록 삭제
               child: Container(
                   color: Colors.transparent,
                   child: Padding(
@@ -339,65 +285,81 @@ class SearchHistory extends StatelessWidget {
 }
 
 class _ScreenSearchKeyword extends StatelessWidget {
-  const _ScreenSearchKeyword({super.key});
+  final TextEditingController tecSearch;
+  final ValueNotifier<List<String>> vnListSearchHistory;
+  final ValueNotifier<bool?> vnHasData;
+  final void Function() onDeleteAllTap;
+
+  final Function(String) onKeyWordDeleteTap;
+  final Function(String) onKeyWordTap;
+
+  const _ScreenSearchKeyword({
+    required this.tecSearch,
+    required this.vnListSearchHistory,
+    required this.vnHasData,
+    required this.onDeleteAllTap,
+
+    required this.onKeyWordDeleteTap,
+    required this.onKeyWordTap,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-    //todo: 이거 넣으려고 했는데 변수 선언을 다 해줘야 해서 이게 맞는건가..?
-    // ValueListenableBuilder(
-    //   ///tec로
-    //   valueListenable: tecSearch,
-    //   builder: (context, tec, child) {
-    //     return ValueListenableBuilder<List<String>>(
-    //       valueListenable: vnListSearchHistory,
-    //       builder: (context, searchHistory, child) {
-    //         if (tec.text.isNotEmpty || vnHasData.value == true) {
-    //           return Container();
-    //         }
-    //         if (searchHistory.isEmpty) return Container();
-    //
-    //         return Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Padding(
-    //               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 children: [
-    //                   Text('최근 검색어', style: TS.s18w700(colorBlack)),
-    //                   GestureDetector(
-    //                     onTap: _clearAllHistory,
-    //                     child: Text('모두 지우기', style: TS.s14w500(colorGray500)),
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //             Gaps.v16,
-    //
-    //             /// 글씨부분을 누르면 검색어에 입력되어 결과가 표시되기
-    //             /// x를 누르면 그 검색어가 사라지기
-    //             Padding(
-    //               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-    //               child: Wrap(
-    //                 spacing: 10.0,
-    //                 runSpacing: 10.0,
-    //                 children: searchHistory.map((text) {
-    //                   return SearchHistory(
-    //                     recentText: text,
-    //                     onDelete: _removeHistoryItem,
-    //                     onTap: (searchText) => _search(searchText),
-    //
-    //                   );
-    //                 }).toList(),
-    //               ),
-    //             ),
-    //           ],
-    //         );
-    //       },
-    //     );
-    //   },
-    // ),
+    return ValueListenableBuilder(
+      ///tec로
+      valueListenable: tecSearch,
+      builder: (context, tec, child) {
+        return ValueListenableBuilder<List<String>>(
+          valueListenable: vnListSearchHistory,
+          builder: (context, searchHistory, child) {
+            if (tec.text.isNotEmpty || vnHasData.value == true) {
+              return Container();
+            }
+            if (searchHistory.isEmpty) return Container();
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('최근 검색어', style: TS.s18w700(colorBlack)),
+                      GestureDetector(
+                        onTap: onDeleteAllTap,
+                        child: Text('모두 지우기', style: TS.s14w500(colorGray500)),
+                      ),
+                    ],
+                  ),
+                ),
+                Gaps.v16,
+
+                /// 글씨부분을 누르면 검색어에 입력되어 결과가 표시되기
+                /// x를 누르면 그 검색어가 사라지기
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Wrap(
+                    spacing: 10.0,
+                    runSpacing: 10.0,
+                    children: searchHistory.map((text) {
+                      return SearchHistory(
+                        recentText: text,
+                        onKeyWordDeleteTap: onKeyWordDeleteTap,
+                        onKeyWordTap: onKeyWordTap,
+                        // onKeyWordDeleteTap: _removeHistoryItem,
+                        // onKeyWordTap: (searchText) => _search(searchText),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 }
 

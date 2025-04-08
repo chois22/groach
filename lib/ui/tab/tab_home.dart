@@ -4,12 +4,14 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
+import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/card_program_grid.dart';
 import 'package:practice1/ui/component/card_program_scroll.dart';
+import 'package:practice1/ui/component/card_review_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
-import 'package:practice1/ui/route/recommendation_program.dart';
+import 'package:practice1/ui/route/home/route_home_programs.dart';
 import 'package:practice1/ui/route/route_main.dart';
 
 class TabHome extends StatefulWidget {
@@ -64,9 +66,9 @@ class _TabHomeState extends State<TabHome> {
                         Image.asset('assets/icon/bell_off.png', width: 24, height: 24),
                         Gaps.h16,
                         GestureDetector(
-                          onTap: (){
-                            RouteMain.vnIndexTab.value = 1;
-                          },
+                            onTap: () {
+                              RouteMain.vnIndexTab.value = 1;
+                            },
                             child: Image.asset('assets/icon/search.png', width: 24, height: 24)),
                         Gaps.h16,
                       ],
@@ -130,8 +132,12 @@ class _TabHomeState extends State<TabHome> {
                         },
                       ),
                     ),
+
+                    /// 상단 8개 아이콘
                     Gaps.v30,
                     IconCardGridView(),
+
+                    /// 추천 프로그램
                     Gaps.v30,
                     CustomDivider(color: colorGray200, height: 10),
                     Gaps.v20,
@@ -147,23 +153,11 @@ class _TabHomeState extends State<TabHome> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) => RecommendationProgram(),
+                                  builder: (_) => RouteHomePrograms(programType: ProgramType.recommend),
                                 ),
                               );
                             },
-                            child: IntrinsicHeight(
-                              child: Container(
-                                color: Colors.red,
-                                padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                                child: Row(
-                                  children: [
-                                    Text('더보기', style: TS.s14w500(colorGray600)),
-                                    SvgPicture.asset('assets/icon/right_arrow.svg',
-                                        colorFilter: ColorFilter.mode(colorGray600, BlendMode.srcIn)),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            child: MoreView(),
                           ),
                         ],
                       ),
@@ -195,20 +189,29 @@ class _TabHomeState extends State<TabHome> {
                         ),
                       ),
                     ),
+
+                    /// 인기 프로그램
                     Gaps.v30,
                     CustomDivider(color: colorGray200, height: 10),
                     Gaps.v30,
-
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: const EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
                           Text('인기 프로그램', style: TS.s18w700(colorBlack)),
                           Gaps.h4,
                           SvgPicture.asset('assets/icon/hot_icon.svg', width: 47, height: 24),
                           Spacer(),
-                          Text('더보기', style: TS.s14w500(colorGray600)),
-                          SvgPicture.asset('assets/icon/right_arrow.svg', colorFilter: ColorFilter.mode(colorGray600, BlendMode.srcIn)),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => RouteHomePrograms(programType: ProgramType.popular),
+                                ),
+                              );
+                            },
+                            child: MoreView(),
+                          ),
                         ],
                       ),
                     ),
@@ -225,6 +228,244 @@ class _TabHomeState extends State<TabHome> {
                         return CardProgramGrid(index: index);
                       },
                     ),
+
+                    /// 급상승 프로그램
+                    Gaps.v30,
+                    CustomDivider(color: colorGray200, height: 10),
+                    Gaps.v30,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Row(
+                        children: [
+                          Text('급상승 프로그램', style: TS.s18w700(colorBlack)),
+                          Gaps.h4,
+                          SvgPicture.asset('assets/icon/up_icon.svg', width: 47, height: 24),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => RouteHomePrograms(programType: ProgramType.hot),
+                                ),
+                              );
+                            },
+                            child: MoreView(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Gaps.v6,
+                    SizedBox(
+                      height: 216,
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(
+                            10,
+                            (index) => Row(
+                              children: [
+                                CardProgramScroll(index: index),
+                                Builder(
+                                  builder: (context) {
+                                    if (index == 9) {
+                                      return const SizedBox.shrink();
+                                    } else {
+                                      return Gaps.h10;
+                                    }
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    /// 신규 프로그램
+                    Gaps.v30,
+                    CustomDivider(color: colorGray200, height: 10),
+                    Gaps.v30,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Row(
+                        children: [
+                          Text('신규 프로그램', style: TS.s18w700(colorBlack)),
+                          Gaps.h4,
+                          SvgPicture.asset('assets/icon/new_icon.svg', width: 47, height: 24),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => RouteHomePrograms(programType: ProgramType.brand_new),
+                                ),
+                              );
+                            },
+                            child: MoreView(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Gaps.v16,
+                    MasonryGridView.count(
+                      shrinkWrap: true,
+                      primary: false,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 20,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: 6,
+                      itemBuilder: (context, index) {
+                        return CardProgramGrid(index: index);
+                      },
+                    ),
+
+                    /// 호캉스 프로그램
+                    Gaps.v30,
+                    CustomDivider(color: colorGray200, height: 10),
+                    Gaps.v30,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Row(
+                        children: [
+                          Text('호캉스 프로그램', style: TS.s18w700(colorBlack)),
+                          Gaps.h4,
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => RouteHomePrograms(programType: ProgramType.hokangs),
+                                ),
+                              );
+                            },
+                            child: MoreView(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Gaps.v6,
+                    SizedBox(
+                      height: 216,
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(
+                            10,
+                            (index) => Row(
+                              children: [
+                                CardProgramScroll(index: index),
+                                Builder(
+                                  builder: (context) {
+                                    if (index == 9) {
+                                      return const SizedBox.shrink();
+                                    } else {
+                                      return Gaps.h10;
+                                    }
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    /// 농총한달살기 프로그램
+                    Gaps.v30,
+                    CustomDivider(color: colorGray200, height: 10),
+                    Gaps.v30,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Row(
+                        children: [
+                          Text('농총한달살기 프로그램', style: TS.s18w700(colorBlack)),
+                          Gaps.h4,
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => RouteHomePrograms(programType: ProgramType.farm),
+                                ),
+                              );
+                            },
+                            child: MoreView(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Gaps.v6,
+                    SizedBox(
+                      height: 216,
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(
+                            10,
+                            (index) => Row(
+                              children: [
+                                CardProgramScroll(index: index),
+                                Builder(
+                                  builder: (context) {
+                                    if (index == 9) {
+                                      return const SizedBox.shrink();
+                                    } else {
+                                      return Gaps.h10;
+                                    }
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    /// 사용자 후기
+                    Gaps.v30,
+                    CustomDivider(color: colorGray200, height: 10),
+                    Gaps.v30,
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Text('사용자 최신 후기', style: TS.s18w700(colorBlack)),
+                        ),
+                      ],
+                    ),
+                    Gaps.v16,
+                    SizedBox(
+                      height: 216,
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(
+                            10,
+                            (index) => Row(
+                              children: [
+                                CardReviewScroll(index: index),
+                                Builder(
+                                  builder: (context) {
+                                    if (index == 9) {
+                                      return const SizedBox.shrink();
+                                    } else {
+                                      return Gaps.h10;
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    /// 하단 회사 정보
                     Gaps.v30,
                     SvgPicture.asset('assets/image/bottominfo.svg'),
                   ],
@@ -233,6 +474,7 @@ class _TabHomeState extends State<TabHome> {
             ),
           ],
         ),
+
         /// 스크롤 하면 좌측 하단에 나타나는 화살표
         ValueListenableBuilder(
           valueListenable: vnOpacity,
@@ -244,7 +486,7 @@ class _TabHomeState extends State<TabHome> {
                 opacity: opacity,
                 duration: Duration(milliseconds: 300),
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     scrollController.animateTo(
                       0,
                       duration: Duration(milliseconds: 300),
@@ -311,13 +553,19 @@ class CardIcon extends StatelessWidget {
           ),
         ),
         Gaps.v10,
-        Text(text, style: TS.s14w600(colorBlack)),
+        /// 글자가 페이지를 넘어서 줄바꿈이 되는걸 방지. 알아서 한 줄 맞춤
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            text,
+            style: TS.s14w600(colorBlack),
+          ),
+        ),
       ],
     );
   }
 }
 
-// todo : 그리드뷰 배운걸로 바꾸기.
 // 아이콘 8개 생성 그리드뷰
 class IconCardGridView extends StatelessWidget {
   const IconCardGridView({super.key});
@@ -350,6 +598,24 @@ class IconCardGridView extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+class MoreView extends StatelessWidget {
+  const MoreView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.transparent,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: Row(
+        children: [
+          Text('더보기', style: TS.s14w500(colorGray600)),
+          SvgPicture.asset('assets/icon/right_arrow.svg', colorFilter: ColorFilter.mode(colorGray600, BlendMode.srcIn)),
+        ],
+      ),
     );
   }
 }

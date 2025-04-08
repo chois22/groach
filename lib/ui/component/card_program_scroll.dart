@@ -7,24 +7,31 @@ import 'package:practice1/const/value/text_style.dart';
 
 class CardProgramScroll extends StatelessWidget {
   final int index;
+  final double width;
+  final double height;
 
-  const CardProgramScroll({required this.index, super.key});
+  const CardProgramScroll({
+    required this.index,
+    this.width = 125,
+    this.height = 125,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final ValueNotifier<bool> vnHeartTouch = ValueNotifier<bool>(false);
 
     return Container(
-      width: 125,
+      width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
               Container(
-                width: 125,
+                width: width,
                 // 각 컨테이너의 너비
-                height: 125,
+                height: height,
                 // 각 컨테이너의 높이
                 //margin: EdgeInsets.only(right: 10),
                 // 각 컨테이너 간 간격
