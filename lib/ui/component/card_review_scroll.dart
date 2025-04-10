@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/value/colors.dart';
+import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
@@ -8,9 +10,13 @@ import 'package:practice1/ui/route/home/route_home_program_detail_page.dart';
 import 'package:practice1/ui/tab/tab_home.dart';
 
 class CardReviewScroll extends StatelessWidget {
+  final ModelProgram modelProgram;
+
   final int index;
 
   const CardReviewScroll({
+    required this.modelProgram,
+
     required this.index,
     super.key,
   });
@@ -76,7 +82,9 @@ class CardReviewScroll extends StatelessWidget {
                   onTap: (){
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                      builder: (_) => RouteHomeProgramDetailPage(),
+                      builder: (_) => RouteHomeProgramDetailPage(
+                        modelProgram: modelProgram,
+                      ),
                       ),
                     );
                   },
@@ -87,7 +95,7 @@ class CardReviewScroll extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Image.asset(
-                            imagePath,
+                            modelProgram.listImgUrl.first,
                             width: 40,
                             height: 40,
                             fit: BoxFit.cover,
@@ -97,14 +105,14 @@ class CardReviewScroll extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('프로그램명', style: TS.s14w600(colorGray600)),
+                            Text(modelProgram.name, style: TS.s14w600(colorGray600)),
                             Gaps.v4,
                             Row(
                               children: [
                                 Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
-                                Text('4.5', style: TS.s13w500(colorGray800)),
+                                Text(modelProgram.averageStarRating.toString(), style: TS.s13w500(colorGray800)),
                                 Gaps.h5,
-                                Text('수원 팔달구', style: TS.s13w500(colorGray500)),
+                                Text(modelProgram.modelAddress.addressDetail, style: TS.s13w500(colorGray500)),
                               ],
                             ),
                           ],

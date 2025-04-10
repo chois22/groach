@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/value/colors.dart';
+import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
@@ -23,21 +24,19 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.programType == ProgramType.recommend
+        title: Text(widget.programType == ProgramType.recommend
             ? '추천 프로그램'
             : widget.programType == ProgramType.popular
-            ? '인기 프로그램'
-            : widget.programType == ProgramType.hot
-            ? '급상승 프로그램'
-            : widget.programType == ProgramType.brand_new
-            ? '신규 프로그램'
-            : widget.programType == ProgramType.hokangs
-            ? '호캉스 프로그램'
-            : widget.programType == ProgramType.farm
-            ? '농촌한달살기 프로그램'
-            : ''
-        ),
+                ? '인기 프로그램'
+                : widget.programType == ProgramType.hot
+                    ? '급상승 프로그램'
+                    : widget.programType == ProgramType.brand_new
+                        ? '신규 프로그램'
+                        : widget.programType == ProgramType.hokangs
+                            ? '호캉스 프로그램'
+                            : widget.programType == ProgramType.farm
+                                ? '농촌한달살기 프로그램'
+                                : ''),
       ),
       body: GestureDetector(
         onTap: () {
@@ -82,9 +81,7 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
                                       child: Text(
                                         labels[index],
-                                        style: isSelected
-                                            ? TS.s14w600(colorGreen600)
-                                            : TS.s14w600(colorGray600),
+                                        style: isSelected ? TS.s14w600(colorGreen600) : TS.s14w600(colorGray600),
                                       ),
                                     ),
                                   ),
@@ -105,13 +102,9 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                           return Center(
                             child: Column(
                               children: [
-                                if (selectedFilter == 0)
-                                  Text('인기순 화면.', style: TS.s16w600(colorBlack)),
-                                if (selectedFilter == 1)
-                                  Text('평점순 화면.', style: TS.s16w600(colorBlack)),
-                                if (selectedFilter == 2)
-                                  Text('가격순 화면.', style: TS.s16w600(colorBlack)),
-
+                                if (selectedFilter == 0) Text('인기순 화면.', style: TS.s16w600(colorBlack)),
+                                if (selectedFilter == 1) Text('평점순 화면.', style: TS.s16w600(colorBlack)),
+                                if (selectedFilter == 2) Text('가격순 화면.', style: TS.s16w600(colorBlack)),
                                 Gaps.v20,
                                 MasonryGridView.count(
                                   shrinkWrap: true,
@@ -121,7 +114,10 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                                   mainAxisSpacing: 20,
                                   itemCount: 8,
                                   itemBuilder: (context, index) {
-                                    return CardProgramGrid(index: index);
+                                    return CardProgramGrid(
+                                      modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                      index: index,
+                                    );
                                   },
                                 ),
                                 Gaps.v30,

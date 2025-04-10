@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/value/colors.dart';
+import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
+import 'package:practice1/ui/component/card_program_grid.dart';
 import 'package:practice1/ui/component/card_program_scroll.dart';
 import 'package:practice1/ui/component/card_review_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
@@ -15,20 +20,28 @@ import 'package:practice1/ui/route/route_picture.dart';
 import 'package:practice1/ui/tab/tab_home.dart';
 
 class RouteHomeProgramDetailPage extends StatelessWidget {
+  final ModelProgram modelProgram;
+
   final int index;
 
   const RouteHomeProgramDetailPage({
+    required this.modelProgram,
     this.index = 0,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    ///  서비스 타입
+    final List<ServiceType> services = [ServiceType.wifi, ServiceType.pet, ServiceType.parking];
+
     final CameraPosition initialPosition = CameraPosition(
       target: LatLng(
         /// 위도, 경도
-        37.2864,
-        127.0110,
+        // 37.2864,
+        // 127.0110,
+        modelProgram.modelAddress.addressGeoPoint.latitude,
+        modelProgram.modelAddress.addressGeoPoint.longitude,
       ),
       zoom: 15,
     );
@@ -36,7 +49,7 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('ㅇㅇ프로그램'),
+        title: Text('${modelProgram.name} 프로그램'),
       ),
       body: GestureDetector(
         onTap: () {
@@ -120,10 +133,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('프로그램명', style: TS.s16w500(colorGray600)),
+                        Text(modelProgram.name, style: TS.s16w500(colorGray600)),
                         Gaps.v8,
                         Text(
-                          '간단한 설명을 입력하는 칸입니다. 두줄까지 채워집니다. 두줄까지 채워집니다. 두줄까지 채워집니다. 두줄까지 채워집니다.',
+                          modelProgram.desc,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TS.s18w400(colorBlack),
@@ -132,18 +145,39 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                         Row(
                           children: [
                             Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
-                            Text('4.5(1,540)', style: TS.s14w500(colorGray800)),
+                            Row(
+                              children: [
+                                Text(modelProgram.averageStarRating.toString(), style: TS.s14w500(colorGray800)),
+                                Gaps.h2,
+                                Text('(${modelProgram.countTotalReview.toString()})', style: TS.s14w500(colorGray800)),
+                              ],
+                            ),
                             Gaps.h4,
-                            Text('리뷰 보기', style: TS.s14w600(colorGreen600)),
+                            GestureDetector(
+                              onTap: () {
+                                print('리뷰 보기');
+                              },
+                              child: Container(
+                                color: Colors.transparent,
+                                child: Row(
+                                  children: [
+                                    Text('리뷰 보기', style: TS.s14w600(colorGreen600)),
+                                    Gaps.h2,
+                                    SvgPicture.asset('assets/icon/right_arrow.svg',
+                                        colorFilter: ColorFilter.mode(colorGreen600, BlendMode.srcIn)),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                         Gaps.v10,
                         Row(
                           children: [
-                            Text('20%', style: TS.s16w700(Color(0XFFFA7014))),
+                            Text('${modelProgram.discountPercentage}%', style: TS.s16w700(Color(0XFFFA7014))),
                             Gaps.h2,
                             Text(
-                              '9,000',
+                              '${NumberFormat('#,###').format(modelProgram.price * modelProgram.discountPercentage / 100)}',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: colorGray500,
@@ -155,7 +189,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                           ],
                         ),
                         Gaps.v4,
-                        Text('45,000원', style: TS.s16w700(colorBlack)),
+                        Text(
+                          '${NumberFormat('#,###').format(modelProgram.price - modelProgram.price * modelProgram.discountPercentage / 100)}원',
+                          style: TS.s16w700(colorBlack),
+                        ),
                       ],
                     ),
                   ),
@@ -172,7 +209,7 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                           children: [
                             SvgPicture.asset('assets/icon/local_gray.svg'),
                             Gaps.h6,
-                            Text('6호선 수원역에서 411m', style: TS.s14w500(colorGray800)),
+                            Text(modelProgram.locationShortCut, style: TS.s14w500(colorGray800)),
                           ],
                         ),
                         Gaps.v10,
@@ -182,7 +219,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                             Gaps.h6,
                             Text('영업중', style: TS.s14w600(Color(0xFF0059FF))),
                             Gaps.h6,
-                            Text('20:00에 라스트오더', style: TS.s14w500(colorGray800)),
+                            Text(
+                              '${modelProgram.timeProgramEnd.toDate().hour}:${modelProgram.timeProgramEnd.toDate().minute}에 라스트오더',
+                              style: TS.s14w500(colorGray800),
+                            ),
                           ],
                         ),
                       ],
@@ -191,62 +231,39 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                   Gaps.v20,
 
                   /// 제공 서비스
+                  // todo: 간격조정 물어보기
                   CustomDivider(color: colorGray200, height: 1),
                   Gaps.v30,
                   SizedBox(
                     height: 112,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('제공 서비스', style: TS.s18w700(colorBlack)),
-                          Gaps.v16,
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: List.generate(
-                                  2,
-                                  (index) => Row(
-                                    children: [
-                                      ServiceCircle(iconPath: 'assets/icon/wifi_icon.png', text: '와이파이'),
-                                      Gaps.h44,
-                                      ServiceCircle(iconPath: 'assets/icon/animal_icon.png', text: '반려동물 가능'),
-                                      Gaps.h44,
-                                      ServiceCircle(iconPath: 'assets/icon/parking_icon.png', text: '주차가능'),
-                                      Gaps.h44,
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text('제공 서비스', style: TS.s18w700(colorBlack)),
+                        ),
+                        Gaps.v16,
+                        Align(
+                          //todo: 이거 다시 물어보기
+                          alignment: Alignment.centerLeft,
+                          child: MasonryGridView.count(
+                            shrinkWrap: true,
+                            primary: false,
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 0,
+                            mainAxisSpacing: 0,
+                            padding: EdgeInsets.zero,
+                            itemCount: services.length,
+                            itemBuilder: (context, index) {
+                              return ServiceCircle(serviceType: modelProgram.listServiceType[index % modelProgram.listServiceType.length]);
+                            },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
 
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  //   child: Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Text('제공 서비스', style: TS.s18w700(colorBlack)),
-                  //       Gaps.v16,
-                  //       Row(
-                  //         children: [
-                  //           ServiceCircle(iconPath: 'assets/icon/wifi_icon.png', text: '와이파이'),
-                  //           Gaps.h44,
-                  //           ServiceCircle(iconPath: 'assets/icon/animal_icon.png', text: '반려동물 가능'),
-                  //           Gaps.h44,
-                  //           ServiceCircle(iconPath: 'assets/icon/parking_icon.png', text: '주차가능'),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   /// 예약 안내
                   Gaps.v30,
                   CustomDivider(color: colorGray200, height: 10),
@@ -344,15 +361,15 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                                 markerId: MarkerId('123'),
                                 position: LatLng(
                                   /// 위도, 경도
-                                  37.2864,
-                                  127.0110,
+                                  modelProgram.modelAddress.addressGeoPoint.latitude,
+                                  modelProgram.modelAddress.addressGeoPoint.longitude,
                                 ),
                               ),
                             },
                           ),
                         ),
                         Gaps.v16,
-                        Text('경기도 수원시 스타필드 수원 2층', style: TS.s14w500(colorBlack)),
+                        Text(modelProgram.modelAddress.addressDetail, style: TS.s14w500(colorBlack)),
                       ],
                     ),
                   ),
@@ -423,7 +440,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                                 10,
                                 (index) => Row(
                                   children: [
-                                    CardReviewScroll(index: index),
+                                    CardReviewScroll(
+                                      modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                      index: index,
+                                    ),
                                     Builder(
                                       builder: (context) {
                                         if (index == 9) {
@@ -442,8 +462,6 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Gaps.v30,
-                  CustomDivider(color: colorGray200, height: 10),
                   Gaps.v30,
                   CustomDivider(color: colorGray200, height: 10),
                   Gaps.v30,
@@ -480,7 +498,11 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                             children: [
                               Column(
                                 children: [
-                                  CardProgramScroll(index: index, width: 115, height: 115),
+                                  CardProgramScroll(
+                                    modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                    width: 115,
+                                    height: 115,
+                                  ),
                                   Gaps.v8,
                                   Container(
                                     width: 115,
@@ -491,10 +513,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: GestureDetector(
-                                      onTap: (){
+                                      onTap: () {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                          builder: (_) => RouteReservaion(),
+                                            builder: (_) => RouteReservaion(),
                                           ),
                                         );
                                       },
@@ -542,18 +564,24 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
   }
 }
 
+Map<ServiceType, Map<String, String>> serviceMap = {
+  ServiceType.wifi: {'icon': 'assets/icon/wifi_icon.png', 'text': '와이파이'},
+  ServiceType.pet: {'icon': 'assets/icon/pet_icon.png', 'text': '반려동물'},
+  ServiceType.parking: {'icon': 'assets/icon/parking_icon.png', 'text': '주차'},
+};
+
 class ServiceCircle extends StatelessWidget {
-  final String iconPath;
-  final String text;
+  final ServiceType serviceType;
 
   const ServiceCircle({
-    required this.iconPath,
-    required this.text,
+    required this.serviceType,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final service = serviceMap[serviceType]!;
+
     return Column(
       children: [
         Container(
@@ -563,10 +591,10 @@ class ServiceCircle extends StatelessWidget {
           ),
           width: 50,
           height: 50,
-          child: Center(child: Image.asset(iconPath, width: 24, height: 24)),
+          child: Center(child: Image.asset(service['icon']!, width: 24, height: 24)),
         ),
         Gaps.v8,
-        Text(text, style: TS.s13w500(colorBlack)),
+        Text(service['text']!, style: TS.s13w500(colorBlack)),
       ],
     );
   }

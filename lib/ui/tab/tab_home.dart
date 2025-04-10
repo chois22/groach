@@ -164,7 +164,7 @@ class _TabHomeState extends State<TabHome> {
                     ),
                     Gaps.v6,
                     SizedBox(
-                      height: 216,
+                      height: 231,
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         scrollDirection: Axis.horizontal,
@@ -173,7 +173,9 @@ class _TabHomeState extends State<TabHome> {
                             10,
                             (index) => Row(
                               children: [
-                                CardProgramScroll(index: index),
+                                CardProgramScroll(
+                                  modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                ),
                                 Builder(
                                   builder: (context) {
                                     if (index == 9) {
@@ -225,7 +227,10 @@ class _TabHomeState extends State<TabHome> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       itemCount: 4,
                       itemBuilder: (context, index) {
-                        return CardProgramGrid(index: index);
+                        return CardProgramGrid(
+                          modelProgram: listSampleModelProgram[index],
+                          index: index,
+                        );
                       },
                     ),
 
@@ -256,7 +261,7 @@ class _TabHomeState extends State<TabHome> {
                     ),
                     Gaps.v6,
                     SizedBox(
-                      height: 216,
+                      height: 231,
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         scrollDirection: Axis.horizontal,
@@ -265,7 +270,9 @@ class _TabHomeState extends State<TabHome> {
                             10,
                             (index) => Row(
                               children: [
-                                CardProgramScroll(index: index),
+                                CardProgramScroll(
+                                  modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                ),
                                 Builder(
                                   builder: (context) {
                                     if (index == 9) {
@@ -317,7 +324,10 @@ class _TabHomeState extends State<TabHome> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       itemCount: 6,
                       itemBuilder: (context, index) {
-                        return CardProgramGrid(index: index);
+                        return CardProgramGrid(
+                          modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                          index: index,
+                        );
                       },
                     ),
 
@@ -347,16 +357,23 @@ class _TabHomeState extends State<TabHome> {
                     ),
                     Gaps.v6,
                     SizedBox(
-                      height: 216,
+                      height: 231,
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: List.generate(
                             10,
+                            //listSampleModelProgram.length,
                             (index) => Row(
                               children: [
-                                CardProgramScroll(index: index),
+                                /// .first 를
+                                /// 모델을 여러개 만들어서
+                                CardProgramScroll(
+                                  modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                  // modelProgram: listSampleModelProgram[index],
+
+                                ),
                                 Builder(
                                   builder: (context) {
                                     if (index == 9) {
@@ -399,7 +416,7 @@ class _TabHomeState extends State<TabHome> {
                     ),
                     Gaps.v6,
                     SizedBox(
-                      height: 216,
+                      height: 231,
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         scrollDirection: Axis.horizontal,
@@ -408,7 +425,9 @@ class _TabHomeState extends State<TabHome> {
                             10,
                             (index) => Row(
                               children: [
-                                CardProgramScroll(index: index),
+                                CardProgramScroll(
+                                  modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                ),
                                 Builder(
                                   builder: (context) {
                                     if (index == 9) {
@@ -448,7 +467,9 @@ class _TabHomeState extends State<TabHome> {
                             10,
                             (index) => Row(
                               children: [
-                                CardReviewScroll(index: index),
+                                CardReviewScroll(
+                                    modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                    index: index),
                                 Builder(
                                   builder: (context) {
                                     if (index == 9) {
@@ -527,39 +548,28 @@ class CardIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double iconSize = MediaQuery.of(context).size.width * 0.1;
-
     return Column(
       children: [
-        AspectRatio(
-          aspectRatio: 1 / 1,
-          child: Container(
-            // width: 60,
-            // height: 60,
-            decoration: BoxDecoration(
-              color: colorGray50,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Image.asset(
-                iconPath,
-                // width: 32,
-                // height: 32,
-                width: iconSize,
-                height: iconSize,
-                fit: BoxFit.cover,
-              ),
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            color: colorGray50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: Image.asset(
+              iconPath,
+              width: 32,
+              height: 32,
+              fit: BoxFit.cover,
             ),
           ),
         ),
         Gaps.v10,
-        /// 글자가 페이지를 넘어서 줄바꿈이 되는걸 방지. 알아서 한 줄 맞춤
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            text,
-            style: TS.s14w600(colorBlack),
-          ),
+        Text(
+          text,
+          style: TS.s14w600(colorBlack),
         ),
       ],
     );
@@ -586,9 +596,9 @@ class IconCardGridView extends StatelessWidget {
           // 스크롤 금지
           primary: false,
           crossAxisCount: 4,
-          crossAxisSpacing: 30,
+          crossAxisSpacing: 0,
           mainAxisSpacing: 21,
-          padding: EdgeInsets.symmetric(horizontal: 22.5),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           itemCount: texts.length,
           itemBuilder: (context, index) {
             return CardIcon(
