@@ -19,6 +19,7 @@ class CardReviewScroll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
     return SizedBox(
       height: 209,
       child: AspectRatio(

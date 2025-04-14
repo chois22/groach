@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:practice1/const/model/model_address.dart';
 import 'package:practice1/const/model/model_program.dart';
+import 'package:practice1/const/model/model_review.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:uuid/uuid.dart';
 
@@ -29,15 +30,20 @@ final List<String> listImgOutlinedMainBottomNavi = [
   'assets/icon/my_outline.svg',
 ];
 
+final List<ModelReview> listSampleModelReview = [];
+
 /// 서버 연결 전에 테스트로 사용하는 프로그램 모델 리스트
 final List<ModelProgram> listSampleModelProgram = [
-
   /// 인기 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '1',
     dateCreate: Timestamp.now(),
     programType: ProgramType.popular,
     listImgUrl: [
+      'assets/image/program_card_image1.png',
+      'assets/image/program_card_image2.png',
+      'assets/image/program_card_image3.png',
+      'assets/image/program_card_image4.png',
       'assets/image/program_card_image1.png',
       'assets/image/program_card_image2.png',
       'assets/image/program_card_image3.png',
@@ -66,9 +72,9 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 농사 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '2',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.farm,
+    programType: ProgramType.popular,
     listImgUrl: [
       'assets/image/program_card_image2.png',
       'assets/image/program_card_image1.png',
@@ -100,7 +106,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: Uuid().v1(),
     dateCreate: Timestamp.now(),
-    programType: ProgramType.hokangs,
+    programType: ProgramType.popular,
     listImgUrl: [
       'assets/image/program_card_image3.png',
       'assets/image/program_card_image2.png',
@@ -146,7 +152,16 @@ final List<ModelProgram> listSampleModelProgram = [
     price: 7000,
     discountPercentage: 35,
     locationShortCut: "수원역 1번 출구에서 400m",
-    listServiceType: [ServiceType.wifi, ServiceType.pet, ServiceType.parking],
+    listServiceType: [
+      ServiceType.wifi,
+      ServiceType.pet,
+      ServiceType.parking,
+      ServiceType.wifi,
+      ServiceType.pet,
+      ServiceType.parking,
+      ServiceType.wifi,
+      ServiceType.pet,
+    ],
     maxCountReserve: 20,
     timeProgramStart: Timestamp.now(),
     timeProgramEnd: Timestamp.now(),

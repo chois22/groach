@@ -1,0 +1,2 @@
+/Users/jongwan/Desktop/test/groach/android/app/.cxx/Debug/195y175k/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/jongwan/Desktop/test/groach/android/app/.cxx/Debug/195y175k/armeabi-v7a/CMakeFiles/rebuild_cache.dir

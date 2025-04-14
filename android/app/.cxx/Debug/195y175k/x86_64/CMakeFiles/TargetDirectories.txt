@@ -1,0 +1,2 @@
+/Users/jongwan/Desktop/test/groach/android/app/.cxx/Debug/195y175k/x86_64/CMakeFiles/edit_cache.dir
+/Users/jongwan/Desktop/test/groach/android/app/.cxx/Debug/195y175k/x86_64/CMakeFiles/rebuild_cache.dir

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
@@ -22,6 +23,9 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
 
   @override
   Widget build(BuildContext context) {
+    final List<ModelProgram> listModelProgram =
+        listSampleModelProgram.where((e) => e.programType == widget.programType).toList();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.programType == ProgramType.recommend
@@ -102,9 +106,9 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                           return Center(
                             child: Column(
                               children: [
-                                if (selectedFilter == 0) Text('인기순 화면.', style: TS.s16w600(colorBlack)),
+                                /*      if (selectedFilter == 0) Text('인기순 화면.', style: TS.s16w600(colorBlack)),
                                 if (selectedFilter == 1) Text('평점순 화면.', style: TS.s16w600(colorBlack)),
-                                if (selectedFilter == 2) Text('가격순 화면.', style: TS.s16w600(colorBlack)),
+                                if (selectedFilter == 2) Text('가격순 화면.', style: TS.s16w600(colorBlack)),*/
                                 Gaps.v20,
                                 MasonryGridView.count(
                                   shrinkWrap: true,
@@ -112,10 +116,10 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 15,
                                   mainAxisSpacing: 20,
-                                  itemCount: 8,
+                                  itemCount: listModelProgram.length,
                                   itemBuilder: (context, index) {
                                     return CardProgramGrid(
-                                      modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                      modelProgram: listModelProgram[index],
                                       index: index,
                                     );
                                   },

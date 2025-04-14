@@ -1,8 +1,12 @@
+import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:practice1/const/model/model_program.dart';
+import 'package:practice1/const/model/model_review.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
@@ -18,8 +22,9 @@ import 'package:practice1/ui/route/home/route_home_programs.dart';
 import 'package:practice1/ui/route/home/route_reservaion.dart';
 import 'package:practice1/ui/route/route_picture.dart';
 import 'package:practice1/ui/tab/tab_home.dart';
+import 'package:practice1/utils/utils_enum.dart';
 
-class RouteHomeProgramDetailPage extends StatelessWidget {
+class RouteHomeProgramDetailPage extends StatefulWidget {
   final ModelProgram modelProgram;
 
   final int index;
@@ -31,22 +36,41 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
   });
 
   @override
+  State<RouteHomeProgramDetailPage> createState() => _RouteHomeProgramDetailPageState();
+}
+
+class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage> {
+  static final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    await controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: LatLng(
+        /// 위도, 경도
+        // 37.2864,
+        // 127.0110,
+        widget.modelProgram.modelAddress.addressGeoPoint.latitude,
+        widget.modelProgram.modelAddress.addressGeoPoint.longitude,
+      ),
+    )));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final CameraPosition initialPosition = CameraPosition(
       target: LatLng(
         /// 위도, 경도
         // 37.2864,
         // 127.0110,
-        modelProgram.modelAddress.addressGeoPoint.latitude,
-        modelProgram.modelAddress.addressGeoPoint.longitude,
+        widget.modelProgram.modelAddress.addressGeoPoint.latitude,
+        widget.modelProgram.modelAddress.addressGeoPoint.longitude,
       ),
       zoom: 15,
     );
-    late final GoogleMapController controller;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${modelProgram.name} 프로그램'),
+        title: Text('${widget.modelProgram.name} 프로그램'),
       ),
       body: GestureDetector(
         onTap: () {
@@ -70,8 +94,7 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                       },
                       child: ClipRRect(
                         child: Image.asset(
-                          'assets/image/program_card_image1.png',
-                          fit: BoxFit.cover,
+                          widget.modelProgram.listImgUrl.first,
                         ),
                       ),
                     ),
@@ -130,10 +153,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(modelProgram.name, style: TS.s16w500(colorGray600)),
+                        Text(widget.modelProgram.name, style: TS.s16w500(colorGray600)),
                         Gaps.v8,
                         Text(
-                          modelProgram.desc,
+                          widget.modelProgram.desc,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TS.s18w400(colorBlack),
@@ -144,9 +167,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                             Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
                             Row(
                               children: [
-                                Text(modelProgram.averageStarRating.toString(), style: TS.s14w500(colorGray800)),
+                                Text(widget.modelProgram.averageStarRating.toString(), style: TS.s14w500(colorGray800)),
                                 Gaps.h2,
-                                Text('(${modelProgram.countTotalReview.toString()})', style: TS.s14w500(colorGray800)),
+                                Text('(${widget.modelProgram.countTotalReview.toString()})',
+                                    style: TS.s14w500(colorGray800)),
                               ],
                             ),
                             Gaps.h4,
@@ -171,10 +195,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                         Gaps.v10,
                         Row(
                           children: [
-                            Text('${modelProgram.discountPercentage}%', style: TS.s16w700(Color(0XFFFA7014))),
+                            Text('${widget.modelProgram.discountPercentage}%', style: TS.s16w700(Color(0XFFFA7014))),
                             Gaps.h2,
                             Text(
-                              '${NumberFormat('#,###').format(modelProgram.price * modelProgram.discountPercentage / 100)}',
+                              '${NumberFormat('#,###').format(widget.modelProgram.price)}',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: colorGray500,
@@ -187,7 +211,7 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                         ),
                         Gaps.v4,
                         Text(
-                          '${NumberFormat('#,###').format(modelProgram.price - modelProgram.price * modelProgram.discountPercentage / 100)}원',
+                          '${NumberFormat('#,###').format(widget.modelProgram.price - widget.modelProgram.price * widget.modelProgram.discountPercentage / 100)}원',
                           style: TS.s16w700(colorBlack),
                         ),
                       ],
@@ -206,7 +230,7 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                           children: [
                             SvgPicture.asset('assets/icon/local_gray.svg'),
                             Gaps.h6,
-                            Text(modelProgram.locationShortCut, style: TS.s14w500(colorGray800)),
+                            Text(widget.modelProgram.locationShortCut, style: TS.s14w500(colorGray800)),
                           ],
                         ),
                         Gaps.v10,
@@ -217,7 +241,7 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                             Text('영업중', style: TS.s14w600(Color(0xFF0059FF))),
                             Gaps.h6,
                             Text(
-                              '${modelProgram.timeProgramEnd.toDate().hour}:${modelProgram.timeProgramEnd.toDate().minute}에 라스트오더',
+                              '${widget.modelProgram.timeProgramEnd.toDate().hour}:${widget.modelProgram.timeProgramEnd.toDate().minute}에 라스트오더',
                               style: TS.s14w500(colorGray800),
                             ),
                           ],
@@ -231,36 +255,31 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                   // todo: 간격조정 물어보기
                   CustomDivider(color: colorGray200, height: 1),
                   Gaps.v30,
-                  SizedBox(
-                    height: modelProgram.listServiceType.length < 2 ? 112 : 210,
-                   // height: modelProgram.listServiceType.length < 5 ? 112 : 210,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text('제공 서비스', style: TS.s18w700(colorBlack)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text('제공 서비스', style: TS.s18w700(colorBlack)),
+                      ),
+                      Gaps.v16,
+                      Align(
+                        //todo: 이거 다시 물어보기
+                        alignment: Alignment.centerLeft,
+                        child: MasonryGridView.count(
+                          shrinkWrap: true,
+                          primary: false,
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 0,
+                          mainAxisSpacing: 16,
+                          padding: EdgeInsets.zero,
+                          itemCount: widget.modelProgram.listServiceType.length,
+                          itemBuilder: (context, index) {
+                            return ServiceCircle(serviceType: widget.modelProgram.listServiceType[index]);
+                          },
                         ),
-                        Gaps.v16,
-                        Align(
-                          //todo: 이거 다시 물어보기
-                          alignment: Alignment.centerLeft,
-                          child: MasonryGridView.count(
-                            shrinkWrap: true,
-                            primary: false,
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 0,
-                            mainAxisSpacing: 16,
-                            padding: EdgeInsets.zero,
-                           // itemCount: modelProgram.listServiceType.length ,
-                            itemCount: 8,
-                            itemBuilder: (context, index) {
-                              return ServiceCircle(serviceType: modelProgram.listServiceType[index % modelProgram.listServiceType.length]);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
 
                   /// 예약 안내
@@ -354,21 +373,24 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                         Container(
                           height: 160,
                           child: GoogleMap(
+                            onMapCreated: (controller) {
+                              _controller.complete(controller);
+                            },
                             initialCameraPosition: initialPosition,
                             markers: {
                               Marker(
                                 markerId: MarkerId('123'),
                                 position: LatLng(
                                   /// 위도, 경도
-                                  modelProgram.modelAddress.addressGeoPoint.latitude,
-                                  modelProgram.modelAddress.addressGeoPoint.longitude,
+                                  widget.modelProgram.modelAddress.addressGeoPoint.latitude,
+                                  widget.modelProgram.modelAddress.addressGeoPoint.longitude,
                                 ),
                               ),
                             },
                           ),
                         ),
                         Gaps.v16,
-                        Text(modelProgram.modelAddress.addressDetail, style: TS.s14w500(colorBlack)),
+                        Text(widget.modelProgram.modelAddress.addressDetail, style: TS.s14w500(colorBlack)),
                       ],
                     ),
                   ),
@@ -430,33 +452,39 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                           ],
                         ),
                         Gaps.v16,
-                        SizedBox(
-                          height: 216,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: List.generate(
-                                10,
-                                (index) => Row(
-                                  children: [
-                                    CardReviewScroll(
-                                      modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
-                                    ),
-                                    Builder(
-                                      builder: (context) {
-                                        if (index == 9) {
-                                          return const SizedBox.shrink();
-                                        } else {
-                                          return Gaps.h10;
-                                        }
-                                      },
-                                    ),
-                                  ],
+                        Builder(builder: (context) {
+                          final List<ModelReview> listModelReviewFilter = listSampleModelReview
+                              .where((review) => review.uidOfModelProgram == widget.modelProgram.uid)
+                              .toList();
+
+                          return SizedBox(
+                            height: 216,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: List.generate(
+                                  10,
+                                  (index) => Row(
+                                    children: [
+                                      CardReviewScroll(
+                                        modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (index == 9) {
+                                            return const SizedBox.shrink();
+                                          } else {
+                                            return Gaps.h10;
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -562,12 +590,6 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
   }
 }
 
-Map<ServiceType, Map<String, String>> serviceMap = {
-  ServiceType.wifi: {'icon': 'assets/icon/wifi_icon.png', 'text': '와이파이'},
-  ServiceType.pet: {'icon': 'assets/icon/pet_icon.png', 'text': '반려동물'},
-  ServiceType.parking: {'icon': 'assets/icon/parking_icon.png', 'text': '주차'},
-};
-
 class ServiceCircle extends StatelessWidget {
   final ServiceType serviceType;
 
@@ -578,8 +600,6 @@ class ServiceCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final service = serviceMap[serviceType]!;
-
     return Column(
       children: [
         Container(
@@ -589,10 +609,19 @@ class ServiceCircle extends StatelessWidget {
           ),
           width: 50,
           height: 50,
-          child: Center(child: Image.asset(service['icon']!, width: 24, height: 24)),
+          child: Center(
+            child: Image.asset(
+              UtilsEnum.getImgUrlFromServiceType(serviceType),
+              width: 24,
+              height: 24,
+            ),
+          ),
         ),
         Gaps.v8,
-        Text(service['text']!, style: TS.s13w500(colorBlack)),
+        Text(
+          UtilsEnum.getNameFromServiceType(serviceType),
+          style: TS.s13w500(colorBlack),
+        ),
       ],
     );
   }
