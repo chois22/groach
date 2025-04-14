@@ -32,9 +32,6 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ///  서비스 타입
-    final List<ServiceType> services = [ServiceType.wifi, ServiceType.pet, ServiceType.parking];
-
     final CameraPosition initialPosition = CameraPosition(
       target: LatLng(
         /// 위도, 경도
@@ -235,7 +232,8 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                   CustomDivider(color: colorGray200, height: 1),
                   Gaps.v30,
                   SizedBox(
-                    height: 112,
+                    height: modelProgram.listServiceType.length < 2 ? 112 : 210,
+                   // height: modelProgram.listServiceType.length < 5 ? 112 : 210,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -252,9 +250,10 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                             primary: false,
                             crossAxisCount: 4,
                             crossAxisSpacing: 0,
-                            mainAxisSpacing: 0,
+                            mainAxisSpacing: 16,
                             padding: EdgeInsets.zero,
-                            itemCount: services.length,
+                           // itemCount: modelProgram.listServiceType.length ,
+                            itemCount: 8,
                             itemBuilder: (context, index) {
                               return ServiceCircle(serviceType: modelProgram.listServiceType[index % modelProgram.listServiceType.length]);
                             },
@@ -442,7 +441,6 @@ class RouteHomeProgramDetailPage extends StatelessWidget {
                                   children: [
                                     CardReviewScroll(
                                       modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
-                                      index: index,
                                     ),
                                     Builder(
                                       builder: (context) {

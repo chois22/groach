@@ -469,7 +469,7 @@ class _TabHomeState extends State<TabHome> {
                               children: [
                                 CardReviewScroll(
                                     modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
-                                    index: index),
+                                   ),
                                 Builder(
                                   builder: (context) {
                                     if (index == 9) {

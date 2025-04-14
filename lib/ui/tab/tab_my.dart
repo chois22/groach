@@ -6,9 +6,6 @@ import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/route/home/route_setting.dart';
-import 'package:practice1/ui/tab/tab_home.dart';
-
-import '../route/route_main.dart';
 
 class TabMy extends StatelessWidget {
   const TabMy({super.key});

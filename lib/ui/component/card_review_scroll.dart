@@ -2,35 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/value/colors.dart';
-import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/route/home/route_home_program_detail_page.dart';
-import 'package:practice1/ui/tab/tab_home.dart';
 
 class CardReviewScroll extends StatelessWidget {
   final ModelProgram modelProgram;
 
-  final int index;
 
   const CardReviewScroll({
     required this.modelProgram,
-
-    required this.index,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    String imagePath = '';
-    // 생성된 index가 짝수면 이미지 1
-    if (index % 2 == 0) {
-      imagePath = 'assets/image/program_image1.png';
-      // 생성된 index가 홀수면 이미지 1
-    } else if (index % 2 == 1) {
-      imagePath = 'assets/image/program_image2.png';
-    }
 
     return SizedBox(
       height: 209,
