@@ -11,11 +11,11 @@ import 'package:practice1/ui/route/home/route_home_program_detail_page.dart';
 class CardProgramGrid extends StatelessWidget {
   final ModelProgram modelProgram;
 
-  final int index;
+
 
   const CardProgramGrid({
     required this.modelProgram,
-    required this.index,
+
     super.key,
   });
 
@@ -44,7 +44,7 @@ class CardProgramGrid extends StatelessWidget {
                   // 각 컨테이너 간 간격
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
-                    color: Colors.teal[(index + 1) * 100], // 색상 변형
+                    color: Colors.transparent, // 색상 변형
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Image.asset(

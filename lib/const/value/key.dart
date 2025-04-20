@@ -13,6 +13,7 @@ const String keyAddress = 'address';
 
 const String keyUid = 'uid';
 const String keyDateCreate = 'date_create';
+
 const String keyProgramType = 'program_type';
 const String keyListImgUrl = 'list_img_url';
 const String keyName = 'name';
@@ -28,3 +29,17 @@ const String keyTimeProgramStart = 'time_program_start';
 const String keyTimeProgramEnd = 'time_program_end';
 const String keyListTag = 'list_tag';
 const String keyModelAddress = 'model_address';
+
+// model_user
+const String keyEmail = 'email';
+const String keyNickName = 'nick_name';
+const String keyPw = 'pw';
+const String keyPwCheck ='pw_check';
+
+// model_review
+const String keyUidOfModelProgram = 'uid_of_model_program';
+const String keyModelProgram = 'model_program';
+const String keyUserName = 'user_name';
+const String keyUserImg = 'user_img';
+const String keyReviewText = 'review_text';
+const String keyStarRating = 'star_rating';

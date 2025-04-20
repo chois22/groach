@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/gaps.dart';
@@ -13,7 +14,8 @@ import 'package:practice1/ui/tab/tab_search.dart';
 // pop안되도록 설정하기
 
 class RouteMain extends StatefulWidget {
-  const RouteMain({super.key});
+  const RouteMain({
+    super.key});
 
   static ValueNotifier<int> vnIndexTab = ValueNotifier(0);
 

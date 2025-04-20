@@ -1,25 +1,22 @@
 import 'dart:async';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:practice1/const/model/model_program.dart';
-import 'package:practice1/const/model/model_review.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
-import 'package:practice1/ui/component/card_program_grid.dart';
 import 'package:practice1/ui/component/card_program_scroll.dart';
 import 'package:practice1/ui/component/card_review_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:practice1/ui/route/home/route_home_programs.dart';
 import 'package:practice1/ui/route/home/route_reservaion.dart';
+import 'package:practice1/ui/route/review/route_review_view.dart';
 import 'package:practice1/ui/route/route_picture.dart';
 import 'package:practice1/ui/tab/tab_home.dart';
 import 'package:practice1/utils/utils_enum.dart';
@@ -88,7 +85,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => RoutePicture(pictureNumber: 0),
+                            builder: (_) => RoutePicture(modelProgram: widget.modelProgram, pictureNumber: 0),
                           ),
                         );
                       },
@@ -107,24 +104,23 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: List.generate(
-                          10,
+                          widget.modelProgram.listImgUrl.length,
                           (index) {
-                            String imagePath = 'assets/image/program_card_image${index % 4 + 1}.png';
-
                             return Row(
                               children: [
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (_) => RoutePicture(pictureNumber: index % 4),
+                                        builder: (_) => RoutePicture(modelProgram: widget.modelProgram, pictureNumber: index),
                                       ),
                                     );
                                   },
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
                                     child: Image.asset(
-                                      imagePath,
+                                      widget.modelProgram.listImgUrl[index],
+                                      //imagePath,
                                       width: 86,
                                       height: 62,
                                       fit: BoxFit.cover,
@@ -133,7 +129,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                                 ),
                                 Builder(
                                   builder: (context) {
-                                    if (index == 9) {
+                                    if (index == widget.modelProgram.listImgUrl.length - 1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;
@@ -169,14 +165,20 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                               children: [
                                 Text(widget.modelProgram.averageStarRating.toString(), style: TS.s14w500(colorGray800)),
                                 Gaps.h2,
-                                Text('(${widget.modelProgram.countTotalReview.toString()})',
-                                    style: TS.s14w500(colorGray800)),
+                                Text('(${widget.modelProgram.countTotalReview.toString()})', style: TS.s14w500(colorGray800)),
                               ],
                             ),
                             Gaps.h4,
                             GestureDetector(
                               onTap: () {
-                                print('리뷰 보기');
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => RouteReviewView(
+                                      modelProgram: widget.modelProgram,
+                                      listModelReview: listSampleModelReview,
+                                    ),
+                                  ),
+                                );
                               },
                               child: Container(
                                 color: Colors.transparent,
@@ -421,21 +423,36 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                     ),
                   ),
 
-                  /// 사용자 리뷰
+                  /// 사용자 리뷰들
                   Gaps.v8,
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       children: [
-                        ReviewBox(iconPath: 'assets/icon/review_smile_icon.svg', text: '시설이 잘 관리되어 있어요'),
+                        ReviewBox(
+                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_facility),
+                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_facility),
+                        ),
                         Gaps.v8,
-                        ReviewBox(iconPath: 'assets/icon/review_thumb_icon.svg', text: '사장님이 친절해요'),
+                        ReviewBox(
+                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.kind_owner),
+                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.kind_owner),
+                        ),
                         Gaps.v8,
-                        ReviewBox(iconPath: 'assets/icon/review_diamond_icon.svg', text: '시설물이 력셔리해요'),
+                        ReviewBox(
+                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.luxury_facility),
+                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.luxury_facility),
+                        ),
                         Gaps.v8,
-                        ReviewBox(iconPath: 'assets/icon/review_mountain_icon.svg', text: '뷰가 좋아요'),
+                        ReviewBox(
+                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_view),
+                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_view),
+                        ),
                         Gaps.v8,
-                        ReviewBox(iconPath: 'assets/icon/review_heart_icon.svg', text: '연인과 함께 가기 좋아요'),
+                        ReviewBox(
+                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.with_couple),
+                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.with_couple),
+                        ),
                       ],
                     ),
                   ),
@@ -448,30 +465,42 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                           children: [
                             Text('사용자 리뷰', style: TS.s18w700(colorBlack)),
                             Spacer(),
-                            MoreView(),
+                            GestureDetector(
+                                onTap: (){
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                    builder: (_) => RouteReviewView(modelProgram: widget.modelProgram, listModelReview: listSampleModelReview),
+                                    ),
+                                  );
+                                },
+                                child: MoreView()),
                           ],
                         ),
                         Gaps.v16,
                         Builder(builder: (context) {
-                          final List<ModelReview> listModelReviewFilter = listSampleModelReview
-                              .where((review) => review.uidOfModelProgram == widget.modelProgram.uid)
-                              .toList();
+                          // todo : 물어보기
+                          // final List<ModelReview> listModelReviewFilter = listSampleModelReview
+                          //     .where((review) => review.uidOfModelProgram == widget.modelProgram.uid)
+                          //     .toList();
 
                           return SizedBox(
-                            height: 216,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: List.generate(
-                                  10,
+                                  listSampleModelReview.length,
                                   (index) => Row(
                                     children: [
                                       CardReviewScroll(
-                                        modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                        modelProgram: listSampleModelProgram[index],
+                                        modelReview: listSampleModelReview[index],
+                                        /// 프로그램 정보 표시 안함
+                                        isTabHome: false,
                                       ),
                                       Builder(
                                         builder: (context) {
-                                          if (index == 9) {
+                                          if (index == listSampleModelReview.length - 1) {
                                             return const SizedBox.shrink();
                                           } else {
                                             return Gaps.h10;
@@ -512,20 +541,30 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                     ),
                   ),
                   Gaps.v6,
+                  //todo: 정렬 물어보기
                   SizedBox(
                     height: 257,
                     child: SingleChildScrollView(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       scrollDirection: Axis.horizontal,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: List.generate(
-                          10,
+                          /// listTag 비교하여 일치한는 값들로 표시
+                          listSampleModelProgram
+                              .where((program) =>
+                              program.listTag.any((tag) => widget.modelProgram.listTag.contains(tag)))
+                              .length,
                           (index) => Row(
                             children: [
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   CardProgramScroll(
-                                    modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                    modelProgram: listSampleModelProgram
+                                        .where((program) =>
+                                        program.listTag.any((tag) => widget.modelProgram.listTag.contains(tag)))
+                                        .toList()[index],
                                     width: 115,
                                     height: 115,
                                   ),
@@ -558,7 +597,10 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                               ),
                               Builder(
                                 builder: (context) {
-                                  if (index == 9) {
+                                  if (index == listSampleModelProgram
+                                      .where((program) =>
+                                      program.listTag.any((tag) => widget.modelProgram.listTag.contains(tag)))
+                                      .length - 1) {
                                     return const SizedBox.shrink();
                                   } else {
                                     return Gaps.h10;
@@ -571,8 +613,6 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                       ),
                     ),
                   ),
-
-                  //todo: 카드 각각에 예약하기는 아직 못넣었음.
                   Gaps.v30,
                   Gaps.v10,
                   Padding(
@@ -630,10 +670,20 @@ class ServiceCircle extends StatelessWidget {
 class ReviewBox extends StatelessWidget {
   final String iconPath;
   final String text;
+  final int number;
+  final Color boxColor;
+  final Color boxBorderColor;
+  final double boxBorderWidth;
+  final TextStyle textStyle;
 
   const ReviewBox({
     required this.iconPath,
     required this.text,
+    this.boxColor = colorGray50,
+    this.boxBorderColor = Colors.transparent,
+    this.boxBorderWidth = 0.0,
+    this.textStyle = const TS.s14w500(colorBlack),
+    this.number = 4,
     super.key,
   });
 
@@ -644,7 +694,8 @@ class ReviewBox extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: colorGray50,
+        color: boxColor,
+        border: Border.all(color: boxBorderColor, width: boxBorderWidth),
       ),
       child: Column(
         children: [
@@ -654,9 +705,9 @@ class ReviewBox extends StatelessWidget {
               Gaps.h16,
               Center(child: SvgPicture.asset(iconPath, width: 20, height: 20)),
               Gaps.h6,
-              Text(text, style: TS.s14w500(colorBlack)),
+              Text(text, style: textStyle),
               Spacer(),
-              Text('+4', style: TS.s14w400(colorGray600)),
+              Text('$number', style: TS.s14w400(colorGray600)),
               Gaps.h16,
             ],
           ),

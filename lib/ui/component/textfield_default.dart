@@ -4,6 +4,7 @@ import 'package:practice1/const/value/text_style.dart';
 
 class TextFieldDefault extends TextField {
   TextFieldDefault({super.key,
+    super.minLines,
     super.onChanged,
     super.controller,
     super.inputFormatters,

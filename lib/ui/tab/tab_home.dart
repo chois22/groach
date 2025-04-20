@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
@@ -13,6 +14,7 @@ import 'package:practice1/ui/component/card_review_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/route/home/route_home_programs.dart';
 import 'package:practice1/ui/route/route_main.dart';
+import 'package:practice1/utils/utils_enum.dart';
 
 class TabHome extends StatefulWidget {
   const TabHome({super.key});
@@ -145,9 +147,16 @@ class _TabHomeState extends State<TabHome> {
                       padding: const EdgeInsets.only(left: 20.0),
                       child: Row(
                         children: [
-                          Text('추천 프로그램', style: TS.s18w700(colorBlack)),
+                          Text(
+                            UtilsEnum.getNameFromProgramType(ProgramType.recommend),
+                            style: TS.s18w700(colorBlack),
+                          ),
                           Gaps.h4,
-                          Image.asset('assets/icon/sparkles.png', width: 15, height: 15),
+                          Image.asset(
+                            UtilsEnum.getImgUrlFromProgramIcon(ProgramType.recommend),
+                            width: 15,
+                            height: 15,
+                          ),
                           Spacer(),
                           GestureDetector(
                             onTap: () {
@@ -170,15 +179,17 @@ class _TabHomeState extends State<TabHome> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: List.generate(
-                            10,
+                            listSampleModelProgram.where((program) => program.programType == ProgramType.recommend).length,
                             (index) => Row(
                               children: [
                                 CardProgramScroll(
-                                  modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                  modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.recommend).toList()[index],
                                 ),
                                 Builder(
                                   builder: (context) {
-                                    if (index == 9) {
+                                    if (index ==
+                                        listSampleModelProgram.where((program) => program.programType == ProgramType.recommend).length -
+                                            1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;
@@ -200,9 +211,9 @@ class _TabHomeState extends State<TabHome> {
                       padding: const EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
-                          Text('인기 프로그램', style: TS.s18w700(colorBlack)),
+                          Text(UtilsEnum.getNameFromProgramType(ProgramType.popular), style: TS.s18w700(colorBlack)),
                           Gaps.h4,
-                          SvgPicture.asset('assets/icon/hot_icon.svg', width: 47, height: 24),
+                          SvgPicture.asset(UtilsEnum.getImgUrlFromProgramIcon(ProgramType.popular), width: 47, height: 24),
                           Spacer(),
                           GestureDetector(
                             onTap: () {
@@ -225,11 +236,10 @@ class _TabHomeState extends State<TabHome> {
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 20,
                       padding: EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: 4,
+                      itemCount: listSampleModelProgram.where((program) => program.programType == ProgramType.popular).length,
                       itemBuilder: (context, index) {
                         return CardProgramGrid(
-                          modelProgram: listSampleModelProgram[index],
-                          index: index,
+                          modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.popular).toList()[index],
                         );
                       },
                     ),
@@ -242,9 +252,9 @@ class _TabHomeState extends State<TabHome> {
                       padding: const EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
-                          Text('급상승 프로그램', style: TS.s18w700(colorBlack)),
+                          Text(UtilsEnum.getNameFromProgramType(ProgramType.hot), style: TS.s18w700(colorBlack)),
                           Gaps.h4,
-                          SvgPicture.asset('assets/icon/up_icon.svg', width: 47, height: 24),
+                          SvgPicture.asset(UtilsEnum.getImgUrlFromProgramIcon(ProgramType.hot), width: 47, height: 24),
                           Spacer(),
                           GestureDetector(
                             onTap: () {
@@ -267,15 +277,16 @@ class _TabHomeState extends State<TabHome> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: List.generate(
-                            10,
+                            listSampleModelProgram.where((program) => program.programType == ProgramType.hot).length,
                             (index) => Row(
                               children: [
                                 CardProgramScroll(
-                                  modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                  modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.hot).toList()[index],
                                 ),
                                 Builder(
                                   builder: (context) {
-                                    if (index == 9) {
+                                    if (index ==
+                                        listSampleModelProgram.where((program) => program.programType == ProgramType.hot).length - 1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;
@@ -297,9 +308,16 @@ class _TabHomeState extends State<TabHome> {
                       padding: const EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
-                          Text('신규 프로그램', style: TS.s18w700(colorBlack)),
+                          Text(
+                            UtilsEnum.getNameFromProgramType(ProgramType.brand_new),
+                            style: TS.s18w700(colorBlack),
+                          ),
                           Gaps.h4,
-                          SvgPicture.asset('assets/icon/new_icon.svg', width: 47, height: 24),
+                          SvgPicture.asset(
+                            UtilsEnum.getImgUrlFromProgramIcon(ProgramType.brand_new),
+                            width: 47,
+                            height: 24,
+                          ),
                           Spacer(),
                           GestureDetector(
                             onTap: () {
@@ -322,11 +340,10 @@ class _TabHomeState extends State<TabHome> {
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 20,
                       padding: EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: 6,
+                      itemCount: listSampleModelProgram.where((program) => program.programType == ProgramType.brand_new).length,
                       itemBuilder: (context, index) {
                         return CardProgramGrid(
-                          modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
-                          index: index,
+                          modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.brand_new).toList()[index],
                         );
                       },
                     ),
@@ -339,7 +356,10 @@ class _TabHomeState extends State<TabHome> {
                       padding: const EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
-                          Text('호캉스 프로그램', style: TS.s18w700(colorBlack)),
+                          Text(
+                            UtilsEnum.getNameFromProgramType(ProgramType.hokangs),
+                            style: TS.s18w700(colorBlack),
+                          ),
                           Gaps.h4,
                           Spacer(),
                           GestureDetector(
@@ -363,20 +383,20 @@ class _TabHomeState extends State<TabHome> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: List.generate(
-                            10,
-                            //listSampleModelProgram.length,
+                            listSampleModelProgram.where((program) => program.programType == ProgramType.hokangs).length,
                             (index) => Row(
                               children: [
                                 /// .first 를
                                 /// 모델을 여러개 만들어서
                                 CardProgramScroll(
-                                  modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
-                                  // modelProgram: listSampleModelProgram[index],
+                                  modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.hokangs).toList()[index],
 
+                                  // modelProgram: listSampleModelProgram[index],
                                 ),
                                 Builder(
                                   builder: (context) {
-                                    if (index == 9) {
+                                    if (index ==
+                                        listSampleModelProgram.where((program) => program.programType == ProgramType.hokangs).length - 1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;
@@ -398,7 +418,10 @@ class _TabHomeState extends State<TabHome> {
                       padding: const EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
-                          Text('농총한달살기 프로그램', style: TS.s18w700(colorBlack)),
+                          Text(
+                            UtilsEnum.getNameFromProgramType(ProgramType.farm),
+                            style: TS.s18w700(colorBlack),
+                          ),
                           Gaps.h4,
                           Spacer(),
                           GestureDetector(
@@ -422,15 +445,16 @@ class _TabHomeState extends State<TabHome> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: List.generate(
-                            10,
+                            listSampleModelProgram.where((program) => program.programType == ProgramType.farm).length,
                             (index) => Row(
                               children: [
                                 CardProgramScroll(
-                                  modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
+                                  modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.farm).toList()[index],
                                 ),
                                 Builder(
                                   builder: (context) {
-                                    if (index == 9) {
+                                    if (index ==
+                                        listSampleModelProgram.where((program) => program.programType == ProgramType.farm).length - 1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;
@@ -464,15 +488,20 @@ class _TabHomeState extends State<TabHome> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: List.generate(
-                            10,
+                            listSampleModelReview.length,
                             (index) => Row(
                               children: [
                                 CardReviewScroll(
-                                    modelProgram: listSampleModelProgram[index % listSampleModelProgram.length],
-                                   ),
+                                  /// 리뷰 밑에 프로그램 정보
+                                  modelProgram: listSampleModelProgram[index],
+                                  /// 리뷰 남긴 사람 정보, 리뷰 내용
+                                  modelReview: listSampleModelReview[index],
+                                  ///  프로그램 정보 표시
+                                  isTabHome: true,
+                                ),
                                 Builder(
                                   builder: (context) {
-                                    if (index == 9) {
+                                    if (index == listSampleModelReview.length - 1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;

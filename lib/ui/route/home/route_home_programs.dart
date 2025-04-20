@@ -8,6 +8,7 @@ import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/card_program_grid.dart';
+import 'package:practice1/utils/utils_enum.dart';
 
 class RouteHomePrograms extends StatefulWidget {
   final ProgramType programType;
@@ -28,19 +29,8 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.programType == ProgramType.recommend
-            ? '추천 프로그램'
-            : widget.programType == ProgramType.popular
-                ? '인기 프로그램'
-                : widget.programType == ProgramType.hot
-                    ? '급상승 프로그램'
-                    : widget.programType == ProgramType.brand_new
-                        ? '신규 프로그램'
-                        : widget.programType == ProgramType.hokangs
-                            ? '호캉스 프로그램'
-                            : widget.programType == ProgramType.farm
-                                ? '농촌한달살기 프로그램'
-                                : ''),
+        /// 앱바 프로그램명 연동
+        title: Text(UtilsEnum.getNameFromProgramType(widget.programType)),
       ),
       body: GestureDetector(
         onTap: () {
@@ -120,7 +110,6 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                                   itemBuilder: (context, index) {
                                     return CardProgramGrid(
                                       modelProgram: listModelProgram[index],
-                                      index: index,
                                     );
                                   },
                                 ),

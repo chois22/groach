@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:practice1/const/model/model_program.dart';
+import 'package:practice1/const/model/model_review.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/text_style.dart';
 
-class RoutePicture extends StatefulWidget {
-  final ModelProgram modelProgram;
+class RouteReviewPicture extends StatefulWidget {
+  final ModelReview modelReview;
   final int pictureNumber;
 
-  const RoutePicture({
-    required this.modelProgram,
+  const RouteReviewPicture({
+    required this.modelReview,
     required this.pictureNumber,
     super.key,
   });
 
   @override
-  State<RoutePicture> createState() => _RoutePictureState();
+  State<RouteReviewPicture> createState() => _RouteReviewPictureState();
 }
 
-class _RoutePictureState extends State<RoutePicture> {
+class _RouteReviewPictureState extends State<RouteReviewPicture> {
   late final ValueNotifier<int> _currentIndex = ValueNotifier<int>(widget.pictureNumber);
   late final PageController _pageController = PageController(initialPage: widget.pictureNumber);
 
@@ -36,11 +37,11 @@ class _RoutePictureState extends State<RoutePicture> {
         child: Stack(
           children: [
             PhotoViewGallery.builder(
-              itemCount: widget.modelProgram.listImgUrl.length,
+              itemCount: widget.modelReview.listImgUrl.length,
               pageController: _pageController,
               builder: (context, index) {
                 return PhotoViewGalleryPageOptions(
-                  imageProvider: AssetImage(widget.modelProgram.listImgUrl[index]),
+                  imageProvider: AssetImage(widget.modelReview.listImgUrl[index]),
                   minScale: PhotoViewComputedScale.contained,
                   maxScale: PhotoViewComputedScale.contained * 2,
                 );
@@ -63,7 +64,7 @@ class _RoutePictureState extends State<RoutePicture> {
                         color: colorBlack,
                       ),
                       child: Text(
-                        '${currentIndex + 1} / ${widget.modelProgram.listImgUrl.length}',
+                        '${currentIndex + 1} / ${widget.modelReview.listImgUrl.length}',
                         style: TS.s18w600(colorWhite),
                       ),
                     ),

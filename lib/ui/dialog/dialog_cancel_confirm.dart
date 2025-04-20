@@ -15,7 +15,7 @@ class DialogCancelConfirm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        //width: 270,
+        width: 270,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: colorWhite,

@@ -27,10 +27,10 @@ class CardProgramScroll extends StatelessWidget {
     final ValueNotifier<bool> vnHeartTouch = ValueNotifier<bool>(false);
 
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-          builder: (_) => RouteHomeProgramDetailPage(modelProgram: modelProgram),
+            builder: (_) => RouteHomeProgramDetailPage(modelProgram: modelProgram),
           ),
         );
       },
@@ -92,7 +92,12 @@ class CardProgramScroll extends StatelessWidget {
               ],
             ),
             Gaps.v8,
-            Text(modelProgram.name, style: TS.s13w500(colorGray600)),
+            Text(
+              modelProgram.name,
+              style: TS.s13w500(colorGray600),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             Gaps.v5,
             Text(
               modelProgram.desc,
