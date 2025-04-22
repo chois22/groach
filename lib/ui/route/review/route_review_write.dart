@@ -27,6 +27,9 @@ class RouteReviewWrite extends StatefulWidget {
 
 class _RouteReviewWriteState extends State<RouteReviewWrite> {
   ValueNotifier<int> vnSelectedStar = ValueNotifier<int>(0);
+  final ValueNotifier<List<ReviewKeyWord>> vnListReviewKeyWord = ValueNotifier([]);
+
+  //todo: vnListSelectedReviewBoxes 지우고, vnListReviewKeyWord 로 구현하기
   List<ValueNotifier<bool>> vnListSelectedReviewBoxes = List.generate(5, (index) => ValueNotifier<bool>(false));
   final TextEditingController tecReviewWrite = TextEditingController();
   final FocusNode focusNode = FocusNode();
