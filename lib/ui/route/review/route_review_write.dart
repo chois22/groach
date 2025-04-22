@@ -232,6 +232,7 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                     Gaps.v16,
                     GestureDetector(
                       onTap: (){
+                        FocusManager.instance.primaryFocus?.unfocus();
                         showDialog(
                           context: context,
                           builder: (context) => DialogCancelConfirm(
