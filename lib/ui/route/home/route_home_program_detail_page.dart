@@ -493,7 +493,6 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                                   (index) => Row(
                                     children: [
                                       CardReviewScroll(
-                                        modelProgram: listSampleModelProgram[index],
                                         modelReview: listSampleModelReview[index],
                                         /// 프로그램 정보 표시 안함
                                         isTabHome: false,

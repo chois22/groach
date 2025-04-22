@@ -492,8 +492,6 @@ class _TabHomeState extends State<TabHome> {
                             (index) => Row(
                               children: [
                                 CardReviewScroll(
-                                  /// 리뷰 밑에 프로그램 정보
-                                  modelProgram: listSampleModelProgram[index],
                                   /// 리뷰 남긴 사람 정보, 리뷰 내용
                                   modelReview: listSampleModelReview[index],
                                   ///  프로그램 정보 표시

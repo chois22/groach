@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:practice1/const/model/model_address.dart';
 import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/model/model_review.dart';
+import 'package:practice1/const/model/model_user.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:uuid/uuid.dart';
 
@@ -37,9 +38,17 @@ final List<ModelReview> listSampleModelReview = [
     dateCreate: Timestamp.now(),
     //modelProgram: listSampleModelProgram.first,
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.recommend),
-    userName: '홍길동',
-    userImg: 'assets/image/modelprogram1_image3.jpeg',
-    reviewText: '너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
+    modelUser: ModelUser(
+      uid: '2',
+      dateCreate: Timestamp.now(),
+      email: 'asdf@gmail.com',
+      name: '김종완',
+      nickname: '김종완',
+      pw: '123123123',
+      userImg: 'assets/image/avatar_image.png',
+    ),
+    reviewText:
+        '너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 4,
     listImgUrl: [
       'assets/image/modelprogram1_image1.jpeg',
@@ -49,7 +58,6 @@ final List<ModelReview> listSampleModelReview = [
       'assets/image/modelprogram1_image3.jpeg',
       'assets/image/modelprogram1_image4.jpg',
       'assets/image/modelprogram1_image5.jpeg',
-
     ],
   ),
   ModelReview(
@@ -57,9 +65,10 @@ final List<ModelReview> listSampleModelReview = [
     dateCreate: Timestamp.now(),
     //modelProgram: listSampleModelProgram.first,
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.recommend),
-    userName: '김동동',
-    userImg: 'assets/image/modelprogram1_image4.jpg',
-    reviewText: '김동동 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
+    modelUser: ModelUser(
+        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+    reviewText:
+        '김동동 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 3,
     listImgUrl: [
       'assets/image/modelprogram1_image4.jpg',
@@ -69,7 +78,6 @@ final List<ModelReview> listSampleModelReview = [
       // 'assets/image/modelprogram1_image3.jpeg',
       // 'assets/image/modelprogram1_image4.jpg',
       // 'assets/image/modelprogram1_image5.jpeg',
-
     ],
   ),
   ModelReview(
@@ -77,9 +85,10 @@ final List<ModelReview> listSampleModelReview = [
     dateCreate: Timestamp.now(),
     //modelProgram: listSampleModelProgram.first,
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.recommend),
-    userName: '박둥둥',
-    userImg: 'assets/image/modelprogram1_image1.jpeg',
-    reviewText: '박둥둥 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
+    modelUser: ModelUser(
+        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+    reviewText:
+        '박둥둥 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 5,
     listImgUrl: [
       'assets/image/modelprogram1_image1.jpeg',
@@ -89,37 +98,17 @@ final List<ModelReview> listSampleModelReview = [
       // 'assets/image/modelprogram1_image5.jpeg',
     ],
   ),
-
   ModelReview(
     uid: '1',
     dateCreate: Timestamp.now(),
     //modelProgram: listSampleModelProgram.first,
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.hot),
-    userName: '가나다',
-    userImg: 'assets/image/modelprogram3_image4.jpeg',
-    reviewText: '가나다 리뷰 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
+    modelUser: ModelUser(
+        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+    reviewText:
+        '가나다 리뷰 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 1,
     listImgUrl: [
-      'assets/image/modelprogram3_image1.png',
-      'assets/image/modelprogram3_image2.png',
-      'assets/image/modelprogram3_image3.png',
-      'assets/image/modelprogram3_image4.jpeg',
-      'assets/image/modelprogram3_image5.png',
-
-    ],
-  ),
-  ModelReview(
-    uid: '1',
-    dateCreate: Timestamp.now(),
-    //modelProgram: listSampleModelProgram.first,
-    modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.hot),
-    userName: '나다라',
-    userImg: 'assets/image/modelprogram3_image5.png',
-    reviewText: '나다라 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
-    starRating: 1,
-    listImgUrl: [
-      'assets/image/modelprogram3_image4.jpeg',
-      'assets/image/modelprogram3_image5.png',
       'assets/image/modelprogram3_image1.png',
       'assets/image/modelprogram3_image2.png',
       'assets/image/modelprogram3_image3.png',
@@ -132,9 +121,30 @@ final List<ModelReview> listSampleModelReview = [
     dateCreate: Timestamp.now(),
     //modelProgram: listSampleModelProgram.first,
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.hot),
-    userName: '다라마',
-    userImg: 'assets/image/modelprogram3_image3.png',
-    reviewText: '다라마 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
+    modelUser: ModelUser(
+        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+    reviewText:
+        '나다라 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
+    starRating: 1,
+    listImgUrl: [
+      'assets/image/modelprogram3_image4.jpeg',
+      'assets/image/modelprogram3_image5.png',
+      'assets/image/modelprogram3_image1.png',
+      'assets/image/modelprogram3_image2.png',
+      'assets/image/modelprogram3_image3.png',
+      'assets/image/modelprogram3_image4.jpeg',
+      'assets/image/modelprogram3_image5.png',
+    ],
+  ),
+  ModelReview(
+    uid: '1',
+    dateCreate: Timestamp.now(),
+    //modelProgram: listSampleModelProgram.first,
+    modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.hot),
+    modelUser: ModelUser(
+        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+    reviewText:
+        '다라마 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 2,
     listImgUrl: [
       'assets/image/modelprogram3_image2.png',
@@ -166,7 +176,6 @@ final List<ModelProgram> listSampleModelProgram = [
       'assets/image/modelprogram1_image3.jpeg',
       'assets/image/modelprogram1_image4.jpg',
       'assets/image/modelprogram1_image5.jpeg',
-
     ],
     name: '경복궁 한복 체험',
     desc: "아름다운 한복을 입고 경복궁에서 전통 문화를 체험할 수 있어요.",
@@ -200,7 +209,6 @@ final List<ModelProgram> listSampleModelProgram = [
       'assets/image/modelprogram1_image3.jpeg',
       'assets/image/modelprogram1_image4.jpg',
       'assets/image/modelprogram1_image5.jpeg',
-
     ],
     name: '시즌2 경복궁 한복 체험',
     desc: "아름다운 한복을 입고 경복궁에서 전통 문화를 체험할 수 있어요.아름다운 한복을 입고 경복궁에서 전통 문화를 체험할 수 있어요.",

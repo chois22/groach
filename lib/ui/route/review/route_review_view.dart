@@ -48,9 +48,9 @@ class _RouteReviewViewState extends State<RouteReviewView> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                builder: (_) => RouteReviewWrite(
-                  modelProgram: widget.modelProgram,
-                ),
+                  builder: (_) => RouteReviewWrite(
+                    modelProgram: widget.modelProgram,
+                  ),
                 ),
               );
             },
@@ -184,14 +184,16 @@ class _RouteReviewViewState extends State<RouteReviewView> {
                         children: [
                           CircleAvatar(
                             radius: 16,
-                            backgroundImage: AssetImage(reviewIndex.userImg),
+                            backgroundImage: reviewIndex.modelUser.userImg == null
+                                ? null
+                                : AssetImage(reviewIndex.modelUser.userImg!),
                           ),
                           Gaps.h8,
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               /// 리뷰 작성자 정보
-                              Text(reviewIndex.userName, style: TS.s13w500(colorBlack)),
+                              Text(reviewIndex.modelUser.nickname, style: TS.s13w500(colorBlack)),
                               Row(
                                 children: List.generate(5, (index) {
                                   if (index < fullStars) {
@@ -227,6 +229,7 @@ class _RouteReviewViewState extends State<RouteReviewView> {
                         ],
                       ),
                       Gaps.v14,
+
                       /// 리뷰 이미지 첨부 부분
                       SizedBox(
                         height: 60,
@@ -243,7 +246,7 @@ class _RouteReviewViewState extends State<RouteReviewView> {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (_) => RouteReviewPicture(
-                                             // modelProgram: widget.modelProgram,
+                                              // modelProgram: widget.modelProgram,
                                               modelReview: reviewIndex,
                                               pictureNumber: reviewImgIndex,
                                             ),

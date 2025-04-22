@@ -8,7 +8,7 @@ class ModelUser {
   final String name; // 이름
   final String nickname; // 닉네임
   final String pw; // 비밀번호
-  final String pwCheck; // 비밀번호 확인
+  final String? userImg; // 프로필 사진
 
   ModelUser({
     required this.uid,
@@ -17,7 +17,7 @@ class ModelUser {
     required this.name,
     required this.nickname,
     required this.pw,
-    required this.pwCheck,
+    this.userImg,
   });
 
   Map<String, dynamic> toJson() {
@@ -25,10 +25,10 @@ class ModelUser {
       keyUid: uid,
       keyDateCreate: dateCreate,
       keyEmail: email,
-      keyName : name,
+      keyName: name,
       keyNickName: nickname,
       keyPw: pw,
-      keyPwCheck: pwCheck,
+      keyUserImg: userImg,
     };
   }
 
@@ -40,7 +40,7 @@ class ModelUser {
       name: json[keyName] as String,
       nickname: json[keyNickName] as String,
       pw: json[keyPw] as String,
-      pwCheck: json[keyPwCheck] as String,
+      userImg: json[keyUserImg] == null ? null : json[keyUserImg] as String,
     );
   }
 }

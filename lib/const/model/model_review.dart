@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:practice1/const/model/model_program.dart';
+import 'package:practice1/const/model/model_user.dart';
+import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/key.dart';
 
 class ModelReview {
   final String uid;
   final Timestamp dateCreate;
+
   //final String uidOfModelProgram;
   final ModelProgram modelProgram;
-  final String userImg;
-  final String userName;
+  final ModelUser modelUser;
   final String reviewText;
   final int starRating;
   final List<String> listImgUrl;
@@ -18,8 +20,7 @@ class ModelReview {
     required this.dateCreate,
     //required this.uidOfModelProgram,
     required this.modelProgram,
-    required this.userImg,
-    required this.userName,
+    required this.modelUser,
     required this.reviewText,
     required this.starRating,
     required this.listImgUrl,
@@ -30,9 +31,8 @@ class ModelReview {
       keyUid: uid,
       keyDateCreate: dateCreate,
       //keyUidOfModelProgram: uidOfModelProgram,
-      keyModelProgram: modelProgram.name,
-      keyUserName: userName,
-      keyUserImg: userImg,
+      keyModelProgram: modelProgram.toJson(),
+      keyModelUser: modelUser.toJson(),
       keyReviewText: reviewText,
       keyStarRating: starRating,
       keyListImgUrl: listImgUrl,
@@ -46,8 +46,7 @@ class ModelReview {
       // 이거 잘 모르겠음
       //uidOfModelProgram: json[keyUidOfModelProgram] as String,
       modelProgram: ModelProgram.fromJson(json[keyModelProgram]),
-      userName: json[keyUserName] as String,
-      userImg: json[keyUserImg] as String,
+      modelUser: ModelUser.fromJson(json[keyModelUser]),
       reviewText: json[keyReviewText] as String,
       starRating: json[keyStarRating] as int,
       listImgUrl: (json[keyListImgUrl] as List).map((e) => e.toString()).toList(),

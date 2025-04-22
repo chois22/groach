@@ -39,6 +39,7 @@ const String keyPwCheck ='pw_check';
 // model_review
 const String keyUidOfModelProgram = 'uid_of_model_program';
 const String keyModelProgram = 'model_program';
+const String keyModelUser = 'model_user';
 const String keyUserName = 'user_name';
 const String keyUserImg = 'user_img';
 const String keyReviewText = 'review_text';

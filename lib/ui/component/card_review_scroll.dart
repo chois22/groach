@@ -10,13 +10,10 @@ import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/route/home/route_home_program_detail_page.dart';
 
 class CardReviewScroll extends StatefulWidget {
-  final ModelProgram modelProgram;
   final ModelReview modelReview;
   final bool isTabHome;
 
-
   const CardReviewScroll({
-    required this.modelProgram,
     required this.modelReview,
     this.isTabHome = true,
     super.key,
@@ -32,7 +29,7 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
   @override
   Widget build(BuildContext context) {
     /// 탭 홈에서 사용자 리뷰 전체
-    if (widget.isTabHome){
+    if (widget.isTabHome) {
       return SizedBox(
         width: 313,
         child: Container(
@@ -50,25 +47,30 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //widget.modelReview.modelUser.userImg==null?null:widget.modelReview.modelUser.userImg!
                 Row(
                   children: [
                     CircleAvatar(
                       //  반지름 값이라 32/2 해줌
                       radius: 16,
-                      backgroundImage: AssetImage(widget.modelReview.userImg),
+                      backgroundImage: widget.modelReview.modelUser.userImg == null
+                          ? null
+                          : AssetImage(widget.modelReview.modelUser.userImg!),
                     ),
                     Gaps.h8,
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.modelReview.userName, style: TS.s12w500(colorBlack)),
+                        Text(widget.modelReview.modelUser.nickname, style: TS.s12w500(colorBlack)),
                         Gaps.v3,
-                        Text(DateFormat('yyyy-MM-dd').format(widget.modelReview.dateCreate.toDate()), style: TS.s12w500(colorGray500)),
+                        Text(DateFormat('yyyy-MM-dd').format(widget.modelReview.dateCreate.toDate()),
+                            style: TS.s12w500(colorGray500)),
                       ],
                     ),
                   ],
                 ),
                 Gaps.v10,
+
                 /// 리뷰 텍스트(내용)
                 Text(
                   widget.modelReview.reviewText,
@@ -82,11 +84,11 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                     CustomDivider(color: colorGray200, height: 1),
                     Gaps.v12,
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => RouteHomeProgramDetailPage(
-                              modelProgram: widget.modelProgram,
+                              modelProgram: widget.modelReview.modelProgram,
                             ),
                           ),
                         );
@@ -98,7 +100,7 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: Image.asset(
-                                widget.modelProgram.listImgUrl.first,
+                                widget.modelReview.modelProgram.listImgUrl.first,
                                 width: 40,
                                 height: 40,
                                 fit: BoxFit.cover,
@@ -108,14 +110,16 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(widget.modelProgram.name, style: TS.s14w600(colorGray600)),
+                                Text(widget.modelReview.modelProgram.name, style: TS.s14w600(colorGray600)),
                                 Gaps.v4,
                                 Row(
                                   children: [
                                     Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
-                                    Text(widget.modelProgram.averageStarRating.toString(), style: TS.s13w500(colorGray800)),
+                                    Text(widget.modelReview.modelProgram.averageStarRating.toString(),
+                                        style: TS.s13w500(colorGray800)),
                                     Gaps.h5,
-                                    Text(widget.modelProgram.modelAddress.addressDetail, style: TS.s13w500(colorGray500)),
+                                    Text(widget.modelReview.modelProgram.modelAddress.addressDetail,
+                                        style: TS.s13w500(colorGray500)),
                                   ],
                                 ),
                               ],
@@ -123,8 +127,9 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                             Spacer(),
                             Container(
                               color: Colors.transparent,
-                              padding: EdgeInsets.only(top: 8,left: 20),
-                              child: SvgPicture.asset('assets/icon/right_arrow.svg', colorFilter: ColorFilter.mode(colorGray600, BlendMode.srcIn)),
+                              padding: EdgeInsets.only(top: 8, left: 20),
+                              child: SvgPicture.asset('assets/icon/right_arrow.svg',
+                                  colorFilter: ColorFilter.mode(colorGray600, BlendMode.srcIn)),
                             ),
                           ],
                         ),
@@ -137,8 +142,9 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
           ),
         ),
       );
+
       /// 디테일 페이지에서 사용자 리뷰
-    } else{
+    } else {
       return SizedBox(
         width: 313,
         child: Container(
@@ -161,21 +167,25 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                     CircleAvatar(
                       //  반지름 값이라 32/2 해줌
                       radius: 16,
-                      backgroundImage: AssetImage(widget.modelReview.userImg),
+                      backgroundImage: widget.modelReview.modelUser.userImg == null
+                          ? null
+                          : AssetImage(widget.modelReview.modelUser.userImg!),
                     ),
                     Gaps.h8,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            Row(
-                              children: [
-                                Text(widget.modelReview.userName, style: TS.s12w500(colorBlack)),
-                                Spacer(),
-                                Text(DateFormat('yyyy-MM-dd').format(widget.modelReview.dateCreate.toDate()), style: TS.s12w500(colorGray500)),
-                              ],
-                            ),
+                          Row(
+                            children: [
+                              Text(widget.modelReview.modelUser.nickname, style: TS.s12w500(colorBlack)),
+                              Spacer(),
+                              Text(DateFormat('yyyy-MM-dd').format(widget.modelReview.dateCreate.toDate()),
+                                  style: TS.s12w500(colorGray500)),
+                            ],
+                          ),
                           Gaps.v6,
+
                           /// 별점 표시
                           Row(
                             children: List.generate(5, (index) {
@@ -207,6 +217,7 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                   ],
                 ),
                 Gaps.v10,
+
                 /// 리뷰 텍스트(내용)
                 Row(
                   children: [
@@ -226,8 +237,9 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       clipBehavior: Clip.hardEdge,
-                      child: Image.asset(widget.modelReview.listImgUrl.first,
-                      fit: BoxFit.cover,
+                      child: Image.asset(
+                        widget.modelReview.listImgUrl.first,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ],
