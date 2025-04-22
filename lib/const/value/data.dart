@@ -36,8 +36,9 @@ final List<ModelReview> listSampleModelReview = [
   ModelReview(
     uid: '1',
     dateCreate: Timestamp.now(),
-    //modelProgram: listSampleModelProgram.first,
+    uidOfModelProgram: '1',
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.recommend),
+    uidOfModelUser: '2',
     modelUser: ModelUser(
       uid: '2',
       dateCreate: Timestamp.now(),
@@ -47,6 +48,7 @@ final List<ModelReview> listSampleModelReview = [
       pw: '123123123',
       userImg: 'assets/image/avatar_image.png',
     ),
+    listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
         '너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 4,
@@ -63,10 +65,19 @@ final List<ModelReview> listSampleModelReview = [
   ModelReview(
     uid: '1',
     dateCreate: Timestamp.now(),
-    //modelProgram: listSampleModelProgram.first,
+    uidOfModelProgram: '1',
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.recommend),
+    uidOfModelUser: '2',
     modelUser: ModelUser(
-        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+      uid: '2',
+      dateCreate: Timestamp.now(),
+      email: 'asdf@gmail.com',
+      name: '김종완',
+      nickname: '김종완',
+      pw: '123123123',
+      userImg: 'assets/image/avatar_image.png',
+    ),
+    listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
         '김동동 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 3,
@@ -83,10 +94,19 @@ final List<ModelReview> listSampleModelReview = [
   ModelReview(
     uid: '1',
     dateCreate: Timestamp.now(),
-    //modelProgram: listSampleModelProgram.first,
+    uidOfModelProgram: '1',
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.recommend),
+    uidOfModelUser: '2',
     modelUser: ModelUser(
-        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+      uid: '2',
+      dateCreate: Timestamp.now(),
+      email: 'asdf@gmail.com',
+      name: '김종완',
+      nickname: '김종완',
+      pw: '123123123',
+      userImg: 'assets/image/avatar_image.png',
+    ),
+    listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
         '박둥둥 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 5,
@@ -101,10 +121,19 @@ final List<ModelReview> listSampleModelReview = [
   ModelReview(
     uid: '1',
     dateCreate: Timestamp.now(),
-    //modelProgram: listSampleModelProgram.first,
+    uidOfModelProgram: '2',
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.hot),
+    uidOfModelUser: '2',
     modelUser: ModelUser(
-        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+      uid: '2',
+      dateCreate: Timestamp.now(),
+      email: 'asdf@gmail.com',
+      name: '김종완',
+      nickname: '김종완',
+      pw: '123123123',
+      userImg: 'assets/image/avatar_image.png',
+    ),
+    listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
         '가나다 리뷰 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 1,
@@ -119,10 +148,19 @@ final List<ModelReview> listSampleModelReview = [
   ModelReview(
     uid: '1',
     dateCreate: Timestamp.now(),
-    //modelProgram: listSampleModelProgram.first,
+    uidOfModelProgram: '3',
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.hot),
+    uidOfModelUser: '2',
     modelUser: ModelUser(
-        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+      uid: '2',
+      dateCreate: Timestamp.now(),
+      email: 'asdf@gmail.com',
+      name: '김종완',
+      nickname: '김종완',
+      pw: '123123123',
+      userImg: 'assets/image/avatar_image.png',
+    ),
+    listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
         '나다라 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 1,
@@ -139,10 +177,19 @@ final List<ModelReview> listSampleModelReview = [
   ModelReview(
     uid: '1',
     dateCreate: Timestamp.now(),
-    //modelProgram: listSampleModelProgram.first,
+    uidOfModelProgram: '4',
     modelProgram: listSampleModelProgram.firstWhere((program) => program.programType == ProgramType.hot),
+    uidOfModelUser: '2',
     modelUser: ModelUser(
-        uid: '2', dateCreate: Timestamp.now(), email: 'asdf@gmail.com', name: '김종완', nickname: '김종완', pw: '123123123'),
+      uid: '2',
+      dateCreate: Timestamp.now(),
+      email: 'asdf@gmail.com',
+      name: '김종완',
+      nickname: '김종완',
+      pw: '123123123',
+      userImg: 'assets/image/avatar_image.png',
+    ),
+    listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
         '다라마 리뷰 입니다. 너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.너무 재밌었어요 다음에 또 이용하고 싶어요.',
     starRating: 2,
@@ -233,7 +280,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌3 추천 프로그램
   ModelProgram(
-    uid: '2',
+    uid: '3',
     dateCreate: Timestamp.now(),
     programType: ProgramType.recommend,
     listImgUrl: [
@@ -266,7 +313,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌4 추천 프로그램
   ModelProgram(
-    uid: '2',
+    uid: '4',
     dateCreate: Timestamp.now(),
     programType: ProgramType.recommend,
     listImgUrl: [
@@ -299,7 +346,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 농촌 프로그램
   ModelProgram(
-    uid: '3',
+    uid: '5',
     dateCreate: Timestamp.now(),
     programType: ProgramType.farm,
     listImgUrl: [
@@ -331,7 +378,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌2 농촌 프로그램
   ModelProgram(
-    uid: '4',
+    uid: '6',
     dateCreate: Timestamp.now(),
     programType: ProgramType.farm,
     listImgUrl: [
@@ -363,7 +410,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌3 농촌 프로그램
   ModelProgram(
-    uid: '4',
+    uid: '7',
     dateCreate: Timestamp.now(),
     programType: ProgramType.farm,
     listImgUrl: [
@@ -395,7 +442,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌4 농촌 프로그램
   ModelProgram(
-    uid: '4',
+    uid: '8',
     dateCreate: Timestamp.now(),
     programType: ProgramType.farm,
     listImgUrl: [
@@ -427,7 +474,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 호캉스 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '9',
     dateCreate: Timestamp.now(),
     programType: ProgramType.hokangs,
     listImgUrl: [
@@ -460,7 +507,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌2 호캉스 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '10',
     dateCreate: Timestamp.now(),
     programType: ProgramType.hokangs,
     listImgUrl: [
@@ -493,7 +540,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌3 호캉스 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '11',
     dateCreate: Timestamp.now(),
     programType: ProgramType.hokangs,
     listImgUrl: [
@@ -526,7 +573,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌4 호캉스 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '12',
     dateCreate: Timestamp.now(),
     programType: ProgramType.hokangs,
     listImgUrl: [
@@ -559,7 +606,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 인기 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '13',
     dateCreate: Timestamp.now(),
     programType: ProgramType.popular,
     listImgUrl: [
@@ -600,7 +647,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌2 인기 많은 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '14',
     dateCreate: Timestamp.now(),
     programType: ProgramType.popular,
     listImgUrl: [
@@ -636,7 +683,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 급상승 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '15',
     dateCreate: Timestamp.now(),
     programType: ProgramType.hot,
     listImgUrl: [
@@ -673,7 +720,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌2 급상승 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '16',
     dateCreate: Timestamp.now(),
     programType: ProgramType.hot,
     listImgUrl: [
@@ -710,7 +757,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌3 급상승 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '17',
     dateCreate: Timestamp.now(),
     programType: ProgramType.hot,
     listImgUrl: [
@@ -747,7 +794,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌4 급상승 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '18',
     dateCreate: Timestamp.now(),
     programType: ProgramType.hot,
     listImgUrl: [
@@ -784,7 +831,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 신규 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '19',
     dateCreate: Timestamp.now(),
     programType: ProgramType.brand_new,
     listImgUrl: [
@@ -821,7 +868,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 신규 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '20',
     dateCreate: Timestamp.now(),
     programType: ProgramType.brand_new,
     listImgUrl: [
@@ -858,7 +905,7 @@ final List<ModelProgram> listSampleModelProgram = [
 
   /// 시즌3 신규 프로그램
   ModelProgram(
-    uid: Uuid().v1(),
+    uid: '21',
     dateCreate: Timestamp.now(),
     programType: ProgramType.brand_new,
     listImgUrl: [
