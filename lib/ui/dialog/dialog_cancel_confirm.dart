@@ -34,7 +34,7 @@ class DialogCancelConfirm extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pop(); // 다이얼로그 닫기
+                    Navigator.of(context).pop(false); // 다이얼로그 닫기
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20.0),
@@ -55,7 +55,7 @@ class DialogCancelConfirm extends StatelessWidget {
                 Gaps.h10,
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pop(); // 다이얼로그 닫기
+                    Navigator.of(context).pop(true); // 다이얼로그 닫기
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(right: 20.0),

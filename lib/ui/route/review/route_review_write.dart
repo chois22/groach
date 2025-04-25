@@ -9,8 +9,8 @@ import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 import 'package:practice1/ui/dialog/dialog_cancel_confirm.dart';
-import 'package:practice1/ui/page/review/page_review_complete.dart';
 import 'package:practice1/ui/route/home/route_home_program_detail_page.dart';
+import 'package:practice1/ui/route/review/route_review_complete.dart';
 import 'package:practice1/utils/utils_enum.dart';
 
 class RouteReviewWrite extends StatefulWidget {
@@ -28,9 +28,6 @@ class RouteReviewWrite extends StatefulWidget {
 class _RouteReviewWriteState extends State<RouteReviewWrite> {
   ValueNotifier<int> vnSelectedStar = ValueNotifier<int>(0);
   final ValueNotifier<List<ReviewKeyWord>> vnListReviewKeyWord = ValueNotifier([]);
-
-  //todo: vnListSelectedReviewBoxes 지우고, vnListReviewKeyWord 로 구현하기
-  List<ValueNotifier<bool>> vnListSelectedReviewBoxes = List.generate(5, (index) => ValueNotifier<bool>(false));
   final TextEditingController tecReviewWrite = TextEditingController();
   final FocusNode focusNode = FocusNode();
   final PageController pageController = PageController();
@@ -45,7 +42,7 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
@@ -107,9 +104,8 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                           return ValueListenableBuilder(
                             valueListenable: vnSelectedStar,
                             builder: (context, selectedStar, child) {
-                              String assetName = index < selectedStar
-                                  ? 'assets/icon/yellow_star_icon.svg'
-                                  : 'assets/icon/grey_star_icon.svg';
+                              String assetName =
+                                  index < selectedStar ? 'assets/icon/yellow_star_icon.svg' : 'assets/icon/grey_star_icon.svg';
                               return GestureDetector(
                                 onTap: () {
                                   vnSelectedStar.value = index + 1;
@@ -141,23 +137,30 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
 
                       /// 리뷰 체크 부분
                       Column(
-                        children: List.generate(5, (index) {
-                          return ValueListenableBuilder(
-                            valueListenable: vnListSelectedReviewBoxes[index],
-                            builder: (context, listSelectedReviewBoxes, child) {
+                        children: List.generate(ReviewKeyWord.values.length, (index) {
+                          final keyword = ReviewKeyWord.values[index];
+                          return ValueListenableBuilder<List<ReviewKeyWord>>(
+                            valueListenable: vnListReviewKeyWord,
+                            builder: (context, selectedKeywords, child) {
+                              final isSelected = selectedKeywords.contains(keyword);
                               return GestureDetector(
                                 onTap: () {
-                                  vnListSelectedReviewBoxes[index].value = !listSelectedReviewBoxes;
+                                  final currentList = List<ReviewKeyWord>.from(selectedKeywords);
+                                  if (isSelected) {
+                                    currentList.remove(keyword);
+                                  } else {
+                                    currentList.add(keyword);
+                                  }
+                                  vnListReviewKeyWord.value = currentList;
                                 },
                                 child: Column(
                                   children: [
-                                    ReviewBox(
-                                      iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.values[index]),
-                                      text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.values[index]),
-                                      textStyle:
-                                          listSelectedReviewBoxes ? TS.s14w700(colorGreen600) : TS.s14w500(colorBlack),
-                                      boxColor: listSelectedReviewBoxes ? colorGreen50 : colorWhite,
-                                      boxBorderColor: listSelectedReviewBoxes ? colorGreen600 : colorGray200,
+                                    _ReviewBox(
+                                      iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(keyword),
+                                      text: UtilsEnum.getNameFromReviewKeyWord(keyword),
+                                      textStyle: isSelected ? TS.s14w700(colorGreen600) : TS.s14w500(colorBlack),
+                                      boxColor: isSelected ? colorGreen50 : colorWhite,
+                                      boxBorderColor: isSelected ? colorGreen600 : colorGray200,
                                       boxBorderWidth: 1.0,
                                     ),
                                     Gaps.v8,
@@ -178,16 +181,16 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                       ValueListenableBuilder(
                         valueListenable: tecReviewWrite,
                         builder: (context, _, child) => SizedBox(
-                          height: 250,
+                          height: 171,
                           child: TextFieldDefault(
                             controller: tecReviewWrite,
                             focusNode: focusNode,
-                            hintText: '리뷰를 작성해 주세요.',
+                            hintText: '리뷰를 작성해 주세요. (최대 500자)',
                             colorBorder: focusNode.hasFocus ? colorGreen600 : colorGray200,
                             textAlignVertical: TextAlignVertical.top,
                             maxLines: null,
                             expands: true,
-                            maxLength: 20,
+                            maxLength: 500,
                           ),
                         ),
                       ),
@@ -246,14 +249,21 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                       ),
                       Gaps.v16,
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async{
                           FocusManager.instance.primaryFocus?.unfocus();
-                          showDialog(
+                          final result = await showDialog<bool>(
                             context: context,
                             builder: (context) => DialogCancelConfirm(
                               text: '리뷰를 등록하시겠어요?',
                             ),
                           );
+                          if (result == true) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                              builder: (_) => RouteReviewComplete(),
+                              ),
+                            );
+                          }
                         },
                         child: ButtonAnimate(title: '작성 완료', colorBg: colorGreen600),
                       ),
@@ -270,7 +280,49 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
   }
 }
 
-// FocusManager.instance.primaryFocus?.unfocus();
-// PageReviewComplete(
-// widget.pageController.animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.linear);
-// ),
+class _ReviewBox extends StatelessWidget {
+  final String iconPath;
+  final String text;
+  final int number;
+  final Color boxColor;
+  final Color boxBorderColor;
+  final double boxBorderWidth;
+  final TextStyle textStyle;
+
+  const _ReviewBox({
+    required this.iconPath,
+    required this.text,
+    this.boxColor = colorGray50,
+    this.boxBorderColor = Colors.transparent,
+    this.boxBorderWidth = 0.0,
+    this.textStyle = const TS.s14w500(colorBlack),
+    this.number = 4,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 40,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: boxColor,
+        border: Border.all(color: boxBorderColor, width: boxBorderWidth),
+      ),
+      child: Column(
+        children: [
+          Gaps.v8,
+          Row(
+            children: [
+              Gaps.h16,
+              Center(child: SvgPicture.asset(iconPath, width: 20, height: 20)),
+              Gaps.h6,
+              Text(text, style: textStyle),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

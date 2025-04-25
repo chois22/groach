@@ -1,4 +1,5 @@
 import 'package:card_swiper/card_swiper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -79,16 +80,19 @@ class _TabHomeState extends State<TabHome> {
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                /// 서버에서 프로그램 불러오기
-                /// 불러온 다음에 갯수 log로 찍기
 
+
+            ElevatedButton(
+              onPressed: () async {
+                final qs = await FirebaseFirestore.instance.collection('program').get();
+                print('가져온 문서 수: ${qs.docs.length}');
               },
               child: Text(
-                'test',
+                '서버 데이터 불러오기',
               ),
             ),
+
+
             Expanded(
               child: SingleChildScrollView(
                 controller: scrollController,

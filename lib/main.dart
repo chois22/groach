@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/text_style.dart';
@@ -5,7 +6,9 @@ import 'package:practice1/ui/component/custom_toast.dart';
 import 'package:practice1/ui/route/route_splash.dart';
 import 'package:sizer/sizer.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     _Groach(),
   );
