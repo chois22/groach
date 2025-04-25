@@ -81,7 +81,7 @@ class ModelProgram {
 
         name: json[keyName] as String,
         desc: json[keyDesc] as String,
-        averageStarRating: json[keyAverageStarRating] as double,
+        averageStarRating: (json[keyAverageStarRating] as num).toDouble(),
         countTotalReview: json[keyCountTotalReview] as int,
         price: json[keyPrice] as int,
         discountPercentage: json[keyDiscountPercentage] as int,

@@ -1,4 +1,5 @@
 // 작은 사진 화면 flutter_staggered_grid_view: ^0.7.0
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -52,10 +53,15 @@ class CardProgramScroll extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Image.asset(
+                  child: CachedNetworkImage(
+                    imageUrl: modelProgram.listImgUrl.first,
+                    fit: BoxFit.cover,
+                  )
+                  /*  child: Image.asset(
                     modelProgram.listImgUrl.first,
                     fit: BoxFit.cover,
-                  ),
+                  )*/
+                  ,
                 ),
                 Positioned(
                   top: 13,

@@ -6,7 +6,7 @@ const String keyAddressDetail = 'address_detail';
 const String keyAddressPostCode = 'address_post_code';
 const String keyAddressGeoPoint = 'address_geo_point';
 const String keyAddressRegion = 'address_region';
-const String keyAddress = 'address';
+const String keyAddress = 'model_address';
 
 // addressBasic -> 카멜 케이스 (단어 마다 대문자로 구분)
 // address_basic => 스네이크 케이스 (단어 마다 언더바_로 구분
@@ -46,3 +46,5 @@ const String keyUserName = 'user_name';
 const String keyUserImg = 'user_img';
 const String keyReviewText = 'review_text';
 const String keyStarRating = 'star_rating';
+
+const String keyProgram = 'program';

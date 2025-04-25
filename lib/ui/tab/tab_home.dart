@@ -8,6 +8,7 @@ import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
+import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/card_program_grid.dart';
 import 'package:practice1/ui/component/card_program_scroll.dart';
@@ -82,17 +83,18 @@ class _TabHomeState extends State<TabHome> {
               ),
             ),
 
-
-            ElevatedButton(
+   /*         ElevatedButton(
               onPressed: () async {
                 final qs = await FirebaseFirestore.instance.collection('program').get();
+
+                final List<ModelProgram> listModelProgram = [];
+
                 Utils.log.i('가져온 문서 수: ${qs.docs.length}');
               },
               child: Text(
                 '서버 데이터 불러오기',
               ),
-            ),
-
+            ),*/
 
             Expanded(
               child: SingleChildScrollView(
@@ -187,36 +189,63 @@ class _TabHomeState extends State<TabHome> {
                       ),
                     ),
                     Gaps.v6,
-                    SizedBox(
-                      height: 231,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(
-                            listSampleModelProgram.where((program) => program.programType == ProgramType.recommend).length,
-                            (index) => Row(
-                              children: [
-                                CardProgramScroll(
-                                  modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.recommend).toList()[index],
+
+                    /// 추천프로그램
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection(keyProgram)
+                            .where(keyProgramType, isEqualTo: ProgramType.recommend.name)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                            return const SizedBox.shrink();
+                          }
+
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const SizedBox.shrink();
+                          }
+
+                          final List<ModelProgram> listModelProgramRecommend =
+                              snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+
+                          return SizedBox(
+                            height: 231,
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: List.generate(
+                                  listModelProgramRecommend
+                                      .where((program) => program.programType == ProgramType.recommend)
+                                      .length,
+                                  (index) => Row(
+                                    children: [
+                                      CardProgramScroll(
+                                        modelProgram: listModelProgramRecommend
+                                            .where((e) => e.programType == ProgramType.recommend)
+                                            .toList()[index],
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (index ==
+                                              listModelProgramRecommend
+                                                      .where((program) => program.programType == ProgramType.recommend)
+                                                      .length -
+                                                  1) {
+                                            return const SizedBox.shrink();
+                                          } else {
+                                            return Gaps.h10;
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                Builder(
-                                  builder: (context) {
-                                    if (index ==
-                                        listSampleModelProgram.where((program) => program.programType == ProgramType.recommend).length -
-                                            1) {
-                                      return const SizedBox.shrink();
-                                    } else {
-                                      return Gaps.h10;
-                                    }
-                                  },
-                                )
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
+                          );
+                        }),
 
                     /// 인기 프로그램
                     Gaps.v30,
@@ -228,7 +257,8 @@ class _TabHomeState extends State<TabHome> {
                         children: [
                           Text(UtilsEnum.getNameFromProgramType(ProgramType.popular), style: TS.s18w700(colorBlack)),
                           Gaps.h4,
-                          SvgPicture.asset(UtilsEnum.getImgUrlFromProgramIcon(ProgramType.popular), width: 47, height: 24),
+                          SvgPicture.asset(UtilsEnum.getImgUrlFromProgramIcon(ProgramType.popular),
+                              width: 47, height: 24),
                           Spacer(),
                           GestureDetector(
                             onTap: () {
@@ -244,20 +274,28 @@ class _TabHomeState extends State<TabHome> {
                       ),
                     ),
                     Gaps.v16,
-                    MasonryGridView.count(
-                      shrinkWrap: true,
-                      primary: false,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 15,
-                      mainAxisSpacing: 20,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: listSampleModelProgram.where((program) => program.programType == ProgramType.popular).length,
-                      itemBuilder: (context, index) {
-                        return CardProgramGrid(
-                          modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.popular).toList()[index],
-                        );
-                      },
-                    ),
+                    StreamBuilder(
+                        stream: null,
+                        builder: (context, snapshot) {
+                          return MasonryGridView.count(
+                            shrinkWrap: true,
+                            primary: false,
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 15,
+                            mainAxisSpacing: 20,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: listSampleModelProgram
+                                .where((program) => program.programType == ProgramType.popular)
+                                .length,
+                            itemBuilder: (context, index) {
+                              return CardProgramGrid(
+                                modelProgram: listSampleModelProgram
+                                    .where((e) => e.programType == ProgramType.popular)
+                                    .toList()[index],
+                              );
+                            },
+                          );
+                        }),
 
                     /// 급상승 프로그램
                     Gaps.v30,
@@ -296,12 +334,17 @@ class _TabHomeState extends State<TabHome> {
                             (index) => Row(
                               children: [
                                 CardProgramScroll(
-                                  modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.hot).toList()[index],
+                                  modelProgram: listSampleModelProgram
+                                      .where((e) => e.programType == ProgramType.hot)
+                                      .toList()[index],
                                 ),
                                 Builder(
                                   builder: (context) {
                                     if (index ==
-                                        listSampleModelProgram.where((program) => program.programType == ProgramType.hot).length - 1) {
+                                        listSampleModelProgram
+                                                .where((program) => program.programType == ProgramType.hot)
+                                                .length -
+                                            1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;
@@ -355,10 +398,14 @@ class _TabHomeState extends State<TabHome> {
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 20,
                       padding: EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: listSampleModelProgram.where((program) => program.programType == ProgramType.brand_new).length,
+                      itemCount: listSampleModelProgram
+                          .where((program) => program.programType == ProgramType.brand_new)
+                          .length,
                       itemBuilder: (context, index) {
                         return CardProgramGrid(
-                          modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.brand_new).toList()[index],
+                          modelProgram: listSampleModelProgram
+                              .where((e) => e.programType == ProgramType.brand_new)
+                              .toList()[index],
                         );
                       },
                     ),
@@ -398,20 +445,27 @@ class _TabHomeState extends State<TabHome> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: List.generate(
-                            listSampleModelProgram.where((program) => program.programType == ProgramType.hokangs).length,
+                            listSampleModelProgram
+                                .where((program) => program.programType == ProgramType.hokangs)
+                                .length,
                             (index) => Row(
                               children: [
                                 /// .first 를
                                 /// 모델을 여러개 만들어서
                                 CardProgramScroll(
-                                  modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.hokangs).toList()[index],
+                                  modelProgram: listSampleModelProgram
+                                      .where((e) => e.programType == ProgramType.hokangs)
+                                      .toList()[index],
 
                                   // modelProgram: listSampleModelProgram[index],
                                 ),
                                 Builder(
                                   builder: (context) {
                                     if (index ==
-                                        listSampleModelProgram.where((program) => program.programType == ProgramType.hokangs).length - 1) {
+                                        listSampleModelProgram
+                                                .where((program) => program.programType == ProgramType.hokangs)
+                                                .length -
+                                            1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;
@@ -464,12 +518,17 @@ class _TabHomeState extends State<TabHome> {
                             (index) => Row(
                               children: [
                                 CardProgramScroll(
-                                  modelProgram: listSampleModelProgram.where((e) => e.programType == ProgramType.farm).toList()[index],
+                                  modelProgram: listSampleModelProgram
+                                      .where((e) => e.programType == ProgramType.farm)
+                                      .toList()[index],
                                 ),
                                 Builder(
                                   builder: (context) {
                                     if (index ==
-                                        listSampleModelProgram.where((program) => program.programType == ProgramType.farm).length - 1) {
+                                        listSampleModelProgram
+                                                .where((program) => program.programType == ProgramType.farm)
+                                                .length -
+                                            1) {
                                       return const SizedBox.shrink();
                                     } else {
                                       return Gaps.h10;
@@ -509,6 +568,7 @@ class _TabHomeState extends State<TabHome> {
                                 CardReviewScroll(
                                   /// 리뷰 남긴 사람 정보, 리뷰 내용
                                   modelReview: listSampleModelReview[index],
+
                                   ///  프로그램 정보 표시
                                   isTabHome: true,
                                 ),
