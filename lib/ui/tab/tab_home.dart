@@ -15,6 +15,7 @@ import 'package:practice1/ui/component/card_review_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/route/home/route_home_programs.dart';
 import 'package:practice1/ui/route/route_main.dart';
+import 'package:practice1/utils/utils.dart';
 import 'package:practice1/utils/utils_enum.dart';
 
 class TabHome extends StatefulWidget {
@@ -85,7 +86,7 @@ class _TabHomeState extends State<TabHome> {
             ElevatedButton(
               onPressed: () async {
                 final qs = await FirebaseFirestore.instance.collection('program').get();
-                print('가져온 문서 수: ${qs.docs.length}');
+                Utils.log.i('가져온 문서 수: ${qs.docs.length}');
               },
               child: Text(
                 '서버 데이터 불러오기',

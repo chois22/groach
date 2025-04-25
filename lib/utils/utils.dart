@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:practice1/const/static/global.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/custom_toast.dart';
 
 class Utils{
+  /// 로그 찍기
+  static final log = Logger(printer: PrettyPrinter(methodCount: 1));
+
+  /// 숫자 쉼표 포맷
+  static final number = NumberFormat("#,###");
+
+
   /// 토스트 메세지
   static void toast({
     required BuildContext context,
