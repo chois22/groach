@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "837634667064",
+    "project_id": "groach-26295",
+    "storage_bucket": "groach-26295.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837634667064:android:361e7df9c08236d846accd",
+        "android_client_info": {
+          "package_name": "com.appdoggaebi.groach"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgvSwbDnjFZh5b2lnDrlzAg4PvN_BFiNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837634667064:android:9d42bace3e9671c446accd",
+        "android_client_info": {
+          "package_name": "com.appdoggaebi.grouch.grouch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgvSwbDnjFZh5b2lnDrlzAg4PvN_BFiNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837634667064:android:696bf3677391bcdd46accd",
+        "android_client_info": {
+          "package_name": "com.example.practice1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgvSwbDnjFZh5b2lnDrlzAg4PvN_BFiNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
