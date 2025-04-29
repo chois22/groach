@@ -1,4 +1,5 @@
 // 작은 사진 화면 flutter_staggered_grid_view: ^0.7.0
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -11,11 +12,8 @@ import 'package:practice1/ui/route/home/route_home_program_detail_page.dart';
 class CardProgramGrid extends StatelessWidget {
   final ModelProgram modelProgram;
 
-
-
   const CardProgramGrid({
     required this.modelProgram,
-
     super.key,
   });
 
@@ -24,10 +22,10 @@ class CardProgramGrid extends StatelessWidget {
     final ValueNotifier<bool> vnHeartTouch = ValueNotifier<bool>(false);
 
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-          builder: (_) => RouteHomeProgramDetailPage(modelProgram: modelProgram),
+            builder: (_) => RouteHomeProgramDetailPage(modelProgram: modelProgram),
           ),
         );
       },
@@ -47,8 +45,8 @@ class CardProgramGrid extends StatelessWidget {
                     color: Colors.transparent, // 색상 변형
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Image.asset(
-                    modelProgram.listImgUrl.first,
+                  child: CachedNetworkImage(
+                    imageUrl: modelProgram.listImgUrl.first,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -88,7 +86,12 @@ class CardProgramGrid extends StatelessWidget {
             ],
           ),
           Gaps.v8,
-          Text(modelProgram.name, style: TS.s13w500(colorGray600)),
+          Text(
+            modelProgram.name,
+            style: TS.s13w500(colorGray600),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
           Text(
             modelProgram.desc,
             style: TS.s13w500(colorGray600),
@@ -101,7 +104,14 @@ class CardProgramGrid extends StatelessWidget {
               Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
               Text(modelProgram.averageStarRating.toString(), style: TS.s13w500(colorGray800)),
               Gaps.h5,
-              Text(modelProgram.modelAddress.addressBasic, style: TS.s13w500(colorGray500)),
+              Expanded(
+                child: Text(
+                  modelProgram.modelAddress.addressBasic,
+                  style: TS.s13w500(colorGray500),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
             ],
           ),
           Gaps.v5,

@@ -56,12 +56,11 @@ class CardProgramScroll extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: modelProgram.listImgUrl.first,
                     fit: BoxFit.cover,
-                  )
+                  ),
                   /*  child: Image.asset(
                     modelProgram.listImgUrl.first,
                     fit: BoxFit.cover,
                   )*/
-                  ,
                 ),
                 Positioned(
                   top: 13,

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,8 +7,10 @@ import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
+import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/card_program_grid.dart';
+import 'package:practice1/utils/utils.dart';
 import 'package:practice1/utils/utils_enum.dart';
 
 class RouteHomePrograms extends StatefulWidget {
@@ -100,18 +103,39 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                                 if (selectedFilter == 1) Text('평점순 화면.', style: TS.s16w600(colorBlack)),
                                 if (selectedFilter == 2) Text('가격순 화면.', style: TS.s16w600(colorBlack)),*/
                                 Gaps.v20,
-                                MasonryGridView.count(
-                                  shrinkWrap: true,
-                                  primary: false,
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 15,
-                                  mainAxisSpacing: 20,
-                                  itemCount: listModelProgram.length,
-                                  itemBuilder: (context, index) {
-                                    return CardProgramGrid(
-                                      modelProgram: listModelProgram[index],
+
+                                StreamBuilder(
+                                    stream: FirebaseFirestore.instance
+                                        .collection(keyProgram) // = 'program'
+                                        .where(keyProgramType, isEqualTo: widget.programType.name)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasError) {
+                                        Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      final List<ModelProgram> listModelProgramFireBase =
+                                      snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+
+                                    return MasonryGridView.count(
+                                      shrinkWrap: true,
+                                      primary: false,
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 15,
+                                      mainAxisSpacing: 20,
+                                      itemCount: listModelProgramFireBase.length,
+                                      itemBuilder: (context, index) {
+                                        return CardProgramGrid(
+                                          modelProgram: listModelProgramFireBase[index],
+                                        );
+                                      },
                                     );
-                                  },
+                                  }
                                 ),
                                 Gaps.v30,
                                 SvgPicture.asset('assets/image/bottominfo.svg'),

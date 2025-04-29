@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/gaps.dart';
@@ -24,7 +23,6 @@ class RouteMain extends StatefulWidget {
 }
 
 class _RouteMainState extends State<RouteMain> {
-  //final ValueNotifier<int> vnIndexTab = ValueNotifier(0);
   final ScrollController scrollController = ScrollController();
   List<String> listIcons = [
     'assets/icon/home_outline.svg',

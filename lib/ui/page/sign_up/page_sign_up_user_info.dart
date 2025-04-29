@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/enum.dart';
@@ -6,9 +7,11 @@ import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/button_confirm.dart';
 import 'package:practice1/ui/component/custom_appbar.dart';
+import 'package:practice1/ui/component/custom_toast.dart';
 import 'package:practice1/ui/component/info_check_text.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 import 'package:practice1/ui/dialog/dialog_confirm.dart';
+import 'package:practice1/utils/utils.dart';
 
 class PageSignUpUserInfo extends StatefulWidget {
   final PageController pageController;
@@ -46,6 +49,17 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
   void _resetEmailStatus() {
     vnIsEmailCheck.value = false;
     vnTecEmailMatch.value = false;
+  }
+
+  Future<bool> _userEmailCheck(String email) async {
+    try {
+      final emailCheck = await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: email).get();
+
+      return emailCheck.docs.isEmpty; // 아무 문서도 없으면 사용 가능
+    } catch (e) {
+      print('이메일 중복 확인 중 오류 발생: $e');
+      return false;
+    }
   }
 
   @override
@@ -122,6 +136,9 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                 child: TextFieldDefault(
                                   controller: widget.tecEmail,
                                   hintText: '이메일 입력',
+                                  onChanged: (value) {
+                                    vnIsEmailCheck.value = false;
+                                  },
                                 ),
                               ),
                             ),
@@ -135,17 +152,29 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                   boxColor: isEmail ? colorGreen600 : colorGray200,
                                   width: 87,
                                   height: 48,
-                                  onTap: () {
-                                    String email = widget.tecEmail.text;
+                                  onTap: () async {
+                                    String email = widget.tecEmail.text.trim();
                                     if (email.isNotEmpty) {
-                                      // 이메일이 입력되었을 때만 체크
-                                      if (email == 'test@naver.com') {
-                                        // 이메일이 사용 가능하면
-                                        vnTecEmailMatch.value = true; // 유효한 이메일
-                                      } else {
-                                        // 이메일이 이미 사용 중이면
-                                        vnTecEmailMatch.value = false; // 유효하지 않은 이메일
+                                      if (!email.contains('@') || !email.contains('.')) {
+                                        showDialog(context: context, builder: (context) => DialogConfirm(text: '올바른 이메일 형식을 사용해주세요.'));
+                                        return; // 이메일 형식이 잘못되었으므로 중복 확인을 중지
                                       }
+
+                                      bool userEmailCheck = await _userEmailCheck(email);
+
+                                      if (userEmailCheck) {
+                                        vnTecEmailMatch.value = true;
+                                      } else {
+                                        vnTecEmailMatch.value = false;
+                                      }
+                                      // 이메일이 입력되었을 때만 체크
+                                      // if (email != 'test@naver.com') {
+                                      //   // 이메일이 사용 가능하면
+                                      //   vnTecEmailMatch.value = true; // 유효한 이메일
+                                      // } else {
+                                      //   // 이메일이 이미 사용 중이면
+                                      //   vnTecEmailMatch.value = false; // 유효하지 않은 이메일
+                                      // }
                                       vnIsEmailCheck.value = true;
                                     }
                                   },
@@ -373,7 +402,9 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                   child: ButtonAnimate(
                     title: '다음',
                     colorBg: isFormCheck ? colorGreen600 : colorGray500,
-                    margin: EdgeInsets.symmetric(vertical: 16,),
+                    margin: EdgeInsets.symmetric(
+                      vertical: 16,
+                    ),
                   ),
                 );
               },

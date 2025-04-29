@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/model/model_program.dart';
+import 'package:practice1/const/model/model_review.dart';
+import 'package:practice1/const/model/model_user.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
+import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
@@ -249,7 +253,7 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                       ),
                       Gaps.v16,
                       GestureDetector(
-                        onTap: () async{
+                        onTap: () async {
                           FocusManager.instance.primaryFocus?.unfocus();
                           final result = await showDialog<bool>(
                             context: context,
@@ -258,9 +262,22 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                             ),
                           );
                           if (result == true) {
+                            //     final reviewUid = FirebaseFirestore.instance.collection('reviews').doc().id;
+                            // final review = ModelReview(
+                            //   uid: reviewUid,
+                            //   dateCreate: Timestamp.now(),
+                            //   uidOfModelProgram: widget.modelProgram.name,
+                            //   modelProgram: modelProgram,
+                            //   uidOfModelUser: uidOfModelUser,
+                            //   modelUser: modelUser,
+                            //   listReviewKeyWord: listReviewKeyWord,
+                            //   reviewText: reviewText,
+                            //   starRating: starRating,
+                            //   listImgUrl: listImgUrl,
+                            // );
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                              builder: (_) => RouteReviewComplete(),
+                                builder: (_) => RouteReviewComplete(),
                               ),
                             );
                           }

@@ -348,7 +348,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: '5',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.farm,
+    programType: ProgramType.rural,
     listImgUrl: [
       'assets/image/program_card_image2.png',
       'assets/image/program_card_image1.png',
@@ -380,7 +380,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: '6',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.farm,
+    programType: ProgramType.rural,
     listImgUrl: [
       'assets/image/program_card_image1.png',
       'assets/image/program_card_image2.png',
@@ -412,7 +412,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: '7',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.farm,
+    programType: ProgramType.rural,
     listImgUrl: [
       'assets/image/program_card_image3.png',
       'assets/image/program_card_image1.png',
@@ -444,7 +444,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: '8',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.farm,
+    programType: ProgramType.rural,
     listImgUrl: [
       'assets/image/program_card_image4.png',
       'assets/image/program_card_image1.png',
@@ -476,7 +476,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: '9',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.hokangs,
+    programType: ProgramType.staycation,
     listImgUrl: [
       'assets/image/modelprogram2_image1.jpeg',
       'assets/image/modelprogram2_image2.png',
@@ -509,7 +509,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: '10',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.hokangs,
+    programType: ProgramType.staycation,
     listImgUrl: [
       'assets/image/modelprogram2_image2.png',
       'assets/image/modelprogram2_image1.jpeg',
@@ -542,7 +542,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: '11',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.hokangs,
+    programType: ProgramType.staycation,
     listImgUrl: [
       'assets/image/modelprogram2_image3.jpeg',
       'assets/image/modelprogram2_image2.png',
@@ -575,7 +575,7 @@ final List<ModelProgram> listSampleModelProgram = [
   ModelProgram(
     uid: '12',
     dateCreate: Timestamp.now(),
-    programType: ProgramType.hokangs,
+    programType: ProgramType.staycation,
     listImgUrl: [
       'assets/image/modelprogram2_image4.jpeg',
       'assets/image/modelprogram2_image2.png',

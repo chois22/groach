@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -40,7 +41,9 @@ class _RoutePictureState extends State<RoutePicture> {
               pageController: _pageController,
               builder: (context, index) {
                 return PhotoViewGalleryPageOptions(
-                  imageProvider: AssetImage(widget.modelProgram.listImgUrl[index]),
+                  imageProvider: CachedNetworkImageProvider(
+                    widget.modelProgram.listImgUrl[index],
+                  ),
                   minScale: PhotoViewComputedScale.contained,
                   maxScale: PhotoViewComputedScale.contained * 2,
                 );

@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +11,7 @@ import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
+import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/card_program_scroll.dart';
@@ -92,8 +95,9 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                         );
                       },
                       child: ClipRRect(
-                        child: Image.asset(
-                          widget.modelProgram.listImgUrl.first,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.modelProgram.listImgUrl.first,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -114,15 +118,14 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                                   onTap: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (_) =>
-                                            RoutePicture(modelProgram: widget.modelProgram, pictureNumber: index),
+                                        builder: (_) => RoutePicture(modelProgram: widget.modelProgram, pictureNumber: index),
                                       ),
                                     );
                                   },
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.asset(
-                                      widget.modelProgram.listImgUrl[index],
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.modelProgram.listImgUrl[index],
                                       //imagePath,
                                       width: 86,
                                       height: 62,
@@ -168,8 +171,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                               children: [
                                 Text(widget.modelProgram.averageStarRating.toString(), style: TS.s14w500(colorGray800)),
                                 Gaps.h2,
-                                Text('(${widget.modelProgram.countTotalReview.toString()})',
-                                    style: TS.s14w500(colorGray800)),
+                                Text('(${widget.modelProgram.countTotalReview.toString()})', style: TS.s14w500(colorGray800)),
                               ],
                             ),
                             Gaps.h4,
@@ -247,7 +249,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                             Text('영업중', style: TS.s14w600(Color(0xFF0059FF))),
                             Gaps.h6,
                             Text(
-                              '${widget.modelProgram.timeProgramEnd.toDate().hour}:${widget.modelProgram.timeProgramEnd.toDate().minute}에 라스트오더',
+                                '${widget.modelProgram.timeProgramEnd.toDate().hour.toString().padLeft(2, '0')}:${widget.modelProgram.timeProgramEnd.toDate().minute.toString().padLeft(2, '0')}에 라스트오더',
                               style: TS.s14w500(colorGray800),
                             ),
                           ],
@@ -473,8 +475,8 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                                 onTap: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (_) => RouteReviewView(
-                                          modelProgram: widget.modelProgram, listModelReview: listSampleModelReview),
+                                      builder: (_) =>
+                                          RouteReviewView(modelProgram: widget.modelProgram, listModelReview: listSampleModelReview),
                                     ),
                                   );
                                 },
@@ -484,9 +486,8 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                         Gaps.v16,
                         Builder(builder: (context) {
                           // todo : 물어보기
-                          final List<ModelReview> listModelReviewFilter = listSampleModelReview
-                              .where((review) => review.uidOfModelProgram == widget.modelProgram.uid)
-                              .toList();
+                          final List<ModelReview> listModelReviewFilter =
+                              listSampleModelReview.where((review) => review.uidOfModelProgram == widget.modelProgram.uid).toList();
 
                           print('프로그램 uid: ${widget.modelProgram.uid}');
 
@@ -540,7 +541,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => RouteHomePrograms(programType: ProgramType.farm),
+                                builder: (_) => RouteHomePrograms(programType: ProgramType.rural),
                               ),
                             );
                           },
@@ -551,78 +552,97 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                   ),
                   Gaps.v6,
                   //todo: 정렬 물어보기
-                  SizedBox(
-                    height: 257,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: List.generate(
-                          /// listTag 비교하여 일치한는 값들로 표시
-                          listSampleModelProgram
-                              .where(
-                                  (program) => program.listTag.any((tag) => widget.modelProgram.listTag.contains(tag)))
-                              .length,
-                          (index) => Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                  StreamBuilder(
+                    // keyProgramType, isEqualTo: widget.modelProgram.name
+                      stream: FirebaseFirestore.instance
+                          .collection(keyProgram) // = 'program'
+                          .where(keyListTag, arrayContainsAny: widget.modelProgram.listTag)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                          return const SizedBox.shrink();
+                        }
+
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const SizedBox.shrink();
+                        }
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          return const Center(child: Text("데이터가 없습니다."));
+                        }
+
+                        /// 리스트 태그 출력
+                       Utils.log.f('widget.modelProgram.listTag: ${widget.modelProgram.listTag}');
+                        Utils.log.f('snapshot.data!.docs: ${snapshot.data!.docs.length}');
+
+                        final List<ModelProgram> listModelProgramSimilar =
+                        snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+
+                        Utils.log.f('snapshot.data!.docs: ${snapshot.data!.docs}');
+
+                        return SizedBox(
+                        height: 257,
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: List.generate(
+                              /// listTag 비교하여 일치한는 값들로 표시
+                              listModelProgramSimilar.length,
+                              (index) => Row(
                                 children: [
-                                  CardProgramScroll(
-                                    modelProgram: listSampleModelProgram
-                                        .where((program) =>
-                                            program.listTag.any((tag) => widget.modelProgram.listTag.contains(tag)))
-                                        .toList()[index],
-                                    width: 115,
-                                    height: 115,
-                                  ),
-                                  Gaps.v8,
-                                  Container(
-                                    width: 115,
-                                    height: 26,
-                                    decoration: BoxDecoration(
-                                      color: colorWhite,
-                                      border: Border.all(width: 1, color: colorGreen600),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (_) => RouteReservaion(),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      CardProgramScroll(
+                                        modelProgram: listModelProgramSimilar[index],
+                                        width: 115,
+                                        height: 115,
+                                      ),
+                                      Gaps.v8,
+                                      Container(
+                                        width: 115,
+                                        height: 26,
+                                        decoration: BoxDecoration(
+                                          color: colorWhite,
+                                          border: Border.all(width: 1, color: colorGreen600),
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (_) => RouteReservaion(),
+                                              ),
+                                            );
+                                          },
+                                          child: Center(
+                                            child: Text(
+                                              '예약하기',
+                                              style: TS.s14w600(colorGreen600),
+                                            ),
                                           ),
-                                        );
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          '예약하기',
-                                          style: TS.s14w600(colorGreen600),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
+                                  Builder(
+                                    builder: (context) {
+                                      if (index == listModelProgramSimilar.length - 1) {
+                                        return const SizedBox.shrink();
+                                      } else {
+                                        return Gaps.h10;
+                                      }
+                                    },
+                                  )
                                 ],
                               ),
-                              Builder(
-                                builder: (context) {
-                                  if (index ==
-                                      listSampleModelProgram
-                                              .where((program) => program.listTag
-                                                  .any((tag) => widget.modelProgram.listTag.contains(tag)))
-                                              .length -
-                                          1) {
-                                    return const SizedBox.shrink();
-                                  } else {
-                                    return Gaps.h10;
-                                  }
-                                },
-                              )
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                   Gaps.v30,
                   Gaps.v10,
@@ -714,7 +734,9 @@ class ReviewBox extends StatelessWidget {
           Row(
             children: [
               Gaps.h16,
-              Center(child: SvgPicture.asset(iconPath, width: 20, height: 20)),
+              Center(
+                child: SvgPicture.asset(iconPath, width: 20, height: 20),
+              ),
               Gaps.h6,
               Text(text, style: textStyle),
               Spacer(),

@@ -21,7 +21,7 @@ class _RouteSplashState extends State<RouteSplash> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 1), () {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
         builder: (_) => RouteAuthLogin(),
         ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/model/model_program.dart';
+import 'package:practice1/const/model/model_user.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
@@ -14,10 +15,12 @@ import 'package:practice1/ui/component/card_program_grid.dart';
 import 'package:practice1/ui/component/card_program_scroll.dart';
 import 'package:practice1/ui/component/card_review_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
+import 'package:practice1/ui/dialog/dialog_confirm.dart';
 import 'package:practice1/ui/route/home/route_home_programs.dart';
 import 'package:practice1/ui/route/route_main.dart';
 import 'package:practice1/utils/utils.dart';
 import 'package:practice1/utils/utils_enum.dart';
+import 'package:uuid/uuid.dart';
 
 class TabHome extends StatefulWidget {
   const TabHome({super.key});
@@ -83,18 +86,36 @@ class _TabHomeState extends State<TabHome> {
               ),
             ),
 
-   /*         ElevatedButton(
+            /// 프로그램 불러오기 get()
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     final qs = await FirebaseFirestore.instance.collection('program').get();
+            //     final List<ModelProgram> listModelProgram = [];
+            //     Utils.log.i('가져온 문서 수: ${qs.docs.length}');
+            //   },
+            //   child: Text(
+            //     '서버 데이터 불러오기',
+            //   ),
+            // ),
+            /// 모델유저 정보 firebase에 업로드 set()
+            ElevatedButton(
               onPressed: () async {
-                final qs = await FirebaseFirestore.instance.collection('program').get();
-
-                final List<ModelProgram> listModelProgram = [];
-
-                Utils.log.i('가져온 문서 수: ${qs.docs.length}');
+                final modelUser = ModelUser(
+                  uid: Uuid().v1(),
+                  dateCreate: Timestamp.now(),
+                  email: 'test@naver.com',
+                  name: '홍길동',
+                  nickname: '길동이',
+                  pw: '1234',
+                );
+                await FirebaseFirestore.instance.collection('users').doc(modelUser.uid).set(modelUser.toJson());
+                showDialog(
+                  context: context,
+                  builder: (context) => DialogConfirm(text: '유저 정보 업로드 완료'),
+                );
               },
-              child: Text(
-                '서버 데이터 불러오기',
-              ),
-            ),*/
+              child: Text('유저 정보 업로드'),
+            ),
 
             Expanded(
               child: SingleChildScrollView(
@@ -193,7 +214,7 @@ class _TabHomeState extends State<TabHome> {
                     /// 추천프로그램
                     StreamBuilder(
                         stream: FirebaseFirestore.instance
-                            .collection(keyProgram)
+                            .collection(keyProgram) // = 'program'
                             .where(keyProgramType, isEqualTo: ProgramType.recommend.name)
                             .snapshots(),
                         builder: (context, snapshot) {
@@ -216,15 +237,12 @@ class _TabHomeState extends State<TabHome> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: List.generate(
-                                  listModelProgramRecommend
-                                      .where((program) => program.programType == ProgramType.recommend)
-                                      .length,
+                                  listModelProgramRecommend.where((program) => program.programType == ProgramType.recommend).length,
                                   (index) => Row(
                                     children: [
                                       CardProgramScroll(
-                                        modelProgram: listModelProgramRecommend
-                                            .where((e) => e.programType == ProgramType.recommend)
-                                            .toList()[index],
+                                        modelProgram:
+                                            listModelProgramRecommend.where((e) => e.programType == ProgramType.recommend).toList()[index],
                                       ),
                                       Builder(
                                         builder: (context) {
@@ -257,8 +275,7 @@ class _TabHomeState extends State<TabHome> {
                         children: [
                           Text(UtilsEnum.getNameFromProgramType(ProgramType.popular), style: TS.s18w700(colorBlack)),
                           Gaps.h4,
-                          SvgPicture.asset(UtilsEnum.getImgUrlFromProgramIcon(ProgramType.popular),
-                              width: 47, height: 24),
+                          SvgPicture.asset(UtilsEnum.getImgUrlFromProgramIcon(ProgramType.popular), width: 47, height: 24),
                           Spacer(),
                           GestureDetector(
                             onTap: () {
@@ -275,8 +292,24 @@ class _TabHomeState extends State<TabHome> {
                     ),
                     Gaps.v16,
                     StreamBuilder(
-                        stream: null,
+                        stream: FirebaseFirestore.instance
+                            .collection(keyProgram)
+                            .where(keyProgramType, isEqualTo: ProgramType.popular.name)
+                            .snapshots(),
                         builder: (context, snapshot) {
+                          // 에러면, 빈 사이즈 박스 반환
+                          if (snapshot.hasError) {
+                            Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                            return const SizedBox.shrink();
+                          }
+                          // 로딩중이면, 빈 사이즈 박스 반환
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const SizedBox.shrink();
+                          }
+
+                          final List<ModelProgram> listModelProgramPopular =
+                              snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+
                           return MasonryGridView.count(
                             shrinkWrap: true,
                             primary: false,
@@ -284,14 +317,10 @@ class _TabHomeState extends State<TabHome> {
                             crossAxisSpacing: 15,
                             mainAxisSpacing: 20,
                             padding: EdgeInsets.symmetric(horizontal: 20),
-                            itemCount: listSampleModelProgram
-                                .where((program) => program.programType == ProgramType.popular)
-                                .length,
+                            itemCount: listModelProgramPopular.where((program) => program.programType == ProgramType.popular).length,
                             itemBuilder: (context, index) {
                               return CardProgramGrid(
-                                modelProgram: listSampleModelProgram
-                                    .where((e) => e.programType == ProgramType.popular)
-                                    .toList()[index],
+                                modelProgram: listModelProgramPopular.where((e) => e.programType == ProgramType.popular).toList()[index],
                               );
                             },
                           );
@@ -323,40 +352,54 @@ class _TabHomeState extends State<TabHome> {
                       ),
                     ),
                     Gaps.v6,
-                    SizedBox(
-                      height: 231,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(
-                            listSampleModelProgram.where((program) => program.programType == ProgramType.hot).length,
-                            (index) => Row(
-                              children: [
-                                CardProgramScroll(
-                                  modelProgram: listSampleModelProgram
-                                      .where((e) => e.programType == ProgramType.hot)
-                                      .toList()[index],
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection(keyProgram)
+                            .where(keyProgramType, isEqualTo: ProgramType.hot.name)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                            return const SizedBox.shrink();
+                          }
+
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const SizedBox.shrink();
+                          }
+
+                          final List<ModelProgram> listModelProgramHot =
+                              snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+
+                          return SizedBox(
+                            height: 231,
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: List.generate(
+                                  listModelProgramHot.where((program) => program.programType == ProgramType.hot).length,
+                                  (index) => Row(
+                                    children: [
+                                      CardProgramScroll(
+                                        modelProgram: listModelProgramHot.where((e) => e.programType == ProgramType.hot).toList()[index],
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (index ==
+                                              listModelProgramHot.where((program) => program.programType == ProgramType.hot).length - 1) {
+                                            return const SizedBox.shrink();
+                                          } else {
+                                            return Gaps.h10;
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                Builder(
-                                  builder: (context) {
-                                    if (index ==
-                                        listSampleModelProgram
-                                                .where((program) => program.programType == ProgramType.hot)
-                                                .length -
-                                            1) {
-                                      return const SizedBox.shrink();
-                                    } else {
-                                      return Gaps.h10;
-                                    }
-                                  },
-                                )
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
+                          );
+                        }),
 
                     /// 신규 프로그램
                     Gaps.v30,
@@ -391,24 +434,39 @@ class _TabHomeState extends State<TabHome> {
                       ),
                     ),
                     Gaps.v16,
-                    MasonryGridView.count(
-                      shrinkWrap: true,
-                      primary: false,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 15,
-                      mainAxisSpacing: 20,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: listSampleModelProgram
-                          .where((program) => program.programType == ProgramType.brand_new)
-                          .length,
-                      itemBuilder: (context, index) {
-                        return CardProgramGrid(
-                          modelProgram: listSampleModelProgram
-                              .where((e) => e.programType == ProgramType.brand_new)
-                              .toList()[index],
-                        );
-                      },
-                    ),
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection(keyProgram)
+                            .where(keyProgramType, isEqualTo: ProgramType.brand_new.name)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                            return const SizedBox.shrink();
+                          }
+
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const SizedBox.shrink();
+                          }
+
+                          final List<ModelProgram> listModelProgramBrandNew =
+                              snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+
+                          return MasonryGridView.count(
+                            shrinkWrap: true,
+                            primary: false,
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 15,
+                            mainAxisSpacing: 20,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: listModelProgramBrandNew.where((program) => program.programType == ProgramType.brand_new).length,
+                            itemBuilder: (context, index) {
+                              return CardProgramGrid(
+                                modelProgram: listModelProgramBrandNew.where((e) => e.programType == ProgramType.brand_new).toList()[index],
+                              );
+                            },
+                          );
+                        }),
 
                     /// 호캉스 프로그램
                     Gaps.v30,
@@ -419,7 +477,7 @@ class _TabHomeState extends State<TabHome> {
                       child: Row(
                         children: [
                           Text(
-                            UtilsEnum.getNameFromProgramType(ProgramType.hokangs),
+                            UtilsEnum.getNameFromProgramType(ProgramType.staycation),
                             style: TS.s18w700(colorBlack),
                           ),
                           Gaps.h4,
@@ -428,7 +486,7 @@ class _TabHomeState extends State<TabHome> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) => RouteHomePrograms(programType: ProgramType.hokangs),
+                                  builder: (_) => RouteHomePrograms(programType: ProgramType.staycation),
                                 ),
                               );
                             },
@@ -438,46 +496,60 @@ class _TabHomeState extends State<TabHome> {
                       ),
                     ),
                     Gaps.v6,
-                    SizedBox(
-                      height: 231,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(
-                            listSampleModelProgram
-                                .where((program) => program.programType == ProgramType.hokangs)
-                                .length,
-                            (index) => Row(
-                              children: [
-                                /// .first 를
-                                /// 모델을 여러개 만들어서
-                                CardProgramScroll(
-                                  modelProgram: listSampleModelProgram
-                                      .where((e) => e.programType == ProgramType.hokangs)
-                                      .toList()[index],
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection(keyProgram)
+                            .where(keyProgramType, isEqualTo: ProgramType.staycation.name)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                            return const SizedBox.shrink();
+                          }
 
-                                  // modelProgram: listSampleModelProgram[index],
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const SizedBox.shrink();
+                          }
+
+                          final List<ModelProgram> listModelProgramHokangs =
+                              snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+
+                          return SizedBox(
+                            height: 231,
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: List.generate(
+                                  listModelProgramHokangs.where((program) => program.programType == ProgramType.staycation).length,
+                                  (index) => Row(
+                                    children: [
+                                      CardProgramScroll(
+                                        modelProgram:
+                                            listModelProgramHokangs.where((e) => e.programType == ProgramType.staycation).toList()[index],
+
+                                        // modelProgram: listSampleModelProgram[index],
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (index ==
+                                              listModelProgramHokangs
+                                                      .where((program) => program.programType == ProgramType.staycation)
+                                                      .length -
+                                                  1) {
+                                            return const SizedBox.shrink();
+                                          } else {
+                                            return Gaps.h10;
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                Builder(
-                                  builder: (context) {
-                                    if (index ==
-                                        listSampleModelProgram
-                                                .where((program) => program.programType == ProgramType.hokangs)
-                                                .length -
-                                            1) {
-                                      return const SizedBox.shrink();
-                                    } else {
-                                      return Gaps.h10;
-                                    }
-                                  },
-                                )
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
+                          );
+                        }),
 
                     /// 농총한달살기 프로그램
                     Gaps.v30,
@@ -488,7 +560,7 @@ class _TabHomeState extends State<TabHome> {
                       child: Row(
                         children: [
                           Text(
-                            UtilsEnum.getNameFromProgramType(ProgramType.farm),
+                            UtilsEnum.getNameFromProgramType(ProgramType.rural),
                             style: TS.s18w700(colorBlack),
                           ),
                           Gaps.h4,
@@ -497,7 +569,7 @@ class _TabHomeState extends State<TabHome> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) => RouteHomePrograms(programType: ProgramType.farm),
+                                  builder: (_) => RouteHomePrograms(programType: ProgramType.rural),
                                 ),
                               );
                             },
@@ -507,40 +579,56 @@ class _TabHomeState extends State<TabHome> {
                       ),
                     ),
                     Gaps.v6,
-                    SizedBox(
-                      height: 231,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(
-                            listSampleModelProgram.where((program) => program.programType == ProgramType.farm).length,
-                            (index) => Row(
-                              children: [
-                                CardProgramScroll(
-                                  modelProgram: listSampleModelProgram
-                                      .where((e) => e.programType == ProgramType.farm)
-                                      .toList()[index],
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection(keyProgram)
+                            .where(keyProgramType, isEqualTo: ProgramType.rural.name)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                            return const SizedBox.shrink();
+                          }
+
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const SizedBox.shrink();
+                          }
+
+                          final List<ModelProgram> listModelProgramFrams =
+                              snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+
+                          return SizedBox(
+                            height: 231,
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: List.generate(
+                                  listModelProgramFrams.where((program) => program.programType == ProgramType.rural).length,
+                                  (index) => Row(
+                                    children: [
+                                      CardProgramScroll(
+                                        modelProgram:
+                                            listModelProgramFrams.where((e) => e.programType == ProgramType.rural).toList()[index],
+                                      ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (index ==
+                                              listModelProgramFrams.where((program) => program.programType == ProgramType.rural).length -
+                                                  1) {
+                                            return const SizedBox.shrink();
+                                          } else {
+                                            return Gaps.h10;
+                                          }
+                                        },
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                Builder(
-                                  builder: (context) {
-                                    if (index ==
-                                        listSampleModelProgram
-                                                .where((program) => program.programType == ProgramType.farm)
-                                                .length -
-                                            1) {
-                                      return const SizedBox.shrink();
-                                    } else {
-                                      return Gaps.h10;
-                                    }
-                                  },
-                                )
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
+                          );
+                        }),
 
                     /// 사용자 후기
                     Gaps.v30,

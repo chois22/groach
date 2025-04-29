@@ -24,10 +24,12 @@ class UtilsEnum {
         return '급상승 프로그램';
       case ProgramType.brand_new:
         return '신규 프로그램';
-      case ProgramType.hokangs:
+      case ProgramType.staycation:
         return '호캉스 프로그램';
-      case ProgramType.farm:
+      case ProgramType.rural:
         return '농촌한달살기 프로그램';
+      case ProgramType.up:
+        return 'up 프로그램';
     }
   }
 
@@ -42,9 +44,11 @@ class UtilsEnum {
         return 'assets/icon/up_icon.svg';
       case ProgramType.brand_new:
         return 'assets/icon/new_icon.svg';
-      case ProgramType.hokangs:
+      case ProgramType.staycation:
         return '';
-      case ProgramType.farm:
+      case ProgramType.rural:
+        return '';
+      case ProgramType.up:
         return '';
     }
   }
