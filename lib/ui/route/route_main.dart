@@ -13,7 +13,9 @@ import 'package:practice1/ui/tab/tab_search.dart';
 // pop안되도록 설정하기
 
 class RouteMain extends StatefulWidget {
+  final Map<String, dynamic>? user;
   const RouteMain({
+    this.user,
     super.key});
 
   static ValueNotifier<int> vnIndexTab = ValueNotifier(0);
@@ -69,11 +71,11 @@ class _RouteMainState extends State<RouteMain> {
             valueListenable: RouteMain.vnIndexTab,
             builder: (context, index, child) {
               if (index == 0) {
-                return TabHome();
+                return TabHome(user: widget.user);
               } else if (index == 1) {
                 return TabSearch();
               } else {
-                return TabMy();
+                return TabMy(user: widget.user);
               }
             },
           ),

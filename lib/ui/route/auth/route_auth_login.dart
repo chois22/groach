@@ -39,37 +39,59 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
     super.dispose();
   }
 
-  Future<bool> _userInfoCheck(String email, String pw) async {
+  // Future<bool> _userInfoCheck(String email, String pw) async {
+  //   try {
+  //     final QuerySnapshot userInfo = await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .where('email', isEqualTo: email)
+  //         .get();
+  //
+  //     Utils.log.f('이메일 "$email" 로 검색된 문서 수: ${userInfo.docs.length}개');
+  //     if (userInfo.docs.isEmpty) {
+  //       return false; // 이메일 없음
+  //     }
+  //
+  //     for (final doc in userInfo.docs) {
+  //       final userPw = doc['pw'];
+  //       final userUid = doc['uid'];
+  //       Utils.log.f('저장된 비밀번호: $userPw');
+  //       Utils.log.f('입력된 비밀번호: $pw');
+  //       Utils.log.f('UID: $userUid');
+  //
+  //       if (userPw == pw) {
+  //         Utils.log.f('비밀번호 일치');
+  //         return true;
+  //       } else {
+  //         Utils.log.f('비밀번호 불일치');
+  //       }
+  //     }
+  //
+  //     return false; // 이메일은 있지만 비밀번호 다 틀림
+  //   } catch (e) {
+  //     Utils.log.f('에러 발생: $e');
+  //     return false;
+  //   }
+  // }
+  Future<Map<String, dynamic>?> _userInfoCheck(String email, String pw) async {
     try {
       final QuerySnapshot userInfo = await FirebaseFirestore.instance
           .collection('users')
           .where('email', isEqualTo: email)
           .get();
 
-      Utils.log.f('이메일 "$email" 로 검색된 문서 수: ${userInfo.docs.length}개');
-      if (userInfo.docs.isEmpty) {
-        return false; // 이메일 없음
-      }
+      if (userInfo.docs.isEmpty) return null;
 
       for (final doc in userInfo.docs) {
-        final userPw = doc['pw'];
-        final userUid = doc['uid'];
-        Utils.log.f('저장된 비밀번호: $userPw');
-        Utils.log.f('입력된 비밀번호: $pw');
-        Utils.log.f('UID: $userUid');
-
-        if (userPw == pw) {
-          Utils.log.f('비밀번호 일치');
-          return true;
-        } else {
-          Utils.log.f('비밀번호 불일치');
+        final data = doc.data() as Map<String, dynamic>;
+        if (data['pw'] == pw) {
+          return data; // 로그인 성공 시 유저 정보 반환
         }
       }
 
-      return false; // 이메일은 있지만 비밀번호 다 틀림
+      return null; // 이메일은 있지만 비밀번호 틀림
     } catch (e) {
-      Utils.log.f('에러 발생: $e');
-      return false;
+      print('에러 발생: $e');
+      return null;
     }
   }
 
@@ -159,16 +181,26 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
                         );
                         return;
                       }
-                     bool isUserValid = await _userInfoCheck(email, pw);
+                     //bool isUserValid = await _userInfoCheck(email, pw);
+                      final userList = await _userInfoCheck(email, pw);
 
-                      if (isUserValid) {
-                        // 로그인 성공 시 화면 전환 (RouteMain으로 이동)
+                      // if (isUserValid) {
+                      //   // 로그인 성공 시 화면 전환 (RouteMain으로 이동)
+                      //   Navigator.of(context).push(
+                      //     MaterialPageRoute(
+                      //       builder: (_) => RouteMain(),
+                      //     ),
+                      //   );
+                      // }
+                      if (userList != null) {
+                        // 로그인 성공 시 화면 전환 (RouteMain으로 이동, 유저 정보 전달)
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => RouteMain(),
+                            builder: (_) => RouteMain(user: userList),
                           ),
                         );
-                      } else {
+                      }
+                      else {
                         // 로그인 실패 시 다이얼로그 표시
                         showDialog(
                           context: context,

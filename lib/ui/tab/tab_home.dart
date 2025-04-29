@@ -23,7 +23,8 @@ import 'package:practice1/utils/utils_enum.dart';
 import 'package:uuid/uuid.dart';
 
 class TabHome extends StatefulWidget {
-  const TabHome({super.key});
+  final Map<String, dynamic>? user;
+  const TabHome({required this.user, super.key});
 
   @override
   State<TabHome> createState() => _TabHomeState();

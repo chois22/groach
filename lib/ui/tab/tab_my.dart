@@ -8,7 +8,8 @@ import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/route/home/route_setting.dart';
 
 class TabMy extends StatelessWidget {
-  const TabMy({super.key});
+  final Map<String, dynamic>? user;
+  const TabMy({required this.user,super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,8 @@ class TabMy extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text('로그인', style: TS.s16w600(colorBlack)),
+                          Text('${user?['nick_name']}님 (${user?['email']})', style: TS.s16w600(colorBlack)),
+                         // Text('로그인', style: TS.s16w600(colorBlack)),
                           Gaps.h2,
                           SvgPicture.asset('assets/icon/right_arrow.svg', width: 16, height: 16, colorFilter: ColorFilter.mode(colorBlack, BlendMode.srcIn)),
                         ],
