@@ -664,7 +664,7 @@ class _TabHomeState extends State<TabHome> {
                             .toList();
 
 
-                        return SizedBox(
+                        return Container(
                           height: 216,
                           child: SingleChildScrollView(
                             padding: EdgeInsets.symmetric(horizontal: 20),

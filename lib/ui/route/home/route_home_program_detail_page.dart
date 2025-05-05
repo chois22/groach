@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +119,8 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                                   onTap: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (_) => RoutePicture(modelProgram: widget.modelProgram, pictureNumber: index),
+                                        builder: (_) =>
+                                            RoutePicture(modelProgram: widget.modelProgram, pictureNumber: index),
                                       ),
                                     );
                                   },
@@ -171,7 +173,8 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                               children: [
                                 Text(widget.modelProgram.averageStarRating.toString(), style: TS.s14w500(colorGray800)),
                                 Gaps.h2,
-                                Text('(${widget.modelProgram.countTotalReview.toString()})', style: TS.s14w500(colorGray800)),
+                                Text('(${widget.modelProgram.countTotalReview.toString()})',
+                                    style: TS.s14w500(colorGray800)),
                               ],
                             ),
                             Gaps.h4,
@@ -249,7 +252,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                             Text('영업중', style: TS.s14w600(Color(0xFF0059FF))),
                             Gaps.h6,
                             Text(
-                                '${widget.modelProgram.timeProgramEnd.toDate().hour.toString().padLeft(2, '0')}:${widget.modelProgram.timeProgramEnd.toDate().minute.toString().padLeft(2, '0')}에 라스트오더',
+                              '${widget.modelProgram.timeProgramEnd.toDate().hour.toString().padLeft(2, '0')}:${widget.modelProgram.timeProgramEnd.toDate().minute.toString().padLeft(2, '0')}에 라스트오더',
                               style: TS.s14w500(colorGray800),
                             ),
                           ],
@@ -404,146 +407,182 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                   ),
 
                   /// 리뷰 메세지들
+
                   Gaps.v30,
                   CustomDivider(color: colorGray200, height: 10),
                   Gaps.v30,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Container(
-                      width: double.infinity,
-                      height: 34,
-                      decoration: BoxDecoration(
-                        color: colorGreen100,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('최근 한 달 동안 ', style: TS.s14w700(colorGray600)),
-                          Text('1,600명 ', style: TS.s14w700(colorGreen600)),
-                          Text('방문 / ', style: TS.s14w700(colorGray600)),
-                          Text('44명', style: TS.s14w700(colorGreen600)),
-                          Text('이 예약했어요', style: TS.s14w700(colorGray600)),
-                        ],
-                      ),
-                    ),
-                  ),
 
-                  /// 사용자 리뷰들
-                  Gaps.v8,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      children: [
-                        ReviewBox(
-                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_facility),
-                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_facility),
-                        ),
-                        Gaps.v8,
-                        ReviewBox(
-                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.kind_owner),
-                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.kind_owner),
-                        ),
-                        Gaps.v8,
-                        ReviewBox(
-                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.luxury_facility),
-                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.luxury_facility),
-                        ),
-                        Gaps.v8,
-                        ReviewBox(
-                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_view),
-                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_view),
-                        ),
-                        Gaps.v8,
-                        ReviewBox(
-                          iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.with_couple),
-                          text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.with_couple),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Gaps.v30,
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Column(
-                      children: [
-                        Row(
+                  StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection(keyReview)
+                          .where(keyUidOfModelProgram, isEqualTo: widget.modelProgram.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        // 에러면, 빈 사이즈 박스 반환
+                        if (snapshot.hasError) {
+                          Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                          return const SizedBox.shrink();
+                        }
+                        // 로딩중이면, 빈 사이즈 박스 반환
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const SizedBox.shrink();
+                        }
+
+                        final List<ModelReview> listModelReview = snapshot.data!.docs
+                            .map((doc) => ModelReview.fromJson(doc.data() as Map<String, dynamic>))
+                            .toList();
+
+                        Utils.log.f('프로그램 uid: ${widget.modelProgram.uid}');
+
+                        Utils.log.f('리뷰 갯수: ${listModelReview.length}개');
+
+                        int countFacilityGood = 0;
+                        int a = 0;
+                        int b = 0;
+                        int c = 0;
+                        int d = 0;
+
+                        for (ModelReview review in listModelReview) {
+                          if (review.listReviewKeyWord.contains(ReviewKeyWord.good_facility)) {
+                            countFacilityGood++;
+                          }
+
+                          if (review.listReviewKeyWord.contains(ReviewKeyWord.kind_owner)) {
+                            a++;
+                          }
+                          if (review.listReviewKeyWord.contains(ReviewKeyWord.luxury_facility)) {
+                            b++;
+                          }
+                          if (review.listReviewKeyWord.contains(ReviewKeyWord.good_view)) {
+                            c++;
+                          }
+                          if (review.listReviewKeyWord.contains(ReviewKeyWord.with_couple)) {
+                            d++;
+                          }
+                        }
+
+                        return Column(
                           children: [
-                            Text('사용자 리뷰', style: TS.s18w700(colorBlack)),
-                            Spacer(),
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          RouteReviewView(modelProgram: widget.modelProgram, listModelReview: listSampleModelReview),
-                                    ),
-                                  );
-                                },
-                                child: MoreView()),
-                          ],
-                        ),
-                        Gaps.v16,
-                        StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance.collection(keyReview).snapshots(),
-                          builder: (context, snapshot) {
-                            // 에러면, 빈 사이즈 박스 반환
-                            if (snapshot.hasError) {
-                              Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
-                              return const SizedBox.shrink();
-                            }
-                            // 로딩중이면, 빈 사이즈 박스 반환
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const SizedBox.shrink();
-                            }
-
-                            final List<ModelReview> listModelReview = snapshot.data!.docs
-                                .map((doc) => ModelReview.fromJson(doc.data() as Map<String, dynamic>))
-                                .toList();
-                            // 모델에 맞는 리뷰만 필터링
-                            final List<ModelReview> listModelReviewFilter = listModelReview
-                                .where((review) => review.uidOfModelProgram == widget.modelProgram.uid)
-                                .toList();
-
-                          Utils.log.f('프로그램 uid: ${widget.modelProgram.uid}');
-
-                          Utils.log.f('리뷰 갯수: ${listModelReviewFilter.length}개');
-
-                          return SizedBox(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: List.generate(
-                                  listModelReviewFilter.length,
-                                  (index) => Row(
-                                    children: [
-                                      CardReviewScroll(
-                                        modelReview: listModelReviewFilter[index],
-
-                                        /// 프로그램 정보 표시 안함
-                                        isTabHome: false,
-                                      ),
-                                      Builder(
-                                        builder: (context) {
-                                          if (index == listModelReviewFilter.length - 1) {
-                                            return const SizedBox.shrink();
-                                          } else {
-                                            return Gaps.h10;
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Container(
+                                width: double.infinity,
+                                height: 34,
+                                decoration: BoxDecoration(
+                                  color: colorGreen100,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('최근 한 달 동안 ', style: TS.s14w700(colorGray600)),
+                                    Text('1,600명 ', style: TS.s14w700(colorGreen600)),
+                                    Text('방문 / ', style: TS.s14w700(colorGray600)),
+                                    Text('44명', style: TS.s14w700(colorGreen600)),
+                                    Text('이 예약했어요', style: TS.s14w700(colorGray600)),
+                                  ],
                                 ),
                               ),
                             ),
-                          );
-                        },
-                        ),
-                      ],
-                    ),
-                  ),
+
+                            /// 사용자 리뷰들
+                            Gaps.v8,
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Column(
+                                children: [
+                                  ReviewBox(
+                                    iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_facility),
+                                    text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_facility),
+                                    number: countFacilityGood,
+                                  ),
+                                  Gaps.v8,
+                                  ReviewBox(
+                                    iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.kind_owner),
+                                    text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.kind_owner),
+                                    number: a,
+                                  ),
+                                  Gaps.v8,
+                                  ReviewBox(
+                                    iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.luxury_facility),
+                                    text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.luxury_facility),
+                                    number: b,
+                                  ),
+                                  Gaps.v8,
+                                  ReviewBox(
+                                    iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_view),
+                                    text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_view),
+                                    number: c,
+                                  ),
+                                  Gaps.v8,
+                                  ReviewBox(
+                                    iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.with_couple),
+                                    text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.with_couple),
+                                    number: d,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Gaps.v30,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('사용자 리뷰', style: TS.s18w700(colorBlack)),
+                                      Spacer(),
+                                      GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (_) => RouteReviewView(
+                                                    modelProgram: widget.modelProgram,
+                                                    listModelReview: listSampleModelReview),
+                                              ),
+                                            );
+                                          },
+                                          child: MoreView()),
+                                    ],
+                                  ),
+                                  Gaps.v16,
+                                  SizedBox(
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: List.generate(
+                                          listModelReview.length,
+                                          (index) => Row(
+                                            children: [
+                                              CardReviewScroll(
+                                                modelReview: listModelReview[index],
+
+                                                /// 프로그램 정보 표시 안함
+                                                isTabHome: false,
+                                              ),
+                                              Builder(
+                                                builder: (context) {
+                                                  if (index == listModelReview.length - 1) {
+                                                    return const SizedBox.shrink();
+                                                  } else {
+                                                    return Gaps.h10;
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+
                   Gaps.v30,
                   CustomDivider(color: colorGray200, height: 10),
                   Gaps.v30,
@@ -558,7 +597,9 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => RouteHomePrograms(programType: ProgramType.rural,),
+                                builder: (_) => RouteHomePrograms(
+                                  programType: ProgramType.rural,
+                                ),
                               ),
                             );
                           },
@@ -571,33 +612,33 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                   //todo: 정렬 물어보기
                   StreamBuilder(
                     // keyProgramType, isEqualTo: widget.modelProgram.name
-                      stream: FirebaseFirestore.instance
-                          .collection(keyProgram) // = 'program'
-                          .where(keyListTag, arrayContainsAny: widget.modelProgram.listTag)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
-                          return const SizedBox.shrink();
-                        }
+                    stream: FirebaseFirestore.instance
+                        .collection(keyProgram) // = 'program'
+                        .where(keyListTag, arrayContainsAny: widget.modelProgram.listTag)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                        return const SizedBox.shrink();
+                      }
 
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const SizedBox.shrink();
-                        }
-                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return const Center(child: Text("데이터가 없습니다."));
-                        }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox.shrink();
+                      }
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return const Center(child: Text("데이터가 없습니다."));
+                      }
 
-                        /// 리스트 태그 출력
-                       Utils.log.f('widget.modelProgram.listTag: ${widget.modelProgram.listTag}');
-                        Utils.log.f('snapshot.data!.docs: ${snapshot.data!.docs.length}');
+                      /// 리스트 태그 출력
+                      Utils.log.f('widget.modelProgram.listTag: ${widget.modelProgram.listTag}');
+                      Utils.log.f('snapshot.data!.docs: ${snapshot.data!.docs.length}');
 
-                        final List<ModelProgram> listModelProgramSimilar =
-                        snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+                      final List<ModelProgram> listModelProgramSimilar =
+                          snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
 
-                        Utils.log.f('snapshot.data!.docs: ${snapshot.data!.docs}');
+                      Utils.log.f('snapshot.data!.docs: ${snapshot.data!.docs}');
 
-                        return SizedBox(
+                      return SizedBox(
                         height: 257,
                         child: SingleChildScrollView(
                           padding: EdgeInsets.symmetric(horizontal: 20),

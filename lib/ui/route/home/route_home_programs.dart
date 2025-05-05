@@ -30,7 +30,8 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
 
   @override
   Widget build(BuildContext context) {
-    final List<ModelProgram> listModelProgram = listSampleModelProgram.where((e) => e.programType == widget.programType).toList();
+    final List<ModelProgram> listModelProgram =
+        listSampleModelProgram.where((e) => e.programType == widget.programType).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -93,6 +94,7 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                     },
                   ),
                   Gaps.v20,
+                  //todo: vnSelectedFilter 랑 StreamBuilder 순서 바꾸기
                   Expanded(
                     child: SingleChildScrollView(
                       child: ValueListenableBuilder<int>(

@@ -72,11 +72,13 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                 Gaps.v10,
 
                 /// 리뷰 텍스트(내용)
-                Text(
-                  widget.modelReview.reviewText,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                  style: TS.s14w400(colorGray800),
+                Expanded(
+                  child: Text(
+                    widget.modelReview.reviewText,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    style: TS.s14w400(colorGray800),
+                  ),
                 ),
                 Column(
                   children: [

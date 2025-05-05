@@ -39,7 +39,7 @@ class _RouteSplashState extends State<RouteSplash> {
     if (uid == null) {
       Navigator.of(context).push(
         MaterialPageRoute(
-            builder: (_) => RouteAuthLogin()
+            builder: (_) => RouteMain()
         ),
       );
     }
@@ -48,7 +48,8 @@ class _RouteSplashState extends State<RouteSplash> {
     else {
       await Future.delayed(Duration(milliseconds: 1500));
 
-      ///파베 문서 조회하고 메인 넘기기 !
+      ///파베 문서 조회하고 Global.userNotifier.value 에 조회한 유저를 넣기
+      ///유저를 넣고 메인으로 보내기
 
 
       Navigator.of(context).push(

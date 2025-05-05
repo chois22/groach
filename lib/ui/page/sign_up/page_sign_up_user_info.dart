@@ -64,15 +64,6 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
   @override
   void initState() {
     super.initState();
-    widget.tecEmail.addListener(() {
-      String email = widget.tecEmail.text;
-
-      // 이메일 수정시 자동으로 상태를 갱신하지 않도록 해야 하므로,
-      // '중복확인' 버튼을 다시 눌러야만 상태가 갱신되도록 설정
-      if (email.isEmpty) {
-        _resetEmailStatus(); // 이메일이 비었으면 상태 리셋
-      } else {}
-    });
   }
 
 //todo : vn들 dispose 추가
@@ -87,22 +78,12 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
     vnIsEmailCheck.dispose();
     vnTecEmailMatch.dispose();
     vnFormCheck.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.tecEmail.addListener(() {
-      vnTecEmailMatch.value = widget.tecEmail.text.isNotEmpty;
-    });
-    widget.tecNickName.addListener(() {
-      vnTecNickNameMatch.value = widget.tecNickName.text.isNotEmpty;
-    });
-    widget.tecName.addListener(_checkFormField);
-    widget.tecNickName.addListener(_checkFormField);
-    widget.tecPw.addListener(_checkFormField);
-    widget.tecPwCheck.addListener(_checkFormField);
-
     // Scaffold랑 Appbar 지우기
     return GestureDetector(
       onTap: () {
@@ -143,6 +124,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                   hintText: '이메일 입력',
                                   onChanged: (value) {
                                     vnEmailErrorMessage.value = null;
+                                    vnIsEmailCheck.value = false;
+                                    vnTecEmailMatch.value = false;
                                   },
                                 ),
                               ),
@@ -151,22 +134,14 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                             ValueListenableBuilder(
                               valueListenable: vnIsEmailCheck,
                               builder: (context, isEmailCheck, child) => ValueListenableBuilder(
-                                valueListenable: vnTecEmailMatch,
+                                valueListenable: widget.tecEmail,
                                 builder: (context, isEmail, child) {
                                   return ButtonConfirm(
                                     boxText: isEmailCheck ? '확인완료' : '중복확인',
                                     textStyle: TS.s16w500(
-                                      isEmailCheck
-                                          ? colorGray500
-                                          : isEmail
-                                              ? colorWhite
-                                              : colorGray500,
+                                      isEmailCheck ? colorGray500 : colorWhite,
                                     ),
-                                    boxColor: isEmailCheck
-                                        ? colorGray200
-                                        : isEmail
-                                            ? colorGreen600
-                                            : colorGray200,
+                                    boxColor: isEmailCheck ? colorGray200 : colorGreen600,
                                     width: 87,
                                     height: 48,
                                     onTap: () async {
@@ -181,7 +156,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                           ),
                                         );
 
-                                        vnEmailErrorMessage.value = UtilsEnum.getSignUpMessage(SignUpMessage.Empty_Email);
+                                        vnEmailErrorMessage.value =
+                                            UtilsEnum.getSignUpMessage(SignUpMessage.Empty_Email);
                                         return;
                                       }
 
@@ -195,13 +171,16 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                             text: UtilsEnum.getSignUpMessage(SignUpMessage.Invalid_Email),
                                           ),
                                         );
-                                        vnEmailErrorMessage.value = UtilsEnum.getSignUpMessage(SignUpMessage.Invalid_Email);
+                                        vnEmailErrorMessage.value =
+                                            UtilsEnum.getSignUpMessage(SignUpMessage.Invalid_Email);
 
                                         return;
                                       }
 
-                                      final resultEmail =
-                                          await FirebaseFirestore.instance.collection(keyUser).where(keyEmail, isEqualTo: email).get();
+                                      final resultEmail = await FirebaseFirestore.instance
+                                          .collection(keyUser)
+                                          .where(keyEmail, isEqualTo: email)
+                                          .get();
 
                                       /// 이메일이 중복일 때 return
                                       if (resultEmail.docs.isNotEmpty) {
@@ -211,7 +190,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                             text: UtilsEnum.getSignUpMessage(SignUpMessage.Duplicate_Email),
                                           ),
                                         );
-                                        vnEmailErrorMessage.value = UtilsEnum.getSignUpMessage(SignUpMessage.Duplicate_Email);
+                                        vnEmailErrorMessage.value =
+                                            UtilsEnum.getSignUpMessage(SignUpMessage.Duplicate_Email);
 
                                         return;
                                       }
@@ -221,7 +201,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                       if (isEmailCheck && resultEmail.docs.isEmpty) {}
                                       vnIsEmailCheck.value = true;
                                       vnTecEmailMatch.value = true;
-                                      vnEmailErrorMessage.value = UtilsEnum.getSignUpMessage(SignUpMessage.Possible_Email);
+                                      vnEmailErrorMessage.value =
+                                          UtilsEnum.getSignUpMessage(SignUpMessage.Possible_Email);
                                       _checkFormField();
 
                                       showDialog(
@@ -368,7 +349,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                             text: UtilsEnum.getSignUpMessage(SignUpMessage.Empty_NickName),
                                           ),
                                         );
-                                        vnNickNameErrorMessage.value = UtilsEnum.getSignUpMessage(SignUpMessage.Empty_NickName);
+                                        vnNickNameErrorMessage.value =
+                                            UtilsEnum.getSignUpMessage(SignUpMessage.Empty_NickName);
                                         return;
                                       }
 
@@ -383,7 +365,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                             text: UtilsEnum.getSignUpMessage(SignUpMessage.Invalid_NickName),
                                           ),
                                         );
-                                        vnNickNameErrorMessage.value = UtilsEnum.getSignUpMessage(SignUpMessage.Invalid_NickName);
+                                        vnNickNameErrorMessage.value =
+                                            UtilsEnum.getSignUpMessage(SignUpMessage.Invalid_NickName);
 
                                         return;
                                       }
@@ -401,7 +384,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                             text: UtilsEnum.getSignUpMessage(SignUpMessage.Duplicate_NickName),
                                           ),
                                         );
-                                        vnNickNameErrorMessage.value = UtilsEnum.getSignUpMessage(SignUpMessage.Duplicate_NickName);
+                                        vnNickNameErrorMessage.value =
+                                            UtilsEnum.getSignUpMessage(SignUpMessage.Duplicate_NickName);
 
                                         return;
                                       }
@@ -411,7 +395,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                                       if (isNickNameCheck && resultNickName.docs.isEmpty) {}
                                       vnIsNickNameCheck.value = true;
                                       vnTecNickNameMatch.value = true;
-                                      vnNickNameErrorMessage.value = UtilsEnum.getSignUpMessage(SignUpMessage.Possible_NickName);
+                                      vnNickNameErrorMessage.value =
+                                          UtilsEnum.getSignUpMessage(SignUpMessage.Possible_NickName);
                                       _checkFormField();
 
                                       showDialog(
@@ -493,7 +478,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                         hintText: '비밀번호 입력',
                         obscureText: true, // 비밀번호 ***표시
                         onChanged: (passwordText) {
-                          final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*()\-_=+{};:,<.>]).{8,}$');
+                          final passwordRegex =
+                              RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*()\-_=+{};:,<.>]).{8,}$');
                           final pwCheck = widget.tecPwCheck.text;
 
                           /// 비밀번호 입력을 안했을 때
@@ -534,7 +520,8 @@ class _PageSignUpUserInfoState extends State<PageSignUpUserInfo> {
                         hintText: '비밀번호 재입력',
                         obscureText: true,
                         onChanged: (passwordText) {
-                          final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*()\-_=+{};:,<.>]).{8,}$');
+                          final passwordRegex =
+                              RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%^&*()\-_=+{};:,<.>]).{8,}$');
                           final pwCheck = widget.tecPwCheck.text;
 
                           /// 비밀번호 입력을 안했을 때

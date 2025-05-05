@@ -43,6 +43,8 @@ class _RouteReviewViewState extends State<RouteReviewView> {
 
   Future<void> fetchKeywordCounts() async{
     final snapshot = await FirebaseFirestore.instance.collection(keyReview).where(keyUidOfModelProgram, isEqualTo: widget.modelProgram).get();
+    Utils.log.d(snapshot.docs.length);
+
     final Map<String, int> counts = {};
 
     for (var doc in snapshot.docs) {
