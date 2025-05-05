@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/model/model_user.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/gaps.dart';
+import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/dialog/dialog_confirm.dart';
 import 'package:practice1/ui/route/auth/route_auth_login.dart';
 import 'package:practice1/ui/route/route_main.dart';
-import 'package:practice1/ui/tab/tab_home.dart';
 import 'package:uuid/uuid.dart';
 
 // 회원가입 완료 페이지
@@ -97,11 +97,8 @@ class PageSignUpComplete extends StatelessWidget {
                   builder: (_) => RouteAuthLogin(),
                 ),
               );
-              await FirebaseFirestore.instance.collection('users').doc(modelUser.uid).set(modelUser.toJson());
-              showDialog(
-                  context: context,
-                  builder: (context) => DialogConfirm(text: '유저 정보 업로드 완료'),
-              );
+              await FirebaseFirestore.instance.collection(keyUser).doc(modelUser.uid).set(modelUser.toJson());
+
             },
             child: ButtonAnimate(
               title: '메인 페이지로 이동',

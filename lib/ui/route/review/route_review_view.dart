@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -7,11 +8,13 @@ import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
+import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/route/home/route_home_program_detail_page.dart';
 import 'package:practice1/ui/route/review/route_review_picture.dart';
 import 'package:practice1/ui/route/review/route_review_write.dart';
+import 'package:practice1/utils/utils.dart';
 import 'package:practice1/utils/utils_enum.dart';
 
 class RouteReviewView extends StatefulWidget {
@@ -30,14 +33,51 @@ class RouteReviewView extends StatefulWidget {
 
 class _RouteReviewViewState extends State<RouteReviewView> {
   final ValueNotifier<int> vnSelectedFilter = ValueNotifier<int>(0);
+  Map<String, int>? keyWordCounts;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchKeywordCounts();
+  }
+
+  Future<void> fetchKeywordCounts() async{
+    final snapshot = await FirebaseFirestore.instance.collection(keyReview).where(keyUidOfModelProgram, isEqualTo: widget.modelProgram).get();
+    final Map<String, int> counts = {};
+
+    for (var doc in snapshot.docs) {
+      final keyWords = List<String>.from(doc[keyReviewKeyWord] ?? []);
+      for (final keyWord in keyWords) {
+        counts[keyWord] = (counts[keyWord] ?? 0) + 1;
+      }
+    }
+    setState(() {
+      keyWordCounts = counts;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '리뷰 ${NumberFormat('#,###').format(widget.modelProgram.countTotalReview)}',
-          style: TS.s18w600(colorBlack),
+        title: StreamBuilder(
+            stream: FirebaseFirestore.instance.collection(keyReview).where(keyUidOfModelProgram, isEqualTo: widget.modelProgram.uid).snapshots(),
+          builder: (context, snapshot) {
+            // 에러면, 빈 사이즈 박스 반환
+            if (snapshot.hasError) {
+              Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+              return const SizedBox.shrink();
+            }
+            // 로딩중이면, 빈 사이즈 박스 반환
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox.shrink();
+            }
+
+            return Text(
+              '리뷰 ${NumberFormat('#,###').format(snapshot.data!.docs.length)}',
+              style: TS.s18w600(colorBlack),
+            );
+          }
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -99,6 +139,7 @@ class _RouteReviewViewState extends State<RouteReviewView> {
                     ReviewBox(
                       iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_facility),
                       text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_facility),
+                      number: keyWordCounts?['good_facility'] ?? 0,
                     ),
                     Gaps.v8,
                     ReviewBox(
@@ -261,6 +302,12 @@ class _RouteReviewViewState extends State<RouteReviewView> {
                                           height: 60,
                                           fit: BoxFit.cover,
                                         ),
+                                        // child: CachedNetworkImage(
+                                        //   imageUrl: reviewIndex.listImgUrl[reviewImgIndex],
+                                        //   width: 60,
+                                        //   height: 60,
+                                        //   fit: BoxFit.cover,
+                                        // ),
                                       ),
                                     ),
                                     if (reviewImgIndex != reviewIndex.listImgUrl.length - 1) Gaps.h10,

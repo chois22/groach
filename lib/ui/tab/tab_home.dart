@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/model/model_program.dart';
+import 'package:practice1/const/model/model_review.dart';
 import 'package:practice1/const/model/model_user.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
@@ -18,12 +19,15 @@ import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/dialog/dialog_confirm.dart';
 import 'package:practice1/ui/route/home/route_home_programs.dart';
 import 'package:practice1/ui/route/route_main.dart';
+import 'package:practice1/ui/route/route_splash.dart';
 import 'package:practice1/utils/utils.dart';
 import 'package:practice1/utils/utils_enum.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class TabHome extends StatefulWidget {
   final Map<String, dynamic>? user;
+
   const TabHome({required this.user, super.key});
 
   @override
@@ -98,24 +102,22 @@ class _TabHomeState extends State<TabHome> {
             //     '서버 데이터 불러오기',
             //   ),
             // ),
-            /// 모델유저 정보 firebase에 업로드 set()
+            /// 로그아웃
             ElevatedButton(
               onPressed: () async {
-                final modelUser = ModelUser(
-                  uid: Uuid().v1(),
-                  dateCreate: Timestamp.now(),
-                  email: 'test@naver.com',
-                  name: '홍길동',
-                  nickname: '길동이',
-                  pw: '1234',
-                );
-                await FirebaseFirestore.instance.collection('users').doc(modelUser.uid).set(modelUser.toJson());
-                showDialog(
-                  context: context,
-                  builder: (context) => DialogConfirm(text: '유저 정보 업로드 완료'),
+
+                SharedPreferences spf = await SharedPreferences.getInstance();
+
+                await spf.remove(keyUid);
+
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => RouteSplash(),
+                  ),
+                  (route) => false,
                 );
               },
-              child: Text('유저 정보 업로드'),
+              child: Text('로그아웃'),
             ),
 
             Expanded(
@@ -644,37 +646,57 @@ class _TabHomeState extends State<TabHome> {
                       ],
                     ),
                     Gaps.v16,
-                    SizedBox(
-                      height: 216,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: List.generate(
-                            listSampleModelReview.length,
-                            (index) => Row(
-                              children: [
-                                CardReviewScroll(
-                                  /// 리뷰 남긴 사람 정보, 리뷰 내용
-                                  modelReview: listSampleModelReview[index],
+                    StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance.collection(keyReview).snapshots(),
+                      builder: (context, snapshot) {
+                        // 에러면, 빈 사이즈 박스 반환
+                        if (snapshot.hasError) {
+                          Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                          return const SizedBox.shrink();
+                        }
+                        // 로딩중이면, 빈 사이즈 박스 반환
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const SizedBox.shrink();
+                        }
 
-                                  ///  프로그램 정보 표시
-                                  isTabHome: true,
+                        final List<ModelReview> listModelReview = snapshot.data!.docs
+                            .map((doc) => ModelReview.fromJson(doc.data() as Map<String, dynamic>))
+                            .toList();
+
+
+                        return SizedBox(
+                          height: 216,
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: List.generate(
+                                listModelReview.length,
+                                (index) => Row(
+                                  children: [
+                                    CardReviewScroll(
+                                      /// 리뷰 남긴 사람 정보, 리뷰 내용
+                                      modelReview: listModelReview[index],
+                        
+                                      ///  프로그램 정보 표시
+                                      isTabHome: true,
+                                    ),
+                                    Builder(
+                                      builder: (context) {
+                                        if (index == listModelReview.length - 1) {
+                                          return const SizedBox.shrink();
+                                        } else {
+                                          return Gaps.h10;
+                                        }
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                Builder(
-                                  builder: (context) {
-                                    if (index == listSampleModelReview.length - 1) {
-                                      return const SizedBox.shrink();
-                                    } else {
-                                      return Gaps.h10;
-                                    }
-                                  },
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }
                     ),
 
                     /// 하단 회사 정보

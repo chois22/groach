@@ -484,14 +484,30 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                           ],
                         ),
                         Gaps.v16,
-                        Builder(builder: (context) {
-                          // todo : 물어보기
-                          final List<ModelReview> listModelReviewFilter =
-                              listSampleModelReview.where((review) => review.uidOfModelProgram == widget.modelProgram.uid).toList();
+                        StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance.collection(keyReview).snapshots(),
+                          builder: (context, snapshot) {
+                            // 에러면, 빈 사이즈 박스 반환
+                            if (snapshot.hasError) {
+                              Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
+                              return const SizedBox.shrink();
+                            }
+                            // 로딩중이면, 빈 사이즈 박스 반환
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const SizedBox.shrink();
+                            }
 
-                          print('프로그램 uid: ${widget.modelProgram.uid}');
+                            final List<ModelReview> listModelReview = snapshot.data!.docs
+                                .map((doc) => ModelReview.fromJson(doc.data() as Map<String, dynamic>))
+                                .toList();
+                            // 모델에 맞는 리뷰만 필터링
+                            final List<ModelReview> listModelReviewFilter = listModelReview
+                                .where((review) => review.uidOfModelProgram == widget.modelProgram.uid)
+                                .toList();
 
-                          print('리뷰 갯수: ${listModelReviewFilter.length}개');
+                          Utils.log.f('프로그램 uid: ${widget.modelProgram.uid}');
+
+                          Utils.log.f('리뷰 갯수: ${listModelReviewFilter.length}개');
 
                           return SizedBox(
                             child: SingleChildScrollView(
@@ -523,7 +539,8 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                               ),
                             ),
                           );
-                        }),
+                        },
+                        ),
                       ],
                     ),
                   ),
@@ -541,7 +558,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => RouteHomePrograms(programType: ProgramType.rural),
+                                builder: (_) => RouteHomePrograms(programType: ProgramType.rural,),
                               ),
                             );
                           },
@@ -714,7 +731,7 @@ class ReviewBox extends StatelessWidget {
     this.boxBorderColor = Colors.transparent,
     this.boxBorderWidth = 0.0,
     this.textStyle = const TS.s14w500(colorBlack),
-    this.number = 4,
+    this.number = 0,
     super.key,
   });
 

@@ -1,21 +1,22 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/model/model_review.dart';
-import 'package:practice1/const/model/model_user.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
+import 'package:practice1/static/global.dart';
 import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 import 'package:practice1/ui/dialog/dialog_cancel_confirm.dart';
-import 'package:practice1/ui/route/home/route_home_program_detail_page.dart';
 import 'package:practice1/ui/route/review/route_review_complete.dart';
 import 'package:practice1/utils/utils_enum.dart';
+import 'package:uuid/uuid.dart';
 
 class RouteReviewWrite extends StatefulWidget {
   final ModelProgram modelProgram;
@@ -67,8 +68,8 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         clipBehavior: Clip.hardEdge,
-                        child: Image.asset(
-                          widget.modelProgram.listImgUrl.first,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.modelProgram.listImgUrl.first,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -254,6 +255,24 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                       Gaps.v16,
                       GestureDetector(
                         onTap: () async {
+                          ModelReview modelReview = ModelReview(
+                            uid: Uuid().v1(),
+                            dateCreate: Timestamp.now(),
+                            uidOfModelProgram: widget.modelProgram.uid,
+                            modelProgram: widget.modelProgram,
+                            uidOfModelUser: Global.userNotifier.value!.uid,
+                            modelUser: Global.userNotifier.value!,
+                            listReviewKeyWord: vnListReviewKeyWord.value,
+                            reviewText: tecReviewWrite.text.trim(),
+                            starRating: vnSelectedStar.value,
+                            listImgUrl: [],
+                          );
+
+                          FirebaseFirestore.instance.collection(keyReview).doc(modelReview.uid).set(modelReview.toJson());
+
+                          // get : 가져오기
+                          //FirebaseFirestore.instance.collection(keyReview)..where(keyUidOfModelUser,isEqualTo: Global.userNotifier.value!.uid).get();
+
                           FocusManager.instance.primaryFocus?.unfocus();
                           final result = await showDialog<bool>(
                             context: context,
@@ -262,19 +281,7 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                             ),
                           );
                           if (result == true) {
-                            //     final reviewUid = FirebaseFirestore.instance.collection('reviews').doc().id;
-                            // final review = ModelReview(
-                            //   uid: reviewUid,
-                            //   dateCreate: Timestamp.now(),
-                            //   uidOfModelProgram: widget.modelProgram.name,
-                            //   modelProgram: modelProgram,
-                            //   uidOfModelUser: uidOfModelUser,
-                            //   modelUser: modelUser,
-                            //   listReviewKeyWord: listReviewKeyWord,
-                            //   reviewText: reviewText,
-                            //   starRating: starRating,
-                            //   listImgUrl: listImgUrl,
-                            // );
+
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) => RouteReviewComplete(),

@@ -7,6 +7,8 @@ import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/route/home/route_setting.dart';
 
+import '../../static/global.dart';
+
 class TabMy extends StatelessWidget {
   final Map<String, dynamic>? user;
   const TabMy({required this.user,super.key});
@@ -43,67 +45,70 @@ class TabMy extends StatelessWidget {
           ),
         ),
         Gaps.v16,
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Image.asset('assets/image/user_image.png', width: 56, height: 56),
-                  Gaps.h14,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text('${user?['nick_name']}님 (${user?['email']})', style: TS.s16w600(colorBlack)),
-                         // Text('로그인', style: TS.s16w600(colorBlack)),
-                          Gaps.h2,
-                          SvgPicture.asset('assets/icon/right_arrow.svg', width: 16, height: 16, colorFilter: ColorFilter.mode(colorBlack, BlendMode.srcIn)),
-                        ],
-                      ),
-                      Gaps.v4,
-                      Text('로그인 후 더 많은 정보를 확인해보세요.', style: TS.s13w400(colorGray600)),
-                    ],
-                  ),
-                ],
-              ),
-              Gaps.v20,
-              Container(
-                height: 70,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: colorGray50,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        ValueListenableBuilder(
+          valueListenable: Global.userNotifier,
+          builder:(context, modelUser, child) =>  Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                Row(
                   children: [
+                    Image.asset('assets/image/user_image.png', width: 56, height: 56),
+                    Gaps.h14,
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Gaps.v16,
-                        Text('-', style: TS.s16w700(colorGreen600)),
-                        Gaps.v5,
-                        Text('진행중인 예약', style: TS.s14w500(colorGray800)),
-                      ],
-                    ),
-                    Container(
-                      height: 46,
-                      width: 1,
-                      color: colorWhite,
-                    ),
-                    Column(
-                      children: [
-                        Gaps.v16,
-                        Text('-', style: TS.s16w700(colorGreen600)),
-                        Gaps.v5,
-                        Text('완료된 예약', style: TS.s14w500(colorGray800)),
+                        Row(
+                          children: [
+                            Text('${modelUser?.nickname}님 (${user?['email']})', style: TS.s16w600(colorBlack)),
+                           // Text('로그인', style: TS.s16w600(colorBlack)),
+                            Gaps.h2,
+                            SvgPicture.asset('assets/icon/right_arrow.svg', width: 16, height: 16, colorFilter: ColorFilter.mode(colorBlack, BlendMode.srcIn)),
+                          ],
+                        ),
+                        Gaps.v4,
+                        Text('로그인 후 더 많은 정보를 확인해보세요.', style: TS.s13w400(colorGray600)),
                       ],
                     ),
                   ],
                 ),
-              ),
-            ],
+                Gaps.v20,
+                Container(
+                  height: 70,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colorGray50,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Gaps.v16,
+                          Text('-', style: TS.s16w700(colorGreen600)),
+                          Gaps.v5,
+                          Text('진행중인 예약', style: TS.s14w500(colorGray800)),
+                        ],
+                      ),
+                      Container(
+                        height: 46,
+                        width: 1,
+                        color: colorWhite,
+                      ),
+                      Column(
+                        children: [
+                          Gaps.v16,
+                          Text('-', style: TS.s16w700(colorGreen600)),
+                          Gaps.v5,
+                          Text('완료된 예약', style: TS.s14w500(colorGray800)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Gaps.v20,

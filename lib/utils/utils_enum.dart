@@ -95,4 +95,41 @@ class UtilsEnum {
         return 'assets/icon/review_heart_icon.svg';
     }
   }
+
+  /// 회원가입 메세지들
+  static String getSignUpMessage(SignUpMessage signUpMessage) {
+    switch (signUpMessage) {
+      case SignUpMessage.Empty_Email:
+        return '이메일을 입력해주세요.';
+      case SignUpMessage.Duplicate_Email:
+        return '사용중인 이메일입니다.';
+      case SignUpMessage.Invalid_Email:
+        return '잘못된 이메일 형식입니다.';
+      case SignUpMessage.Possible_Email:
+        return '사용 가능한 이메일입니다.';
+
+      case SignUpMessage.Empty_Name:
+        return '이름을 입력해주세요.';
+      case SignUpMessage.Invalid_Name:
+        return '이름은 한글로 입력해주세요.';
+
+      case SignUpMessage.Empty_NickName:
+        return '닉네임을 입력해주세요.';
+      case SignUpMessage.Duplicate_NickName:
+        return '사용중인 닉네임입니다.';
+      case SignUpMessage.Invalid_NickName:
+        return '특수문자는 사용할 수 없습니다.';
+      case SignUpMessage.Possible_NickName:
+        return '사용 가능한 닉네임입니다.';
+
+      case SignUpMessage.Empty_Pw:
+        return '비밀번호를 입력해주세요.';
+      case SignUpMessage.Invalid_Pw:
+        return '잘못된 비밀번호 형식입니다.';
+      case SignUpMessage.Possible_Pw:
+        return '사용 가능한 비밀번호입니다.';
+    }
+  }
 }
+
+

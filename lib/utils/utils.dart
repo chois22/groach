@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:practice1/const/static/global.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/custom_toast.dart';
+
+import '../static/global.dart';
 
 class Utils{
   /// 로그 찍기

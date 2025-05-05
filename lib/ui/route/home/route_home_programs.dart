@@ -16,7 +16,10 @@ import 'package:practice1/utils/utils_enum.dart';
 class RouteHomePrograms extends StatefulWidget {
   final ProgramType programType;
 
-  const RouteHomePrograms({required this.programType, super.key});
+  const RouteHomePrograms({
+    required this.programType,
+    super.key,
+  });
 
   @override
   State<RouteHomePrograms> createState() => _RouteHomeProgramsState();
@@ -27,8 +30,7 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
 
   @override
   Widget build(BuildContext context) {
-    final List<ModelProgram> listModelProgram =
-        listSampleModelProgram.where((e) => e.programType == widget.programType).toList();
+    final List<ModelProgram> listModelProgram = listSampleModelProgram.where((e) => e.programType == widget.programType).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -103,7 +105,6 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                                 if (selectedFilter == 1) Text('평점순 화면.', style: TS.s16w600(colorBlack)),
                                 if (selectedFilter == 2) Text('가격순 화면.', style: TS.s16w600(colorBlack)),*/
                                 Gaps.v20,
-
                                 StreamBuilder(
                                     stream: FirebaseFirestore.instance
                                         .collection(keyProgram) // = 'program'
@@ -120,23 +121,22 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
                                       }
 
                                       final List<ModelProgram> listModelProgramFireBase =
-                                      snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
+                                          snapshot.data!.docs.map((doc) => ModelProgram.fromJson(doc.data())).toList();
 
-                                    return MasonryGridView.count(
-                                      shrinkWrap: true,
-                                      primary: false,
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 15,
-                                      mainAxisSpacing: 20,
-                                      itemCount: listModelProgramFireBase.length,
-                                      itemBuilder: (context, index) {
-                                        return CardProgramGrid(
-                                          modelProgram: listModelProgramFireBase[index],
-                                        );
-                                      },
-                                    );
-                                  }
-                                ),
+                                      return MasonryGridView.count(
+                                        shrinkWrap: true,
+                                        primary: false,
+                                        crossAxisCount: 2,
+                                        crossAxisSpacing: 15,
+                                        mainAxisSpacing: 20,
+                                        itemCount: listModelProgramFireBase.length,
+                                        itemBuilder: (context, index) {
+                                          return CardProgramGrid(
+                                            modelProgram: listModelProgramFireBase[index],
+                                          );
+                                        },
+                                      );
+                                    }),
                                 Gaps.v30,
                                 SvgPicture.asset('assets/image/bottominfo.svg'),
                               ],

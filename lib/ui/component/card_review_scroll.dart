@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:practice1/const/model/model_program.dart';
 import 'package:practice1/const/model/model_review.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/gaps.dart';
@@ -99,8 +99,8 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: Image.asset(
-                                widget.modelReview.modelProgram.listImgUrl.first,
+                              child: CachedNetworkImage(
+                                imageUrl: widget.modelReview.modelProgram.listImgUrl.first,
                                 width: 40,
                                 height: 40,
                                 fit: BoxFit.cover,
@@ -237,8 +237,8 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       clipBehavior: Clip.hardEdge,
-                      child: Image.asset(
-                        widget.modelReview.listImgUrl.first,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.modelReview.modelProgram.listImgUrl.first,
                         fit: BoxFit.cover,
                       ),
                     ),

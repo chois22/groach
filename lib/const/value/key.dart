@@ -1,5 +1,6 @@
 // Firebasestore.instance.collection(ketUser).
 const String keyUser = 'user';
+const String keyReview = 'review';
 
 const String keyAddressBasic = 'address_basic';
 const String keyAddressDetail = 'address_detail';
