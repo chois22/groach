@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_naver_login/flutter_naver_login.dart';
-import 'package:flutter_naver_login/interface/types/naver_login_result.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:practice1/const/model/model_user.dart';
@@ -306,7 +304,7 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
                             iconName: 'assets/icon/naver.svg',
                             selectColor: Color(0xFF03C75A),
                             onTap: () {
-                              // _naverLogin(context);
+
                             },
                           ),
                           Gaps.h16,
@@ -349,7 +347,7 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
     );
   }
 
-  Future<void> saveUserToFirestore(User kakaoUser) async {
+  Future<void> saveUserToFiresbase(User kakaoUser) async {
     final user = ModelUser(
       uid: kakaoUser.id.toString(),
       dateCreate: Timestamp.now(),
@@ -405,7 +403,7 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
           '\n이메일: ${user.kakaoAccount?.email}');
 
       // 🔽 Firestore에 저장
-      await saveUserToFirestore(user);
+      await saveUserToFiresbase(user);
 
       final spf = await SharedPreferences.getInstance();
       await spf.setString(keyUid, user.id.toString());
@@ -424,55 +422,7 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
   }
 }
 
-// Future<void> _naverLogin(BuildContext context) async {
-//   try {
-//     final NaverLoginResult result = await FlutterNaverLogin.logIn();
-//     final account = result.account;
-//
-//     debugPrint('네이버 로그인 상태: ${result.status}');
-//     debugPrint('에러 메시지: ${result.errorMessage}');
-//     debugPrint('account 정보: '
-//         'id=${account.id}, '
-//         'email=${account.email}, '
-//         'nickname=${account.nickname}, '
-//         'profileImage=${account.profileImage}');
-//
-//     if (result.status != NaverLoginStatus.loggedIn) {
-//       debugPrint('❌ 네이버 로그인 실패');
-//       return;
-//     }
-//
-//     final user = ModelUser(
-//       uid: account.id ?? account.email ?? account.nickname ?? DateTime.now().millisecondsSinceEpoch.toString(),
-//       dateCreate: Timestamp.now(),
-//       email: account.email ?? '',
-//       name: '',
-//       nickname: account.nickname ?? '',
-//       pw: '',
-//       userImg: account.profileImage,
-//       loginType: LoginType.naver,
-//     );
-//
-//     await FirebaseFirestore.instance
-//         .collection(keyUser)
-//         .doc(user.uid)
-//         .set(user.toJson());
-//
-//     final spf = await SharedPreferences.getInstance();
-//     await spf.setString(keyUid, user.uid);
-//
-//     Global.userNotifier.value = user;
-//
-//     if (context.mounted) {
-//       Navigator.of(context).pushAndRemoveUntil(
-//         MaterialPageRoute(builder: (_) => RouteSplash()),
-//             (route) => false,
-//       );
-//     }
-//   } catch (e) {
-//     debugPrint('❗ 네이버 로그인 예외 발생: $e');
-//   }
-// }
+
 
 class CircleContainer extends StatelessWidget {
   final String iconName;
