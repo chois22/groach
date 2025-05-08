@@ -117,7 +117,7 @@ class _CardReviewScrollState extends State<CardReviewScroll> {
                                 Row(
                                   children: [
                                     Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
-                                    Text(widget.modelReview.modelProgram.averageStarRating.toString(),
+                                    Text(widget.modelReview.modelProgram.averageStarRating.toStringAsFixed(1),
                                         style: TS.s13w500(colorGray800)),
                                     Gaps.h5,
                                     Text(widget.modelReview.modelProgram.modelAddress.addressDetail,

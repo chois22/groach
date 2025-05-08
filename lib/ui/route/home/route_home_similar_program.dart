@@ -13,19 +13,21 @@ import 'package:practice1/ui/component/card_program_grid.dart';
 import 'package:practice1/utils/utils.dart';
 import 'package:practice1/utils/utils_enum.dart';
 
-class RouteHomePrograms extends StatefulWidget {
+class RouteHomeSimilarProgram extends StatefulWidget {
   final ProgramType programType;
+  final ModelProgram modelProgram;
 
-  const RouteHomePrograms({
+  const RouteHomeSimilarProgram({
     required this.programType,
+    required this.modelProgram,
     super.key,
   });
 
   @override
-  State<RouteHomePrograms> createState() => _RouteHomeProgramsState();
+  State<RouteHomeSimilarProgram> createState() => _RouteHomeSimilarProgramState();
 }
 
-class _RouteHomeProgramsState extends State<RouteHomePrograms> {
+class _RouteHomeSimilarProgramState extends State<RouteHomeSimilarProgram> {
   final ValueNotifier<int> vnSelectedFilter = ValueNotifier<int>(0);
 
   @override
@@ -48,14 +50,13 @@ class _RouteHomeProgramsState extends State<RouteHomePrograms> {
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection(keyProgram) // = 'program'
-                      .where(keyProgramType, isEqualTo: widget.programType.name)
+                      .where(keyListTag, arrayContainsAny: widget.modelProgram.listTag)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       Utils.log.f('${snapshot.error}\n${snapshot.stackTrace}');
                       return const SizedBox.shrink();
                     }
-
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox.shrink();
                     }

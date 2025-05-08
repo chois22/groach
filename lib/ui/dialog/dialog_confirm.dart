@@ -6,6 +6,7 @@ import 'package:practice1/const/value/text_style.dart';
 /// 확인 버튼
 class DialogConfirm extends StatelessWidget {
   final String text;
+
   const DialogConfirm({
     required this.text,
     super.key,
@@ -15,6 +16,7 @@ class DialogConfirm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
+        width: 270,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: colorWhite,
@@ -23,7 +25,14 @@ class DialogConfirm extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Gaps.v42,
-            Text(text, style: TS.s16w500(colorBlack)),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TS.s16w500(colorBlack).copyWith(height: 1.5),
+              ),
+            ),
             Gaps.v26,
             GestureDetector(
               onTap: () {

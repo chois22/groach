@@ -102,7 +102,7 @@ class CardProgramGrid extends StatelessWidget {
           Row(
             children: [
               Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
-              Text(modelProgram.averageStarRating.toString(), style: TS.s13w500(colorGray800)),
+              Text(modelProgram.averageStarRating.toStringAsFixed(1), style: TS.s13w500(colorGray800)),
               Gaps.h5,
               Expanded(
                 child: Text(

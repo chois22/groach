@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/text_style.dart';
 import 'package:practice1/ui/component/custom_toast.dart';
@@ -9,6 +10,9 @@ import 'package:sizer/sizer.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  KakaoSdk.init(nativeAppKey: 'f1f3a1070b2eb4d91def774b9c3d86b5'); // 이 줄을 runApp 위에 추가한다.
+
   runApp(
     _Groach(),
   );

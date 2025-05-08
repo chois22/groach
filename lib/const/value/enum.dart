@@ -1,7 +1,7 @@
 // 상태를 나타날 때 status
 enum StatusOfPw { none, match, not_match, Invalid_Pw }
 
-enum ProgramType { recommend, popular, hot, brand_new, staycation, rural, up }
+enum ProgramType { recommend, popular, hot, brand_new, staycation, rural, up, similar }
 
 enum ServiceType { wifi, pet, parking }
 
@@ -31,4 +31,11 @@ enum SignUpMessage {
   Invalid_Pw,
   Possible_Pw,
 
+}
+
+enum LoginType {
+  kakao,
+  naver,
+  google,
+  grouch,
 }

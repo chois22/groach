@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/key.dart';
 
 class ModelUser {
@@ -9,6 +10,7 @@ class ModelUser {
   final String nickname; // 닉네임
   final String pw; // 비밀번호
   final String? userImg; // 프로필 사진
+  final LoginType loginType;
 
   ModelUser({
     required this.uid,
@@ -17,6 +19,7 @@ class ModelUser {
     required this.name,
     required this.nickname,
     required this.pw,
+    required this.loginType,
     this.userImg,
   });
 
@@ -29,6 +32,7 @@ class ModelUser {
       keyNickName: nickname,
       keyPw: pw,
       keyUserImg: userImg,
+      keyLoginType: loginType.name,
     };
   }
 
@@ -41,6 +45,7 @@ class ModelUser {
       nickname: json[keyNickName] as String,
       pw: json[keyPw] as String,
       userImg: json[keyUserImg] == null ? null : json[keyUserImg] as String,
+      loginType: LoginType.values.firstWhere((e) => e.name == json[keyLoginType], orElse: () => LoginType.grouch),
     );
   }
 }

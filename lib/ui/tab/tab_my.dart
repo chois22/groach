@@ -5,7 +5,7 @@ import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/data.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
-import 'package:practice1/ui/route/home/route_setting.dart';
+import 'package:practice1/ui/route/route_setting/route_setting.dart';
 
 import '../../static/global.dart';
 

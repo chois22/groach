@@ -36,6 +36,7 @@ const String keyEmail = 'email';
 const String keyNickName = 'nick_name';
 const String keyPw = 'pw';
 const String keyPwCheck ='pw_check';
+const String keyLoginType = 'login_type';
 
 // model_review
 const String keyUidOfModelProgram = 'uid_of_model_program';

@@ -17,6 +17,7 @@ import 'package:practice1/ui/component/card_program_scroll.dart';
 import 'package:practice1/ui/component/card_review_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/dialog/dialog_confirm.dart';
+import 'package:practice1/ui/route/auth/route_auth_login.dart';
 import 'package:practice1/ui/route/home/route_home_programs.dart';
 import 'package:practice1/ui/route/route_main.dart';
 import 'package:practice1/ui/route/route_splash.dart';
@@ -102,23 +103,23 @@ class _TabHomeState extends State<TabHome> {
             //     '서버 데이터 불러오기',
             //   ),
             // ),
-            /// 로그아웃
-            ElevatedButton(
-              onPressed: () async {
-
-                SharedPreferences spf = await SharedPreferences.getInstance();
-
-                await spf.remove(keyUid);
-
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => RouteSplash(),
-                  ),
-                  (route) => false,
-                );
-              },
-              child: Text('로그아웃'),
-            ),
+            // /// 로그아웃
+            // ElevatedButton(
+            //   onPressed: () async {
+            //
+            //     SharedPreferences spf = await SharedPreferences.getInstance();
+            //
+            //     await spf.remove(keyUid);
+            //
+            //     Navigator.of(context).pushAndRemoveUntil(
+            //       MaterialPageRoute(
+            //         builder: (context) => RouteAuthLogin(),
+            //       ),
+            //       (route) => false,
+            //     );
+            //   },
+            //   child: Text('로그아웃'),
+            // ),
 
             Expanded(
               child: SingleChildScrollView(
@@ -661,8 +662,9 @@ class _TabHomeState extends State<TabHome> {
 
                         final List<ModelReview> listModelReview = snapshot.data!.docs
                             .map((doc) => ModelReview.fromJson(doc.data() as Map<String, dynamic>))
-                            .toList();
-
+                            .toList()
+                        // 리뷰 작성 날짜 순서대로 정렬
+                        ..sort((a, b) => b.modelUser.dateCreate.compareTo(a.modelUser.dateCreate));
 
                         return Container(
                           height: 216,

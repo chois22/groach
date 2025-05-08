@@ -19,7 +19,7 @@ import 'package:practice1/ui/component/card_program_scroll.dart';
 import 'package:practice1/ui/component/card_review_scroll.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:practice1/ui/route/home/route_home_programs.dart';
+import 'package:practice1/ui/route/home/route_home_similar_program.dart';
 import 'package:practice1/ui/route/home/route_reservaion.dart';
 import 'package:practice1/ui/route/review/route_review_view.dart';
 import 'package:practice1/ui/route/route_picture.dart';
@@ -60,6 +60,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    Utils.log.d('평균 별점${widget.modelProgram.averageStarRating.toString()}');
     final CameraPosition initialPosition = CameraPosition(
       target: LatLng(
         /// 위도, 경도
@@ -96,6 +97,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                         );
                       },
                       child: ClipRRect(
+                        borderRadius: BorderRadius.circular(0),
                         child: CachedNetworkImage(
                           imageUrl: widget.modelProgram.listImgUrl.first,
                           fit: BoxFit.cover,
@@ -171,10 +173,11 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                             Image.asset('assets/icon/yellow_star.png', width: 16, height: 16),
                             Row(
                               children: [
-                                Text(widget.modelProgram.averageStarRating.toString(), style: TS.s14w500(colorGray800)),
+                                Text(widget.modelProgram.averageStarRating.toStringAsFixed(1), style: TS.s14w500(colorGray800)),
                                 Gaps.h2,
                                 Text('(${widget.modelProgram.countTotalReview.toString()})',
                                     style: TS.s14w500(colorGray800)),
+
                               ],
                             ),
                             Gaps.h4,
@@ -275,7 +278,6 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                       ),
                       Gaps.v16,
                       Align(
-                        //todo: 이거 다시 물어보기
                         alignment: Alignment.centerLeft,
                         child: MasonryGridView.count(
                           shrinkWrap: true,
@@ -436,28 +438,29 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
 
                         Utils.log.f('리뷰 갯수: ${listModelReview.length}개');
 
-                        int countFacilityGood = 0;
-                        int a = 0;
-                        int b = 0;
-                        int c = 0;
-                        int d = 0;
+                        int good_facility = 0;
+                        int kind_owner = 0;
+                        int luxury_facility = 0;
+                        int good_view = 0;
+                        int with_couple = 0;
+
 
                         for (ModelReview review in listModelReview) {
                           if (review.listReviewKeyWord.contains(ReviewKeyWord.good_facility)) {
-                            countFacilityGood++;
+                            good_facility++;
                           }
 
                           if (review.listReviewKeyWord.contains(ReviewKeyWord.kind_owner)) {
-                            a++;
+                            kind_owner++;
                           }
                           if (review.listReviewKeyWord.contains(ReviewKeyWord.luxury_facility)) {
-                            b++;
+                            luxury_facility++;
                           }
                           if (review.listReviewKeyWord.contains(ReviewKeyWord.good_view)) {
-                            c++;
+                            good_view++;
                           }
                           if (review.listReviewKeyWord.contains(ReviewKeyWord.with_couple)) {
-                            d++;
+                            with_couple++;
                           }
                         }
 
@@ -494,31 +497,31 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                                   ReviewBox(
                                     iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_facility),
                                     text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_facility),
-                                    number: countFacilityGood,
+                                    number: good_facility,
                                   ),
                                   Gaps.v8,
                                   ReviewBox(
                                     iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.kind_owner),
                                     text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.kind_owner),
-                                    number: a,
+                                    number: kind_owner,
                                   ),
                                   Gaps.v8,
                                   ReviewBox(
                                     iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.luxury_facility),
                                     text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.luxury_facility),
-                                    number: b,
+                                    number: luxury_facility,
                                   ),
                                   Gaps.v8,
                                   ReviewBox(
                                     iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.good_view),
                                     text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.good_view),
-                                    number: c,
+                                    number: good_view,
                                   ),
                                   Gaps.v8,
                                   ReviewBox(
                                     iconPath: UtilsEnum.getNameFromReviewKeyWordIcon(ReviewKeyWord.with_couple),
                                     text: UtilsEnum.getNameFromReviewKeyWord(ReviewKeyWord.with_couple),
-                                    number: d,
+                                    number: with_couple,
                                   ),
                                 ],
                               ),
@@ -530,7 +533,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                                 children: [
                                   Row(
                                     children: [
-                                      Text('사용자 리뷰', style: TS.s18w700(colorBlack)),
+                                      Text('사용자 리뷰 (${widget.modelProgram.countTotalReview}) ${listModelReview.length}', style: TS.s18w700(colorBlack)),
                                       Spacer(),
                                       GestureDetector(
                                           onTap: () {
@@ -583,32 +586,7 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
                         );
                       }),
 
-                  Gaps.v30,
-                  CustomDivider(color: colorGray200, height: 10),
-                  Gaps.v30,
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Row(
-                      children: [
-                        Text('비슷한 프로그램', style: TS.s18w700(colorBlack)),
-                        Gaps.h4,
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => RouteHomePrograms(
-                                  programType: ProgramType.rural,
-                                ),
-                              ),
-                            );
-                          },
-                          child: MoreView(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Gaps.v6,
+
                   //todo: 정렬 물어보기
                   StreamBuilder(
                     // keyProgramType, isEqualTo: widget.modelProgram.name
@@ -638,67 +616,99 @@ class _RouteHomeProgramDetailPageState extends State<RouteHomeProgramDetailPage>
 
                       Utils.log.f('snapshot.data!.docs: ${snapshot.data!.docs}');
 
-                      return SizedBox(
-                        height: 257,
-                        child: SingleChildScrollView(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: List.generate(
-                              /// listTag 비교하여 일치한는 값들로 표시
-                              listModelProgramSimilar.length,
-                              (index) => Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      CardProgramScroll(
-                                        modelProgram: listModelProgramSimilar[index],
-                                        width: 115,
-                                        height: 115,
-                                      ),
-                                      Gaps.v8,
-                                      Container(
-                                        width: 115,
-                                        height: 26,
-                                        decoration: BoxDecoration(
-                                          color: colorWhite,
-                                          border: Border.all(width: 1, color: colorGreen600),
-                                          borderRadius: BorderRadius.circular(6),
+                      return Column(
+                        children: [
+                          Gaps.v30,
+                          CustomDivider(color: colorGray200, height: 10),
+                          Gaps.v30,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Row(
+                              children: [
+                                Text('비슷한 프로그램', style: TS.s18w700(colorBlack)),
+                                Gaps.h4,
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) => RouteHomeSimilarProgram(
+                                          programType: ProgramType.similar,
+                                          modelProgram:  widget.modelProgram,
                                         ),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (_) => RouteReservaion(),
+                                      ),
+                                    );
+                                  },
+                                  child: MoreView(),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Gaps.v6,
+
+                          SizedBox(
+                            height: 257,
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: List.generate(
+                                  /// listTag 비교하여 일치한는 값들로 표시
+                                  listModelProgramSimilar.length,
+                                  (index) => Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          CardProgramScroll(
+                                            modelProgram: listModelProgramSimilar[index],
+                                            width: 115,
+                                            height: 115,
+                                          ),
+                                          Gaps.v8,
+                                          Container(
+                                            width: 115,
+                                            height: 26,
+                                            decoration: BoxDecoration(
+                                              color: colorWhite,
+                                              border: Border.all(width: 1, color: colorGreen600),
+                                              borderRadius: BorderRadius.circular(6),
+                                            ),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (_) => RouteReservaion(),
+                                                  ),
+                                                );
+                                              },
+                                              child: Center(
+                                                child: Text(
+                                                  '예약하기',
+                                                  style: TS.s14w600(colorGreen600),
+                                                ),
                                               ),
-                                            );
-                                          },
-                                          child: Center(
-                                            child: Text(
-                                              '예약하기',
-                                              style: TS.s14w600(colorGreen600),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
+                                      Builder(
+                                        builder: (context) {
+                                          if (index == listModelProgramSimilar.length - 1) {
+                                            return const SizedBox.shrink();
+                                          } else {
+                                            return Gaps.h10;
+                                          }
+                                        },
+                                      )
                                     ],
                                   ),
-                                  Builder(
-                                    builder: (context) {
-                                      if (index == listModelProgramSimilar.length - 1) {
-                                        return const SizedBox.shrink();
-                                      } else {
-                                        return Gaps.h10;
-                                      }
-                                    },
-                                  )
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       );
                     },
                   ),

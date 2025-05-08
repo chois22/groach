@@ -14,6 +14,7 @@ import 'package:practice1/ui/component/button_animate.dart';
 import 'package:practice1/ui/component/custom_divider.dart';
 import 'package:practice1/ui/component/textfield_default.dart';
 import 'package:practice1/ui/dialog/dialog_cancel_confirm.dart';
+import 'package:practice1/ui/dialog/dialog_confirm.dart';
 import 'package:practice1/ui/route/review/route_review_complete.dart';
 import 'package:practice1/utils/utils_enum.dart';
 import 'package:uuid/uuid.dart';
@@ -255,12 +256,42 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                       Gaps.v16,
                       GestureDetector(
                         onTap: () async {
+                          if (vnSelectedStar.value == 0) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => DialogConfirm(
+                                text: '별점을 최소 1점 이상 선택해주세요.',
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (vnListReviewKeyWord.value.isEmpty) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => DialogConfirm(
+                                text: '리뷰 키워드를 1개 이상 선택해주세요.',
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (tecReviewWrite.text.trim().isEmpty) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => DialogConfirm(
+                                text: '리뷰 내용을 입력해 주세요.',
+                              ),
+                            );
+                            return;
+                          }
+
                           ModelReview modelReview = ModelReview(
                             uid: Uuid().v1(),
                             dateCreate: Timestamp.now(),
                             uidOfModelProgram: widget.modelProgram.uid,
                             modelProgram: widget.modelProgram,
-                            uidOfModelUser: Global.userNotifier.value!.uid,
+                            uidOfModelUser: Global.userNotifier.value                                                                                                                                     !.uid,
                             modelUser: Global.userNotifier.value!,
                             listReviewKeyWord: vnListReviewKeyWord.value,
                             reviewText: tecReviewWrite.text.trim(),
@@ -270,6 +301,26 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
 
                           FirebaseFirestore.instance.collection(keyReview).doc(modelReview.uid).set(modelReview.toJson());
 
+                          // 프로그램의 평균 별점과 리뷰 수를 업데이트
+                          final programRef = FirebaseFirestore.instance.collection(keyProgram).doc(widget.modelProgram.uid);
+                          // 기존 평균 별점과 리뷰 수 가져오기
+                          final programDoc = await programRef.get();
+                          if (programDoc.exists) {
+                            final currentAvgRating = programDoc.data()?[keyAverageStarRating] as num? ?? 0; // 기본값 0.0으로 설정
+                            final currentReviewCount = programDoc.data()?[keyCountTotalReview] as int? ?? 0; // 기본값 0으로 설정
+
+                            // 새로운 평균 별점 계산
+                            final newAvgRating = (currentAvgRating * currentReviewCount + vnSelectedStar.value) / (currentReviewCount + 1);
+
+                            // Update: 프로그램 문서의 평균 별점과 리뷰 수만 업데이트
+                            await programRef.update({
+                              keyAverageStarRating: newAvgRating,
+                              keyCountTotalReview: FieldValue.increment(1), // 리뷰 수 1 증가
+                            });
+                          } else {
+                            // 문서가 없을 경우 적절한 처리
+                            print('Program document does not exist');
+                          }
                           // get : 가져오기
                           //FirebaseFirestore.instance.collection(keyReview)..where(keyUidOfModelUser,isEqualTo: Global.userNotifier.value!.uid).get();
 
@@ -281,7 +332,6 @@ class _RouteReviewWriteState extends State<RouteReviewWrite> {
                             ),
                           );
                           if (result == true) {
-
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) => RouteReviewComplete(),

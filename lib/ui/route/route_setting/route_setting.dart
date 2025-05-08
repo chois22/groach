@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/value/colors.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/text_style.dart';
+import 'package:practice1/ui/route/route_setting/route_account.dart';
 import 'package:practice1/ui/route/route_terms.dart';
 
 class RouteSetting extends StatefulWidget {
@@ -27,7 +28,11 @@ class _RouteSettingState extends State<RouteSetting> {
           child: Column(
             children: [
               Gaps.v16,
-              SettingBox(text: '계정 관리'),
+              GestureDetector(onTap: (){Navigator.of(context).push(
+                MaterialPageRoute(
+                builder: (_) => RouteAccount(),
+                ),
+              );}, child: SettingBox(text: '계정 관리')),
               SettingBox(text: '알림 설정'),
               GestureDetector(
                 onTap: (){

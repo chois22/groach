@@ -47,6 +47,7 @@ final List<ModelReview> listSampleModelReview = [
       nickname: '김종완',
       pw: '123123123',
       userImg: 'assets/image/avatar_image.png',
+      loginType: LoginType.kakao,
     ),
     listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
@@ -76,6 +77,7 @@ final List<ModelReview> listSampleModelReview = [
       nickname: '김종완',
       pw: '123123123',
       userImg: 'assets/image/avatar_image.png',
+      loginType: LoginType.kakao,
     ),
     listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
@@ -105,6 +107,7 @@ final List<ModelReview> listSampleModelReview = [
       nickname: '김종완',
       pw: '123123123',
       userImg: 'assets/image/avatar_image.png',
+      loginType: LoginType.kakao,
     ),
     listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
@@ -132,6 +135,7 @@ final List<ModelReview> listSampleModelReview = [
       nickname: '김종완',
       pw: '123123123',
       userImg: 'assets/image/avatar_image.png',
+      loginType: LoginType.kakao,
     ),
     listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
@@ -159,6 +163,7 @@ final List<ModelReview> listSampleModelReview = [
       nickname: '김종완',
       pw: '123123123',
       userImg: 'assets/image/avatar_image.png',
+      loginType: LoginType.kakao,
     ),
     listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:
@@ -188,6 +193,7 @@ final List<ModelReview> listSampleModelReview = [
       nickname: '김종완',
       pw: '123123123',
       userImg: 'assets/image/avatar_image.png',
+      loginType: LoginType.kakao,
     ),
     listReviewKeyWord: [ReviewKeyWord.good_facility,ReviewKeyWord.good_view],
     reviewText:

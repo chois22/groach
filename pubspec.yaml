@@ -73,6 +73,8 @@ dependencies:
   cloud_firestore: ^5.6.0
   firebase_storage: ^12.3.6
   cloud_functions: ^5.0.2
+  kakao_flutter_sdk_user: ^1.3.1
+  flutter_naver_login_plus: ^1.0.2
 
 
 dev_dependencies:

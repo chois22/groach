@@ -30,6 +30,8 @@ class UtilsEnum {
         return '농촌한달살기 프로그램';
       case ProgramType.up:
         return 'up 프로그램';
+      case ProgramType.similar:
+        return '비슷한 프로그램';
     }
   }
 
@@ -49,6 +51,8 @@ class UtilsEnum {
       case ProgramType.rural:
         return '';
       case ProgramType.up:
+        return '';
+      case ProgramType.similar:
         return '';
     }
   }

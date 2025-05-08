@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
+import 'package:flutter_naver_login/interface/types/naver_login_result.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:practice1/const/model/model_user.dart';
 import 'package:practice1/const/value/colors.dart';
+import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
@@ -293,13 +297,17 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
                           CircleContainer(
                             iconName: 'assets/icon/kakao.svg',
                             selectColor: const Color(0xFFF7E317),
-                            onTap: () {},
+                            onTap: () {
+                              _kakaoLogin();
+                            },
                           ),
                           Gaps.h16,
                           CircleContainer(
                             iconName: 'assets/icon/naver.svg',
                             selectColor: Color(0xFF03C75A),
-                            onTap: () {},
+                            onTap: () {
+                              // _naverLogin(context);
+                            },
                           ),
                           Gaps.h16,
                           CircleContainer(
@@ -340,7 +348,131 @@ class _RouteAuthLoginState extends State<RouteAuthLogin> {
       ),
     );
   }
+
+  Future<void> saveUserToFirestore(User kakaoUser) async {
+    final user = ModelUser(
+      uid: kakaoUser.id.toString(),
+      dateCreate: Timestamp.now(),
+      email: kakaoUser.kakaoAccount?.email ?? '',
+      name: '',
+      nickname: kakaoUser.kakaoAccount?.profile?.nickname ?? '',
+      pw: '',
+      userImg: kakaoUser.kakaoAccount?.profile?.profileImageUrl,
+      loginType: LoginType.kakao,
+    );
+   await FirebaseFirestore.instance
+        .collection(keyUser)
+        .doc(user.uid)
+        .set(user.toJson());
+    Utils.log.t('카카오 로그인 후 저장된 유저 정보: ${user.toJson()}');
+    Global.userNotifier.value = user;
+  }
+
+  void _kakaoLogin() async {
+    if (await isKakaoTalkInstalled()) {
+      try {
+        await UserApi.instance.loginWithKakaoTalk();
+        Utils.log.t('카카오톡으로 로그인 성공');
+      } catch (error) {
+        Utils.log.t('카카오톡으로 로그인 실패 $error');
+
+        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+        if (error is PlatformException && error.code == 'CANCELED') {
+          return;
+        }
+        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
+        try {
+          await UserApi.instance.loginWithKakaoAccount();
+          Utils.log.t('카카오계정으로 로그인 성공');
+        } catch (error) {
+          Utils.log.t('카카오계정으로 로그인 실패 $error');
+        }
+      }
+    } else {
+      try {
+        await UserApi.instance.loginWithKakaoAccount();
+        Utils.log.t('카카오계정으로 로그인 성공');
+      } catch (error) {
+        Utils.log.t('카카오계정으로 로그인 실패 $error');
+      }
+    }
+    try {
+      User user = await UserApi.instance.me();
+      Utils.log.t('사용자 정보 요청 성공'
+          '\n회원번호: ${user.id}'
+          '\n닉네임: ${user.kakaoAccount?.profile?.nickname}'
+          '\n이메일: ${user.kakaoAccount?.email}');
+
+      // 🔽 Firestore에 저장
+      await saveUserToFirestore(user);
+
+      final spf = await SharedPreferences.getInstance();
+      await spf.setString(keyUid, user.id.toString());
+
+      if (context.mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => RouteSplash()),
+              (route) => false,
+        );
+      }
+
+
+    } catch (error) {
+      Utils.log.t('사용자 정보 요청 실패 $error');
+    }
+  }
 }
+
+// Future<void> _naverLogin(BuildContext context) async {
+//   try {
+//     final NaverLoginResult result = await FlutterNaverLogin.logIn();
+//     final account = result.account;
+//
+//     debugPrint('네이버 로그인 상태: ${result.status}');
+//     debugPrint('에러 메시지: ${result.errorMessage}');
+//     debugPrint('account 정보: '
+//         'id=${account.id}, '
+//         'email=${account.email}, '
+//         'nickname=${account.nickname}, '
+//         'profileImage=${account.profileImage}');
+//
+//     if (result.status != NaverLoginStatus.loggedIn) {
+//       debugPrint('❌ 네이버 로그인 실패');
+//       return;
+//     }
+//
+//     final user = ModelUser(
+//       uid: account.id ?? account.email ?? account.nickname ?? DateTime.now().millisecondsSinceEpoch.toString(),
+//       dateCreate: Timestamp.now(),
+//       email: account.email ?? '',
+//       name: '',
+//       nickname: account.nickname ?? '',
+//       pw: '',
+//       userImg: account.profileImage,
+//       loginType: LoginType.naver,
+//     );
+//
+//     await FirebaseFirestore.instance
+//         .collection(keyUser)
+//         .doc(user.uid)
+//         .set(user.toJson());
+//
+//     final spf = await SharedPreferences.getInstance();
+//     await spf.setString(keyUid, user.uid);
+//
+//     Global.userNotifier.value = user;
+//
+//     if (context.mounted) {
+//       Navigator.of(context).pushAndRemoveUntil(
+//         MaterialPageRoute(builder: (_) => RouteSplash()),
+//             (route) => false,
+//       );
+//     }
+//   } catch (e) {
+//     debugPrint('❗ 네이버 로그인 예외 발생: $e');
+//   }
+// }
 
 class CircleContainer extends StatelessWidget {
   final String iconName;

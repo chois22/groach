@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practice1/const/model/model_user.dart';
 import 'package:practice1/const/value/colors.dart';
+import 'package:practice1/const/value/enum.dart';
 import 'package:practice1/const/value/gaps.dart';
 import 'package:practice1/const/value/key.dart';
 import 'package:practice1/const/value/text_style.dart';
@@ -89,6 +90,7 @@ class PageSignUpComplete extends StatelessWidget {
                 name: tecName.text.trim(),
                 nickname: tecNickName.text.trim(),
                 pw: tecPw.text.trim(),
+                loginType: LoginType.kakao,
               );
               // print('입력된 이메일은 ?: ${tecEmail.text}');
               // print('입력된 이름은 ?: ${tecName.text}');
